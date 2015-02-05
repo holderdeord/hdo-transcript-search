@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "elasticsearch"
+gem "nokogiri"
+gem "pry"
+gem "patron"
