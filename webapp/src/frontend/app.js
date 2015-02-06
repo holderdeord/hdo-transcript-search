@@ -1,5 +1,6 @@
 var Timeline = require('./timeline');
 var reqwest  = require('reqwest');
+var d3       = require('d3');
 
 var chart = new Timeline('.timeline');
 

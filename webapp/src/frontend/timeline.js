@@ -8,7 +8,7 @@ var Timeline = function (element) {
             columns: [
                 ['x']
             ],
-            type: 'line'
+            type: 'spline'
         },
         axis: {
             x: {
@@ -22,7 +22,7 @@ var Timeline = function (element) {
                     format: function (d) { return d + '%'; }
                 },
                 // max: 100,
-                // min: 100,
+                 min: 0,
                 padding: { top: 0, bottom: 0 }
             }
         },

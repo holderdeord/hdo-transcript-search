@@ -7,7 +7,7 @@ This project consists of two parts:
 
 ## indexer
 
-Download and index transcripts:
+Download and index transcripts (requires a local elasticsearch):
 
     $ cd indexer/
     $ bundle install
@@ -15,9 +15,13 @@ Download and index transcripts:
 
 ## webapp
 
-Start the webapp in dev mode:
+Start the webapp in dev mode (with elasticsearch):
 
     $ cd webapp
     $ npm install
     $ npm run dev
     # open your browser at http://localhost:7575/
+
+If you don't have elasticsearch, you can run the app with fake data:
+
+    $ fake=true npm run dev

@@ -44,6 +44,8 @@ function countsFor(opts) {
 
         body.size = 0;
 
+        debug('request', JSON.stringify(body));
+
         return es.search({ index: 'hdo-transcripts', body: body })
             .then(function (response) {
                 var result = {};
@@ -56,6 +58,8 @@ function countsFor(opts) {
                 });
 
                 cache[opts] = result;
+
+                debug('result', result);
 
                 return result;
             });

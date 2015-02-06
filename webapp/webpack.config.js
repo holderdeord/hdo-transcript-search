@@ -1,9 +1,14 @@
+var path = require('path');
 
 module.exports = {
-    entry: './src/frontend/app',
+    entry: path.join(__dirname, 'src/frontend/app'),
 
     output: {
-        path: __dirname + '/public/',
+        path: path.join(__dirname, '/public/'),
         filename: 'bundle.js'
+    },
+
+    module: {
+        loaders: []
     }
 };

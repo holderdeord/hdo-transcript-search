@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public --ignore ./scripts server.js lib"
+    "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public server.js",
+    "test": "./node_modules/.bin/jshint --exclude node_modules *.js src"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "errorhandler": "^1.2.2",
+    "jshint": "^2.6.0",
     "nodemon": "^1.2.1",
     "webpack": "^1.5.3",
     "webpack-dev-middleware": "^1.0.11"
