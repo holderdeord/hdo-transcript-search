@@ -1,0 +1,32 @@
+{
+  "name": "hdo-ngram-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public --ignore ./scripts server.js lib"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "c3": "^0.4.9",
+    "cheerio": "^0.18.0",
+    "d3": "^3.5.3",
+    "debug": "^2.1.0",
+    "elasticsearch": "^3.1.3",
+    "express": "^4.11.2",
+    "glob": "^4.3.5",
+    "lru-cache": "^2.5.0",
+    "morgan": "^1.5.0",
+    "nconf": "^0.6.9",
+    "reqwest": "^1.1.5"
+  },
+  "devDependencies": {
+    "errorhandler": "^1.2.2",
+    "nodemon": "^1.2.1",
+    "webpack": "^1.5.3",
+    "webpack-dev-middleware": "^1.0.11"
+  }
+}

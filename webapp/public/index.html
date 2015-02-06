@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="no">
+
+  <head>
+    <meta charset="UTF-8">
+
+    <!-- Enable responsiveness on mobile devices-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <title>
+      Holder de ord &middot; stortingreferater
+    </title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/c3/0.3.0/c3.css">
+    <link rel="stylesheet" href="/css/app.css">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+    <link rel="shortcut icon" href="/public/favicon.ico">
+  </head>
+
+  <body>
+
+    <div class="content">
+      <form>
+        <input type="search" name="query" id="query" autofocus tabindex=0>
+
+        <input type="submit" value="Søk">
+        <input type="button" value="Nullstill" name="cancel">
+
+        <select name="interval">
+          <option value="month">1 måned</option>
+          <option value="12w">3 måneder</option>
+          <option value="24w" selected>6 måneder</option>
+          <option value="year">1 år</option>
+        </select>
+      </form>
+
+      <div class="timeline"></div>
+
+      <ul class="hits"></ul>
+    </div>
+
+    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+  </body>
+</html>

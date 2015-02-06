@@ -1,0 +1,44 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: HelveticaNeueLight, HelveticaNeue-Light, 'Helvetica Neue Light', HelveticaNeue, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+body {
+  color: #333;
+  background-color: #efefef;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+
+.content {
+    padding: 10px;
+    margin: 20px;
+    background-color: #fff;
+}
+
+form {
+    padding: 10px;
+}
+
+
+#query {
+    width: 100%;
+    font-size: 2em;
+    padding: 8px;
+}
+
+.timeline {
+    padding-top: 20px;
+}
+
+.c3-line { stroke-width: 2px; }
