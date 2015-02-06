@@ -1,4 +1,6 @@
-# hdo-transcript-viz
+# hdo-transcript-search
+
+Visualize language usage in the Norwegian parliament.
 
 This project consists of two parts:
 
