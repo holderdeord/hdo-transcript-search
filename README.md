@@ -13,7 +13,7 @@ Download and index transcripts (requires a local elasticsearch):
 
     $ cd indexer/
     $ bundle install
-    $ bundle exec ruby -Ilib bin/hdo-transcript-indexer --help
+    $ bundle exec ruby -Ilib bin/hdo-transcript-indexer 
 
 ## webapp
 
