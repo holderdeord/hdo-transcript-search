@@ -4,7 +4,7 @@ require 'optparse'
 
 options = {
   elasticsearch_url: 'http://localhost:9200',
-  data_dir: File.expand_path('./data'),
+  data_dir: File.expand_path('../data'),
   sessions: [
     '2008-2009',
     '2009-2010',
@@ -13,12 +13,17 @@ options = {
     '2013-2014',
     '2014-2015',
     '2015-2016'
-  ]
+  ],
+  index_name: 'hdo-transcripts',
+  create_index: false
 }
 
 parser = OptionParser.new do |opt|
   opt.on('-e', '--elasticsearch-url URL', "URL to elasticsearch server, default: #{options[:elasticsearch_url]}") { |url| options[:elasticsearch_url] = url }
+  opt.on('-i', '--index INDEX_NAME', "Index to use, default: #{options[:index_name]}") { |n| options[:index_name] = n }
+  opt.on('-c', '--create-index', "Delete and re-create the index") { options[:create_index] = true }
   opt.on('-d', '--data-dir PATH', "Data dir to cache downloads, default: #{options[:data_dir]}") { |dir| options[:data_dir] = dir }
+  opt.on('-f', '--force', "Force re-download of transcripts") { options[:force] = true }
   opt.on('-s', '--sessions SESSIONS', "Comma-separated list of sessions, default: #{options[:sessions].join(',')}") { |sessions| options[:sessions] = sessions.split(',') }
   opt.on('-h', '--help', "You're looking at it.") { puts opt; exit 0; }
 end

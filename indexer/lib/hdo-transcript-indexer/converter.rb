@@ -30,7 +30,7 @@ module Hdo
       end
 
       def president_names
-        @president_name ||= @doc.css('president').text.split("\n").map(&:strip)
+        @president_name ||= @doc.css('president').text.split("\n").map(&:strip).uniq
       end
 
       def as_json(opts = nil)

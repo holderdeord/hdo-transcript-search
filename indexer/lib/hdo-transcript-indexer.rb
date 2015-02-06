@@ -10,29 +10,31 @@ require 'pry'
 require 'hdo-transcript-indexer/converter'
 
 Faraday.default_adapter = :patron
+Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
+Faraday.default_connection_options.headers = {'User-Agent' => 'hdo-transcript-downloader | https://www.holderdeord.no/'}
 
 module Hdo
   module Transcript
     class Indexer
       def initialize(options)
-        @es = Elasticsearch::Client.new(
-          log: false,
-          url: options.fetch(:elasticsearch_url),
-          transport_options: { request: { timeout: 10 }}
-          )
-
         @data_dir     = data_dir_from(options)
         @sessions     = options.fetch(:sessions)
-        @faraday      = Faraday.new(url: 'http://data.stortinget.no')
+        @faraday      = Faraday.new('http://data.stortinget.no')
         @logger       = Logger.new(STDOUT)
-        @create_index = options.fetch(:create_index, true)
-        @index_name   = options.fetch(:index_name, 'hdo-transcripts')
+        @create_index = options.fetch(:create_index)
+        @index_name   = options.fetch(:index_name)
+        @force        = options.fetch(:force)
+
+        @es = Elasticsearch::Client.new(
+          log: false,
+          url: options.fetch(:elasticsearch_url)
+        )
       end
 
       def execute
         download
         convert
-        create_index if @create_index
+        create_index
         index_docs
       end
 
@@ -68,12 +70,12 @@ module Hdo
         id   = t['id']
         dest = @data_dir.join("#{id}.xml")
 
-        if dest.exist?
+        if dest.exist? && !@force
           @logger.info "download cached: #{dest}"
         else
           @logger.info "fetching transcript: #{id} => #{dest}"
 
-          res = @faraday.get("http://data.stortinget.no/eksport/publikasjon?publikasjonid=#{id}") { |r| r.options.timeout = 10 }
+          res = @faraday.get("http://data.stortinget.no/eksport/publikasjon?publikasjonid=#{id}")
           dest.open('w') { |io| io << res.body }
         end
       end
@@ -81,7 +83,7 @@ module Hdo
       def convert_to_json(input_file)
         dest = Pathname.new(input_file.to_s.sub(input_file.extname, '.json'))
 
-        if dest.exist?
+        if dest.exist? && !@force
           @logger.info "conversion cached: #{dest}"
         else
           @logger.info "converting: #{input_file} => #{dest}"
@@ -108,6 +110,8 @@ module Hdo
       end
 
       def create_index
+        return unless @create_index
+
         @logger.info "recreating index #{@index_name}"
 
         @es.indices.delete(index: @index_name) if @es.indices.exists(index: @index_name)
