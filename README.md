@@ -1,4 +1,4 @@
-# hdo-transcript-search
+# hdo-transcript-search [![Build Status](https://travis-ci.org/holderdeord/hdo-transcript-search.png?branch=master)](https://travis-ci.org/holderdeord/hdo-transcript-search)
 
 Visualize language usage in the Norwegian parliament.
 
