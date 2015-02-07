@@ -1,7 +1,6 @@
 var Promise = require('bluebird');
 var LRU     = require('lru-cache');
 var es      = require('./es-client');
-var config  = require('../../config');
 var debug   = require('debug')('elasticsearch');
 var cache   = LRU({max: 500});
 
@@ -42,7 +41,7 @@ function countsFor(opts) {
             };
         }
 
-        body.size = 0;
+        body.size = 10;
 
         debug('request', JSON.stringify(body));
 
@@ -51,13 +50,17 @@ function countsFor(opts) {
                 debug('response', JSON.stringify(response));
 
                 var result = {};
+                var counts = {};
 
                 var agg     = response.aggregations.monthly;
                 var buckets = agg.monthly ? agg.monthly.buckets : agg.buckets;
 
                 buckets.forEach(function (bucket) {
-                    result[bucket.key_as_string] = bucket.doc_count;
+                    counts[bucket.key_as_string] = bucket.doc_count;
                 });
+
+                result.counts = counts;
+                result.hits = response.hits.hits;
 
                 cache[opts] = result;
 
@@ -72,13 +75,13 @@ function timeline(opts) {
     return Promise.join(
         countsFor({query: '*', interval: opts.interval} ),
         countsFor(opts)
-    ).spread(function (totals, counts) {
-        var keys = Object.keys(totals);
+    ).spread(function (allResults, queryResults) {
+        var keys = Object.keys(allResults.counts);
         keys.pop(); // don't want current incomplete period
 
-        return keys.map(function (key) {
-            var total = totals[key];
-            var val = counts[key] || 0.0;
+        var counts = keys.map(function (key) {
+            var total = allResults.counts[key];
+            var val = queryResults.counts[key] || 0.0;
 
             return {
                 date: key,
@@ -87,6 +90,8 @@ function timeline(opts) {
                 pct: (val / total) * 100
             };
         });
+
+        return { counts: counts, hits: queryResults.hits };
     });
 }
 

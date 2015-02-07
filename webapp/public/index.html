@@ -25,54 +25,9 @@
   </head>
 
   <body>
-    <div class="masthead">
-      <h1>Stortingsøk</h1>
-    </div>
+    <div class="masthead"><h1>Stortingsøk</h1></div>
 
-    <div class="container">
-      <form class="form-horizontal">
-        <div class="row">
-          <div class="col-md-8">
-            <input
-              type="search"
-              class="form-control input-lg"
-              name="query"
-              id="query"
-              autofocus
-              placeholder="Ord eller eksakt frase"
-              tabindex="0"
-            >
-          </div>
-
-
-            <div class="col-md-2">
-              <select class="form-control input-xs" name="interval">
-                <option value="month" selected>1 måned</option>
-                <option value="12w">3 måneder</option>
-                <option value="24w">6 måneder</option>
-                <option value="year">1 år</option>
-              </select>
-            </div>
-
-            <div class="col-md-2">
-              <input type="submit" class="btn btn-default btn-sm" value="Søk">
-              <input type="button" class="btn btn-default btn-sm" value="Nullstill" name="cancel">
-            </div>
-
-        </div>
-      </form>
-
-      <hr>
-
-      <div class="row">
-        <div class="timeline"></div>
-      </div>
-
-      <div class="row">
-        <ul class="hits"></ul>
-      </div>
-    </div>
-
+    <div class="container" id="content"></div>
     <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
   </body>
 </html>
