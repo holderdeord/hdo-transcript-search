@@ -48,6 +48,8 @@ function countsFor(opts) {
 
         return es.search({ index: 'hdo-transcripts', body: body })
             .then(function (response) {
+                debug('response', JSON.stringify(response));
+
                 var result = {};
 
                 var agg     = response.aggregations.monthly;
@@ -58,8 +60,6 @@ function countsFor(opts) {
                 });
 
                 cache[opts] = result;
-
-                debug('result', result);
 
                 return result;
             });
@@ -90,27 +90,4 @@ function timeline(opts) {
     });
 }
 
-function randomTimeline() {
-    var ts        = new Date(1998, 9, 1).getTime();
-    var sixMonths = 6 * 30 * 24 * 60 * 60 * 1000;
-    var result    = [];
-
-    for (var i = 0, l = 32; i < l; i++) {
-        var val = Math.random() * 500;
-        var total = Math.random() * 500 + val;
-
-        result.push({
-            date: new Date(ts).toISOString(),
-            count: val,
-            total: total,
-            pct: (val / total) * 100
-        });
-
-        ts += sixMonths;
-    }
-
-    return Promise.resolve(result);
-}
-
-
-module.exports = {  timeline: config.get('fake') ? randomTimeline : timeline };
+module.exports = {  timeline: timeline };
