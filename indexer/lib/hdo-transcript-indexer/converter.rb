@@ -26,7 +26,7 @@ module Hdo
       end
 
       def sections
-        @doc.css('presinnl, innlegg').map { |node| parse_section(node) }
+        @doc.css('presinnl, innlegg').map { |node| parse_section(node) }.compact
       end
 
       def president_names
@@ -47,18 +47,19 @@ module Hdo
 
       private
 
+      IGNORED_NAMES = ["Representantene"]
+
       def parse_section(node)
         case node.name
         when 'innlegg'
           name_str = node.css('navn').text.strip
           text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
 
+          return if IGNORED_NAMES.include?(name_str)
+
           name, party, time, title = parse_name_string(name_str)
 
-          case name
-          when "Representantene"
-            # ignored
-          when /\(|\)/
+          if name =~ /\(|\)/
             raise "invalid name: #{name.inspect}"
           end
 
