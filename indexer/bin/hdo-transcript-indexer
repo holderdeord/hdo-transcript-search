@@ -15,7 +15,8 @@ options = {
     '2015-2016'
   ],
   index_name: 'hdo-transcripts',
-  create_index: false
+  create_index: false,
+  force: false
 }
 
 parser = OptionParser.new do |opt|
