@@ -50,12 +50,15 @@ module Hdo
       def parse_section(node)
         case node.name
         when 'innlegg'
-          name_str = node.css('navn').text
+          name_str = node.css('navn').text.strip
           text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
 
-          name, party, time, title = parse_name_string(name_str.strip)
+          name, party, time, title = parse_name_string(name_str)
 
-          if name =~ /\(|\)/
+          case name
+          when "Representantene"
+            # ignored
+          when /\(|\)/
             raise "invalid name: #{name.inspect}"
           end
 
