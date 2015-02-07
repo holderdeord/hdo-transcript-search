@@ -13,7 +13,7 @@ module.exports = React.createClass({
     componentDidMount: function () {
         this.dispatchToken = searchDispatcher.register(function (payload) {
             if (payload.actionType === 'searchResult') {
-                this.setState({counts: payload.result.partyCounts});
+                this.setState({counts: payload.result.peopleCounts});
             } else if (payload.actionType === 'reset') {
                 this.setState(this.getInitialState());
             }
@@ -32,7 +32,7 @@ module.exports = React.createClass({
 
         return div(
             null,
-            h3(null, 'Partier'),
+            h3(null, 'Personer'),
             ol(null, elements)
         );
     }

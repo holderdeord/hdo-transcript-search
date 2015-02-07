@@ -4,22 +4,51 @@ var es      = require('./es-client');
 var debug   = require('debug')('elasticsearch');
 var cache   = LRU({max: 500});
 
+function parseAggregation(response, key) {
+    var counts = {};
+
+    var agg     = response.aggregations[key];
+    var buckets = agg[key] ? agg[key].buckets : agg.buckets;
+
+    buckets.forEach(function (bucket) {
+        counts[bucket.key_as_string || bucket.key] = bucket.doc_count;
+    });
+
+    return counts;
+}
+
 function countsFor(opts) {
     var cacheHit = cache.get(opts);
 
     if (cacheHit) {
         return Promise.resolve(cacheHit);
     } else {
-        var body = {
-            aggregations: {
-                monthly: {
-                    date_histogram: {
-                        field: "time",
-                        interval: opts.interval,
-                        time_zone: 2
-                    }
+        var aggregations = {
+            monthly: {
+                date_histogram: {
+                    field: "time",
+                    interval: opts.interval,
+                    time_zone: 2
+                }
+            },
+
+            parties: {
+                terms: {
+                    field: 'party'
+                }
+            },
+
+            people: {
+                terms: {
+                    field: 'name'
                 }
             }
+        };
+
+
+        var body = {
+            aggregations: aggregations,
+            size: 0
         };
 
 
@@ -35,19 +64,21 @@ function countsFor(opts) {
             body = {
                 aggregations: {
                     monthly: {
-                        aggs: body.aggregations,
-                        filter: {
-                            query: query
-                        }
+                        filter: { query: query },
+                        aggs: { monthly: aggregations.monthly }
+                    },
+                    parties: {
+                        filter: { query: query },
+                        aggs: { parties: aggregations.parties }
+                    },
+                    people: {
+                        filter: { query: query },
+                        aggs: { people: aggregations.people }
                     }
                 }
             };
 
-            body.highlight = {
-                fields: {
-                    text: {}
-                }
-            };
+            body.highlight = { fields: { text: {} } };
 
             body.query = query;
             body.size = 10;
@@ -62,17 +93,24 @@ function countsFor(opts) {
                 debug('response', JSON.stringify(response));
 
                 var result = {};
-                var counts = {};
 
-                var agg     = response.aggregations.monthly;
-                var buckets = agg.monthly ? agg.monthly.buckets : agg.buckets;
-
-                buckets.forEach(function (bucket) {
-                    counts[bucket.key_as_string] = bucket.doc_count;
-                });
-
-                result.counts = counts;
+                result.counts = parseAggregation(response, 'monthly');
                 result.hits = response.hits.hits;
+                result.total = response.hits.total;
+
+                if (response.aggregations.parties) {
+                    result.parties = parseAggregation(response, 'parties');
+                }
+
+                if (response.aggregations.people) {
+                    result.people = parseAggregation(response, 'people');
+                    // if (result.people.Presidenten) {
+                    //     delete result.people.Presidenten;
+                    // } else {
+                    //     var names = Object.keys(result.people);
+                    //     delete result.people[names[names.length - 1]];
+                    // }
+                }
 
                 cache[opts] = result;
 
@@ -103,7 +141,14 @@ function timeline(opts) {
             };
         });
 
-        return { counts: counts, hits: queryResults.hits };
+        return {
+            totalCount: allResults.total,
+            hitCount: queryResults.total,
+            counts: counts,
+            hits: queryResults.hits,
+            partyCounts: queryResults.parties,
+            peopleCounts: queryResults.people
+        };
     });
 }
 
