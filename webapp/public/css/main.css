@@ -12,3 +12,9 @@
 .masthead h1 {
     color: #eee;
 }
+
+.hit em {
+    background-color: #fadd00;
+    color: black;
+    font-style: normal;
+}

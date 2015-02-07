@@ -24,24 +24,36 @@ function countsFor(opts) {
 
 
         if (opts.query != '*') {
+            var query = {
+                query_string: {
+                    query: opts.query,
+                    default_operator: 'AND',
+                    default_field: 'text'
+                }
+            };
+
             body = {
                 aggregations: {
                     monthly: {
                         aggs: body.aggregations,
                         filter: {
-                            query: {
-                                query_string: {
-                                    query: opts.query,
-                                    default_operator: 'AND'
-                                }
-                            }
+                            query: query
                         }
                     }
                 }
             };
+
+            body.highlight = {
+                fields: {
+                    text: {}
+                }
+            };
+
+            body.query = query;
+            body.size = 10;
+            body.sort = '_score';
         }
 
-        body.size = 10;
 
         debug('request', JSON.stringify(body));
 
@@ -81,7 +93,7 @@ function timeline(opts) {
 
         var counts = keys.map(function (key) {
             var total = allResults.counts[key];
-            var val = queryResults.counts[key] || 0.0;
+            var val   = queryResults.counts[key] || 0.0;
 
             return {
                 date: key,
