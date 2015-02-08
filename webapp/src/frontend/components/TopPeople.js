@@ -29,7 +29,7 @@ module.exports = React.createClass({
     render: function () {
         var counts = this.state.counts;
         var elements = Object.keys(counts).map(function (k) {
-            return li(null, k + ": " + counts[k]);
+            return li({key: k}, k + ": " + counts[k]);
         });
 
         return div(

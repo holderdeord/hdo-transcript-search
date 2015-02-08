@@ -41,12 +41,12 @@ module.exports = React.createClass({
         );
     },
 
-    renderHit: function (hit, i) {
+    renderHit: function (hit) {
         var source    = hit._source;
         var timestamp = moment(source.time).format('LLL');
         var person    = source.name + ' (' + (source.party || source.title) + ')';
 
-        return li({key: i, className: 'hit'},
+        return li({key: hit._id || i, className: 'hit'},
                   div({className: 'pull-right'}, timestamp),
                   div(null, person),
                   div({className: 'text-muted', dangerouslySetInnerHTML: {__html: hit.highlight.text}})
