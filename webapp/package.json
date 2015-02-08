@@ -1,8 +1,12 @@
 {
   "name": "hdo-transcript-search",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Visualize language usage in the Norwegian parliament",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/holderdeord/hdo-transcript-search.git"
+  },
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "build": "npm install && ./node_modules/.bin/webpack -p",
