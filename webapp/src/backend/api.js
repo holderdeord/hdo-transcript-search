@@ -1,8 +1,10 @@
-var Promise = require('bluebird');
-var LRU     = require('lru-cache');
-var es      = require('./es-client');
-var debug   = require('debug')('elasticsearch');
-var cache   = LRU({max: 500});
+var Promise    = require('bluebird');
+var LRU        = require('lru-cache');
+var es         = require('./es-client');
+var debugg     = require('debug');
+var debug      = debugg('elasticsearch');
+var debugCache = debugg('cache');
+var cache      = LRU({max: 500});
 
 function parseAggregation(response, key) {
     var counts = {};
@@ -17,12 +19,41 @@ function parseAggregation(response, key) {
     return counts;
 }
 
+function parseResponse(response) {
+    debug('response', JSON.stringify(response));
+
+    var result = {};
+
+    result.counts = parseAggregation(response, 'monthly');
+    result.hits = response.hits.hits;
+    result.total = response.hits.total;
+
+    if (response.aggregations.parties) {
+        result.parties = parseAggregation(response, 'parties');
+    }
+
+    if (response.aggregations.people) {
+        result.people = parseAggregation(response, 'people');
+        // if (result.people.Presidenten) {
+        //     delete result.people.Presidenten;
+        // } else {
+        //     var names = Object.keys(result.people);
+        //     delete result.people[names[names.length - 1]];
+        // }
+    }
+
+    return result;
+}
+
 function countsFor(opts) {
     var cacheHit = cache.get(opts);
 
     if (cacheHit) {
+        debugCache('cache hit');
         return Promise.resolve(cacheHit);
     } else {
+        debugCache('cache miss');
+
         var aggregations = {
             monthly: {
                 date_histogram: {
@@ -89,31 +120,10 @@ function countsFor(opts) {
         debug('request', JSON.stringify(body));
 
         return es.search({ index: 'hdo-transcripts', body: body })
-            .then(function (response) {
-                debug('response', JSON.stringify(response));
+            .then(parseResponse).then(function (result) {
+                debugCache("caching response for", opts);
 
-                var result = {};
-
-                result.counts = parseAggregation(response, 'monthly');
-                result.hits = response.hits.hits;
-                result.total = response.hits.total;
-
-                if (response.aggregations.parties) {
-                    result.parties = parseAggregation(response, 'parties');
-                }
-
-                if (response.aggregations.people) {
-                    result.people = parseAggregation(response, 'people');
-                    // if (result.people.Presidenten) {
-                    //     delete result.people.Presidenten;
-                    // } else {
-                    //     var names = Object.keys(result.people);
-                    //     delete result.people[names[names.length - 1]];
-                    // }
-                }
-
-                cache[opts] = result;
-
+                cache.set(opts, result);
                 return result;
             });
     }
