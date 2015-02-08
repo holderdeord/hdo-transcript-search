@@ -1,6 +1,8 @@
-var path = require('path');
+var path    = require('path');
+var webpack = require('webpack');
 
 module.exports = {
+    cache: true,
     entry: path.join(__dirname, 'src/frontend/app'),
 
     output: {
@@ -10,5 +12,9 @@ module.exports = {
 
     module: {
         loaders: []
-    }
+    },
+
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin()
+    ]
 };
