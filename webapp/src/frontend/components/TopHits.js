@@ -1,6 +1,7 @@
-var React            = require('react');
-var moment           = require('moment');
-var searchDispatcher = require('../dispatchers/search');
+var React               = require('react');
+var moment              = require('moment');
+var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
+var ActionTypes         = require('../constants/ActionTypes');
 
 var div  = React.DOM.div;
 var h3   = React.DOM.h3;
@@ -12,28 +13,28 @@ moment.locale('nb');
 
 module.exports = React.createClass({
     getInitialState: function () {
-        return { hits: [], totalCount: 0, matchCount: 0};
+        return { hits: [], totalCount: 0, hitCount: 0};
     },
 
     componentDidMount: function () {
-        this.dispatchToken = searchDispatcher.register(function (payload) {
-            if (payload.actionType === 'searchResult') {
-                this.setState({hits: payload.result.hits, totalCount: payload.result.totalCount, matchCount: payload.result.hitCount});
-            } else if (payload.actionType === 'reset') {
+        this.dispatchToken = SearchAppDispatcher.register(function (payload) {
+            if (payload.action.type === ActionTypes.SEARCH_RESULT) {
+                this.setState(payload.action.result);
+            } else if (payload.action.type === ActionTypes.RESET) {
                 this.setState(this.getInitialState());
             }
         }.bind(this));
     },
 
     componentWillUnmount: function () {
-        searchDispatcher.unregister(this.dispatchToken);
+        SearchAppDispatcher.unregister(this.dispatchToken);
     },
 
     render: function () {
         var elements = this.state.hits.map(this.renderHit);
 
         return div(null,
-            span({className: 'pull-right text-muted'}, this.state.matchCount + ' av ' + this.state.totalCount + ' innlegg'),
+            span({className: 'pull-right text-muted'}, this.state.hitCount + ' av ' + this.state.totalCount + ' innlegg'),
             h3(null, 'Treff'),
             ol(null, elements)
         );

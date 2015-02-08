@@ -1,18 +1,20 @@
-var React            = require('react');
-var c3               = require('c3');
-var searchDispatcher = require('../dispatchers/search');
-var div              = React.DOM.div;
+var React                  = require('react');
+var c3                     = require('c3');
+// var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
+var TranscriptStore        = require('../stores/TranscriptStore');
+var ActionTypes            = require('../constants/ActionTypes');
+var div                    = React.DOM.div;
 
 var Timeline = React.createClass({
     componentDidMount: function () {
         var node = this.getDOMNode();
         this.renderChartTo(node);
-        this.addListeners();
+        TranscriptStore.addChangeListener(this.onChange);
     },
 
     componentWillUnmount: function () {
         this.chart.unload();
-        this.removeListeners();
+        TranscriptStore.removeChangeListener(this.onChange);
     },
 
     render: function () {
@@ -38,18 +40,15 @@ var Timeline = React.createClass({
         this.chart.load({ columns: cols });
     },
 
-    addListeners: function() {
-        this.dispatchToken = searchDispatcher.register(function (payload) {
-            if (payload.actionType === 'searchResult') {
-                this.addData(payload.query, payload.result.counts);
-            } else if (payload.actionType === 'reset') {
-                this.chart.unload();
-            }
-        }.bind(this));
-    },
+    onChange: function () {
+        var query = TranscriptStore.getQuery();
+        var result = TranscriptStore.getResult();
 
-    removeListeners: function () {
-        searchDispatcher.unregister(this.dispatchToken);
+        if (query && result) {
+            this.addData(query, result.counts);
+        } else {
+            this.chart.unload();
+        }
     },
 
     renderChartTo: function (node) {

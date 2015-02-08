@@ -1,9 +1,11 @@
-var React            = require('react');
-var div              = React.DOM.div;
-var h3               = React.DOM.h3;
-var ol               = React.DOM.ol;
-var li               = React.DOM.li;
-var searchDispatcher = require('../dispatchers/search');
+var React               = require('react');
+var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
+var ActionTypes         = require('../constants/ActionTypes');
+
+var div                 = React.DOM.div;
+var h3                  = React.DOM.h3;
+var ol                  = React.DOM.ol;
+var li                  = React.DOM.li;
 
 module.exports = React.createClass({
     getInitialState: function () {
@@ -11,17 +13,17 @@ module.exports = React.createClass({
     },
 
     componentDidMount: function () {
-        this.dispatchToken = searchDispatcher.register(function (payload) {
-            if (payload.actionType === 'searchResult') {
-                this.setState({counts: payload.result.partyCounts});
-            } else if (payload.actionType === 'reset') {
+        this.dispatchToken = SearchAppDispatcher.register(function (payload) {
+            if (payload.action.type === ActionTypes.SEARCH_RESULT) {
+                this.setState({counts: payload.action.result.partyCounts});
+            } else if (payload.action.type === ActionTypes.RESET) {
                 this.setState(this.getInitialState());
             }
         }.bind(this));
     },
 
     componentWillUnmount: function () {
-        searchDispatcher.unregister(this.dispatchToken);
+        SearchAppDispatcher.unregister(this.dispatchToken);
     },
 
     render: function () {

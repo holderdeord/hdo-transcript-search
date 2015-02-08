@@ -30,7 +30,9 @@
   "devDependencies": {
     "errorhandler": "^1.2.2",
     "jshint": "^2.6.0",
+    "keymirror": "^0.1.1",
     "nodemon": "^1.2.1",
+    "object-assign": "^2.0.0",
     "webpack": "^1.5.3",
     "webpack-dev-middleware": "^1.0.11"
   }

@@ -1,22 +1,30 @@
-var React            = require('react');
-var div              = React.DOM.div;
-var input            = React.DOM.input;
-var select           = React.DOM.select;
-var option           = React.DOM.option;
-var form             = React.DOM.form;
-var searchDispatcher = require('../dispatchers/search');
+var React               = require('react');
+var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
+var TranscriptStore     = require('../stores/TranscriptStore');
+var ActionTypes         = require('../constants/ActionTypes');
+
+var div                 = React.DOM.div;
+var input               = React.DOM.input;
+var select              = React.DOM.select;
+var option              = React.DOM.option;
+var form                = React.DOM.form;
 
 var SearchInput = React.createFactory(React.createClass({
     componentDidMount: function () {
-        this.dispatchToken = searchDispatcher.register(function (payload) {
-            if (payload.actionType === 'searchResult' || payload.actionType === 'reset') {
-                this.getDOMNode().value = '';
-            }
-        }.bind(this));
+        TranscriptStore.addChangeListener(this.onChange);
     },
 
     componentWillUnmount: function () {
-        searchDispatcher.unregister(this.dispatchToken);
+        TranscriptStore.removeChangeListener(this.onChange);
+    },
+
+    onChange: function () {
+        this.reset();
+    },
+
+    reset: function () {
+        this.getDOMNode().value = '';
+        this.getDOMNode().focus();
     },
 
 
@@ -35,7 +43,7 @@ var SearchInput = React.createFactory(React.createClass({
 
 var IntervalSelector = React.createFactory(React.createClass({
     getInitialState: function () {
-        return { value: 'month' };
+        return { value: '24w' };
     },
 
     render: function () {
@@ -68,14 +76,14 @@ var Buttons = React.createFactory(React.createClass({
                        type: 'button',
                        className: 'btn btn-default btn-sm',
                        value: 'Nullstill',
-                       onClick: this.reset
+                       onClick: this.emitReset
                    })
                   );
     },
 
-    reset: function () {
-        searchDispatcher.dispatch({
-            actionType: 'reset'
+    emitReset: function () {
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.RESET
         });
     }
 }));
@@ -93,11 +101,16 @@ module.exports = React.createClass({
 
     handleSubmit: function (e) {
         e.preventDefault();
+        var form = this.getDOMNode();
 
-        searchDispatcher.dispatch({
-            actionType: 'search',
-            query: this.getDOMNode().query.value,
-            interval: this.getDOMNode().interval.value
-        });
+        if (form.query.value.trim().length) {
+            SearchAppDispatcher.handleViewAction({
+                type: ActionTypes.SEARCH,
+                query: form.query.value,
+                interval: form.interval.value
+            });
+        } else {
+            SearchAppDispatcher.handleViewAction({type: ActionTypes.RESET });
+        }
     }
 });
