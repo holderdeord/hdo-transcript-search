@@ -18,7 +18,7 @@ SearchAppDispatcher.register(function (payload) {
 
 module.exports = React.createClass({
     render: function () {
-        return div({},
+        return div(null,
                    SearchForm(),
                    hr(),
                    Timeline(),

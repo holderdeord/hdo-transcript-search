@@ -119,7 +119,7 @@ function countsFor(opts) {
     }
 }
 
-function timeline(opts) {
+function search(opts) {
     opts.interval = opts.interval || 'month';
 
     return Promise.join(
@@ -152,4 +152,4 @@ function timeline(opts) {
     });
 }
 
-module.exports = {  timeline: timeline };
+module.exports = {  search: search };

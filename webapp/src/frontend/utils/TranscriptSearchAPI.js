@@ -4,7 +4,7 @@ var ActionTypes         = require('../constants/ActionTypes');
 
 var TranscriptSearchAPI = {
     search: function (query, interval) {
-        var path = '/api/timeline?interval=' + encodeURIComponent(interval) + '&query=' + encodeURIComponent(query);
+        var path = '/api/search?interval=' + encodeURIComponent(interval) + '&query=' + encodeURIComponent(query);
 
         return reqwest(path).then(function (result) {
             SearchAppDispatcher.handleServerAction({

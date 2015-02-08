@@ -23,9 +23,9 @@ if(app.get('env') === 'development') {
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
 // routes
-app.get('/api/timeline/', function (req, res) {
+app.get('/api/search', function (req, res) {
     if (req.query.query) {
-        api.timeline(req.query).then(function (results) { res.json(results); });
+        api.search(req.query).then(function (results) { res.json(results); });
     } else {
         res.status(400).json({error: "missing query param"});
     }
