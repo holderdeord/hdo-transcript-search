@@ -1,2 +1,4 @@
 /data/
 npm-debug.log
+/indexer/.bundle
+/indexer/vendor/
