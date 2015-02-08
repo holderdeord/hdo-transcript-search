@@ -142,7 +142,6 @@ function search(opts) {
         countsFor(opts)
     ).spread(function (allResults, queryResults) {
         var keys = Object.keys(allResults.counts);
-        keys.pop(); // don't want current incomplete period
 
         var counts = keys.map(function (key) {
             var total = allResults.counts[key];
