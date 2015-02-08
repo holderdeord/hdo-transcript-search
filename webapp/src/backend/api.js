@@ -112,7 +112,7 @@ function buildQuery(opts) {
 }
 
 function countsFor(opts) {
-    var cacheHit = cache.get(opts);
+    var cacheHit = cache.get(JSON.stringify(opts));
 
     if (cacheHit) {
         debugCache('cache hit');
@@ -128,7 +128,7 @@ function countsFor(opts) {
             .then(parseResponse).then(function (result) {
                 debugCache("caching response for", opts);
 
-                cache.set(opts, result);
+                cache.set(JSON.stringify(opts), result);
                 return result;
             });
     }
