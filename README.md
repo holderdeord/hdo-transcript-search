@@ -27,6 +27,3 @@ Start the webapp in dev mode (with elasticsearch):
     $ npm run dev
     # open your browser at http://localhost:7575/
 
-If you don't have elasticsearch, you can run the app with fake data:
-
-    $ fake=true npm run dev
