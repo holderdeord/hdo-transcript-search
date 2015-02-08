@@ -45,6 +45,72 @@ function parseResponse(response) {
     return result;
 }
 
+function buildQuery(opts) {
+    var aggregations = {
+        monthly: {
+            date_histogram: {
+                field: "time",
+                interval: opts.interval,
+                time_zone: 2
+            }
+        },
+
+        parties: {
+            terms: {
+                field: 'party'
+            }
+        },
+
+        people: {
+            terms: {
+                field: 'name'
+            }
+        }
+    };
+
+
+    var body = {
+        aggregations: aggregations,
+        size: 0
+    };
+
+
+    if (opts.query != '*') {
+        var query = {
+            query_string: {
+                query: opts.query,
+                default_operator: 'AND',
+                default_field: 'text'
+            }
+        };
+
+        body = {
+            aggregations: {
+                monthly: {
+                    filter: { query: query },
+                    aggs: { monthly: aggregations.monthly }
+                },
+                parties: {
+                    filter: { query: query },
+                    aggs: { parties: aggregations.parties }
+                },
+                people: {
+                    filter: { query: query },
+                    aggs: { people: aggregations.people }
+                }
+            }
+        };
+
+        body.highlight = { fields: { text: {} } };
+
+        body.query = query;
+        body.size = 10;
+        body.sort = '_score';
+    }
+
+    return body;
+}
+
 function countsFor(opts) {
     var cacheHit = cache.get(opts);
 
@@ -54,68 +120,7 @@ function countsFor(opts) {
     } else {
         debugCache('cache miss');
 
-        var aggregations = {
-            monthly: {
-                date_histogram: {
-                    field: "time",
-                    interval: opts.interval,
-                    time_zone: 2
-                }
-            },
-
-            parties: {
-                terms: {
-                    field: 'party'
-                }
-            },
-
-            people: {
-                terms: {
-                    field: 'name'
-                }
-            }
-        };
-
-
-        var body = {
-            aggregations: aggregations,
-            size: 0
-        };
-
-
-        if (opts.query != '*') {
-            var query = {
-                query_string: {
-                    query: opts.query,
-                    default_operator: 'AND',
-                    default_field: 'text'
-                }
-            };
-
-            body = {
-                aggregations: {
-                    monthly: {
-                        filter: { query: query },
-                        aggs: { monthly: aggregations.monthly }
-                    },
-                    parties: {
-                        filter: { query: query },
-                        aggs: { parties: aggregations.parties }
-                    },
-                    people: {
-                        filter: { query: query },
-                        aggs: { people: aggregations.people }
-                    }
-                }
-            };
-
-            body.highlight = { fields: { text: {} } };
-
-            body.query = query;
-            body.size = 10;
-            body.sort = '_score';
-        }
-
+        var body = buildQuery(opts);
 
         debug('request', JSON.stringify(body));
 

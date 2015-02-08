@@ -1,8 +1,6 @@
 var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
 var ActionTypes         = require('../constants/ActionTypes');
-
 var assign              = require('object-assign');
-var reqwest             = require('reqwest');
 var EventEmitter        = require('events').EventEmitter;
 
 var _state = {};
@@ -48,7 +46,7 @@ TranscriptStore.dispatchToken = SearchAppDispatcher.register(function (payload) 
 
         default:
           // do nothing
-    };
+    }
 });
 
 module.exports = TranscriptStore;

@@ -1,8 +1,6 @@
 var React                  = require('react');
 var c3                     = require('c3');
-// var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
 var TranscriptStore        = require('../stores/TranscriptStore');
-var ActionTypes            = require('../constants/ActionTypes');
 var div                    = React.DOM.div;
 
 var Timeline = React.createClass({

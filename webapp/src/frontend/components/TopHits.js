@@ -31,10 +31,11 @@ module.exports = React.createClass({
     },
 
     render: function () {
-        var elements = this.state.hits.map(this.renderHit);
+        var elements     = this.state.hits.map(this.renderHit);
+        var hitCountText = this.state.hitCount + ' av ' + this.state.totalCount + ' innlegg';
 
         return div(null,
-            span({className: 'pull-right text-muted'}, this.state.hitCount + ' av ' + this.state.totalCount + ' innlegg'),
+            span({className: 'pull-right text-muted'}, hitCountText),
             h3(null, 'Treff'),
             ol(null, elements)
         );
