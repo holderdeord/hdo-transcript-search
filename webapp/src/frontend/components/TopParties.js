@@ -2,10 +2,7 @@ var React               = require('react');
 var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
 var ActionTypes         = require('../constants/ActionTypes');
 
-var div                 = React.DOM.div;
-var h3                  = React.DOM.h3;
-var ol                  = React.DOM.ol;
-var li                  = React.DOM.li;
+var {div,h3,ol,li} = React.DOM;
 
 class TopParties extends React.Component {
 
@@ -31,7 +28,7 @@ class TopParties extends React.Component {
     render() {
         var counts   = this.state.counts;
         var elements = Object.keys(counts).map(function (k) {
-            return li({key: k}, k + ": " + counts[k]);
+            return li({key: k}, `${k}: ${counts[k]}`);
         });
 
         return div(

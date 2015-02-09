@@ -7,8 +7,7 @@ var SearchForm    = React.createFactory(require('./SearchForm'));
 var Timeline      = React.createFactory(require('./Timeline'));
 var ResultDetails = React.createFactory(require('./ResultDetails'));
 
-var div           = React.DOM.div;
-var hr            = React.DOM.hr;
+var {div,hr} = React.DOM;
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {

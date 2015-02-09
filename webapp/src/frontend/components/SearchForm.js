@@ -3,11 +3,7 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
 
-var div                 = React.DOM.div;
-var input               = React.DOM.input;
-var select              = React.DOM.select;
-var option              = React.DOM.option;
-var form                = React.DOM.form;
+var {div,input,select,option,form} = React.DOM;
 
 class SearchInput extends React.Component {
     componentDidMount() {
@@ -41,13 +37,12 @@ class SearchInput extends React.Component {
 class IntervalSelector extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { value: props.initialInterval || '24w' };
     }
 
     render() {
         return select({ className: 'form-control input-xs',
                         name: 'interval',
-                        value: this.state.value,
+                        defaultValue: this.props.initialInterval,
                         onChange: this.handleChange
                       },
                       option({value: 'month'}, '1 måned'),
@@ -91,7 +86,7 @@ class SearchForm extends React.Component {
         return form({className: 'form-horizontal', onSubmit: this.handleSubmit.bind(this), ref: 'form'},
                     div({className: 'row'},
                         div({className: 'col-md-8'}, React.createFactory(SearchInput)()),
-                        div({className: 'col-md-2'}, React.createFactory(IntervalSelector)()),
+                        div({className: 'col-md-2'}, React.createFactory(IntervalSelector)({initialInterval: '24w'})),
                         div({className: 'col-md-2'}, React.createFactory(Buttons)())
                        )
                    );
@@ -108,7 +103,7 @@ class SearchForm extends React.Component {
                 interval: form.interval.value
             });
         } else {
-            SearchAppDispatcher.handleViewAction({type: ActionTypes.RESET });
+            SearchAppDispatcher.handleViewAction({type: ActionTypes.RESET});
         }
     }
 }

@@ -104,11 +104,13 @@ var buildQuery = opts => {
             }
         };
 
-        body.highlight = { fields: { text: {} } };
+        body.highlight = {
+            fields: { text: {} }
+        };
 
         body.query = query;
-        body.size = 10;
-        body.sort = '_score';
+        body.size  = 10;
+        body.sort  = '_score';
     }
 
     return body;
