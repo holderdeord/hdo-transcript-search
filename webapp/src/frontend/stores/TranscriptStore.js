@@ -6,7 +6,7 @@ import EventEmitter from 'events';
 class TranscriptStore extends EventEmitter {
     constructor() {
         super();
-        this.state = {};
+        this._reset();
         this.dispatchToken = SearchAppDispatcher.register(this._handleAction.bind(this));
     }
 
@@ -43,13 +43,26 @@ class TranscriptStore extends EventEmitter {
             break;
 
         case ActionTypes.RESET:
-            this.state = {};
+            this._reset();
             this.emitChange();
             break;
 
         default:
             // do nothing
         }
+    }
+
+    _reset() {
+        this.state = {
+            query: '',
+            result: {
+                hits: [],
+                totalCount: 0,
+                hitCount: 0,
+                partyCounts: {},
+                peopleCounts: {}
+            }
+        };
     }
 }
 

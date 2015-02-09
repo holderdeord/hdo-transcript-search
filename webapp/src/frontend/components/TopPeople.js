@@ -1,6 +1,5 @@
-var React               = require('react');
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
+import React from 'react';
+import TranscriptStore from '../stores/TranscriptStore';
 
 var {div,h3,ol,li} = React.DOM;
 
@@ -8,21 +7,19 @@ class TopPeople extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {counts: this.props.initialCounts};
+        this.state = {counts: {}};
     }
 
     componentDidMount() {
-        this.dispatchToken = SearchAppDispatcher.register(payload => {
-            if (payload.action.type === ActionTypes.SEARCH_RESULT) {
-                this.setState({counts: payload.action.result.peopleCounts});
-            } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState({counts: this.props.initialCounts});
-            }
-        });
+        TranscriptStore.addChangeListener(this.onChange.bind(this));
     }
 
     componentWillUnmount() {
-        SearchAppDispatcher.unregister(this.dispatchToken);
+        TranscriptStore.removeChangeListener(this.onChange.bind(this));
+    }
+
+    onChange() {
+        this.setState({counts: TranscriptStore.getResult().peopleCounts});
     }
 
     render() {
@@ -38,7 +35,5 @@ class TopPeople extends React.Component {
         );
     }
 }
-
-TopPeople.defaultProps = { initialCounts: {} };
 
 module.exports = TopPeople;

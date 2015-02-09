@@ -1,6 +1,5 @@
-var React               = require('react');
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
+import React from 'react';
+import TranscriptStore from '../stores/TranscriptStore';
 
 var {div,h3,ol,li} = React.DOM;
 
@@ -12,17 +11,15 @@ class TopParties extends React.Component {
     }
 
     componentDidMount() {
-        this.dispatchToken = SearchAppDispatcher.register(payload => {
-            if (payload.action.type === ActionTypes.SEARCH_RESULT) {
-                this.setState({counts: payload.action.result.partyCounts});
-            } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState({counts: {}});
-            }
-        });
+        TranscriptStore.addChangeListener(this.onChange.bind(this));
     }
 
     componentWillUnmount() {
-        SearchAppDispatcher.unregister(this.dispatchToken);
+        TranscriptStore.removeChangeListener(this.onChange.bind(this));
+    }
+
+    onChange() {
+        this.setState({counts: TranscriptStore.getResult().partyCounts});
     }
 
     render() {

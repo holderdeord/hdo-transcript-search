@@ -1,7 +1,6 @@
-var React               = require('react');
-var moment              = require('moment');
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
+import React from 'react';
+import moment from 'moment';
+import TranscriptStore from '../stores/TranscriptStore';
 
 var {div,h3,ol,li,span,a} = React.DOM;
 moment.locale('nb');
@@ -10,21 +9,19 @@ class TopHits extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { hits: [], totalCount: 0, hitCount: 0};
+        this.state = TranscriptStore.getResult();
     }
 
     componentDidMount() {
-        this.dispatchToken = SearchAppDispatcher.register(payload => {
-            if (payload.action.type === ActionTypes.SEARCH_RESULT) {
-                this.setState(payload.action.result);
-            } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState({ hits: [], totalCount: 0, hitCount: 0});
-            }
-        });
+        TranscriptStore.addChangeListener(this.onChange.bind(this));
     }
 
     componentWillUnmount() {
-        SearchAppDispatcher.unregister(this.dispatchToken);
+        TranscriptStore.removeChangeListener(this.onChange.bind(this));
+    }
+
+    onChange() {
+        this.setState(TranscriptStore.getResult());
     }
 
     render() {
