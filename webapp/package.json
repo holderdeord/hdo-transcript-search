@@ -9,7 +9,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm install && ./node_modules/.bin/webpack -p",
+    "build": "npm install && ./node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe",
     "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public --ignore ./src/frontend server.js",
     "test": "./node_modules/.bin/jshint --exclude node_modules *.js src"
   },
