@@ -1,4 +1,7 @@
-# hdo-transcript-search [![Build Status](https://travis-ci.org/holderdeord/hdo-transcript-search.png?branch=master)](https://travis-ci.org/holderdeord/hdo-transcript-search)
+# hdo-transcript-search
+
+[![Build Status](https://travis-ci.org/holderdeord/hdo-transcript-search.png?branch=master)](https://travis-ci.org/holderdeord/hdo-transcript-search)
+[![Code Climate](https://codeclimate.com/github/holderdeord/hdo-transcript-search/badges/gpa.svg)](https://codeclimate.com/github/holderdeord/hdo-transcript-search)
 
 Visualize language usage in the Norwegian parliament.
 
@@ -16,7 +19,7 @@ Download and index transcripts (requires a local elasticsearch):
 
     $ cd indexer/
     $ bundle install
-    $ bundle exec ruby -Ilib bin/hdo-transcript-indexer 
+    $ bundle exec ruby -Ilib bin/hdo-transcript-indexer
 
 ## webapp
 
