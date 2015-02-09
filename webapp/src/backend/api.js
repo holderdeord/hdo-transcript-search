@@ -1,27 +1,27 @@
-var Promise    = require('bluebird');
-var LRU        = require('lru-cache');
-var es         = require('./es-client');
-var debugg     = require('debug');
+import Promise from 'bluebird';
+import LRU from 'lru-cache';
+import es from './es-client';
+import debugg from 'debug';
+
 var debug      = debugg('elasticsearch');
 var debugCache = debugg('cache');
 var cache      = LRU({max: 500});
-
 var INDEX_NAME = 'hdo-transcripts';
 
-function parseAggregation(response, key) {
+var parseAggregation = (response, key) => {
     var counts = {};
 
     var agg     = response.aggregations[key];
     var buckets = agg[key] ? agg[key].buckets : agg.buckets;
 
-    buckets.forEach(function (bucket) {
+    buckets.forEach(bucket => {
         counts[bucket.key_as_string || bucket.key] = bucket.doc_count;
     });
 
     return counts;
-}
+};
 
-function parseResponse(response) {
+var parseResponse = response => {
     debug('response', JSON.stringify(response));
 
     var result = {};
@@ -45,9 +45,10 @@ function parseResponse(response) {
     }
 
     return result;
-}
+};
 
-function buildQuery(opts) {
+
+var buildQuery = opts => {
     var aggregations = {
         monthly: {
             date_histogram: {
@@ -111,9 +112,9 @@ function buildQuery(opts) {
     }
 
     return body;
-}
+};
 
-function countsFor(opts) {
+var countsFor = opts => {
     var cacheHit = cache.get(JSON.stringify(opts));
 
     if (cacheHit) {
@@ -134,20 +135,20 @@ function countsFor(opts) {
                 return result;
             });
     }
-}
+};
 
 
 module.exports = {
-    search: function (opts) {
+    search: opts => {
         opts.interval = opts.interval || 'month';
 
         return Promise.join(
             countsFor({query: '*', interval: opts.interval} ),
             countsFor(opts)
-        ).spread(function (allResults, queryResults) {
+        ).spread((allResults, queryResults) => {
             var keys = Object.keys(allResults.counts);
 
-            var counts = keys.map(function (key) {
+            var counts = keys.map(key => {
                 var total = allResults.counts[key];
                 var val   = queryResults.counts[key] || 0.0;
 
@@ -170,9 +171,9 @@ module.exports = {
         });
     },
 
-    getSpeech: function (id) {
+    getSpeech: id => {
         return es
             .get({ index: INDEX_NAME, type: 'speech', id: id })
-            .then(function (response) { return response._source;});
+            .then(response => { return response._source;});
     }
 };

@@ -1,4 +1,6 @@
-var app = require('./src/backend/app');
+require("6to5/register");
+
+var app   = require('./src/backend/app');
 var debug = require('debug')('server');
 
 // launch

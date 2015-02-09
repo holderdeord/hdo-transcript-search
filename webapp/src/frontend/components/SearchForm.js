@@ -1,7 +1,7 @@
-var React               = require('react');
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var TranscriptStore     = require('../stores/TranscriptStore');
-var ActionTypes         = require('../constants/ActionTypes');
+import React from 'react';
+import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
+import TranscriptStore     from '../stores/TranscriptStore';
+import ActionTypes         from '../constants/ActionTypes';
 
 var div                 = React.DOM.div;
 var input               = React.DOM.input;
@@ -9,26 +9,23 @@ var select              = React.DOM.select;
 var option              = React.DOM.option;
 var form                = React.DOM.form;
 
-var SearchInput = React.createFactory(React.createClass({
-    componentDidMount: function () {
-        TranscriptStore.addChangeListener(this.onChange);
-    },
+class SearchInput extends React.Component {
+    componentDidMount() {
+        TranscriptStore.addChangeListener(this.reset.bind(this));
+    }
 
-    componentWillUnmount: function () {
-        TranscriptStore.removeChangeListener(this.onChange);
-    },
+    componentWillUnmount() {
+        TranscriptStore.removeChangeListener(this.reset.bind(this));
+    }
 
-    onChange: function () {
-        this.reset();
-    },
+    reset() {
+        var node = this.refs.query.getDOMNode();
 
-    reset: function () {
-        this.getDOMNode().value = '';
-        this.getDOMNode().focus();
-    },
+        node.value = '';
+        node.focus();
+    }
 
-
-    render: function () {
+    render() {
         return input({
             type: 'search',
             className: 'form-control input-lg',
@@ -39,14 +36,15 @@ var SearchInput = React.createFactory(React.createClass({
             tabIndex: 0
         });
     }
-}));
+}
 
-var IntervalSelector = React.createFactory(React.createClass({
-    getInitialState: function () {
-        return { value: '24w' };
-    },
+class IntervalSelector extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { value: props.initialInterval || '24w' };
+    }
 
-    render: function () {
+    render() {
         return select({ className: 'form-control input-xs',
                         name: 'interval',
                         value: this.state.value,
@@ -57,15 +55,15 @@ var IntervalSelector = React.createFactory(React.createClass({
                       option({value: '24w'}, '6 måneder'),
                       option({value: 'year'}, '1 år')
                      );
-    },
+    }
 
-    handleChange: function (e) {
+    handleChange(e) {
         this.setState({value: e.target.value });
     }
-}));
+}
 
-var Buttons = React.createFactory(React.createClass({
-    render: function () {
+class Buttons extends React.Component {
+    render() {
         return div({},
                    input({
                        type: 'submit',
@@ -79,29 +77,29 @@ var Buttons = React.createFactory(React.createClass({
                        onClick: this.emitReset
                    })
                   );
-    },
+    }
 
-    emitReset: function () {
+    emitReset() {
         SearchAppDispatcher.handleViewAction({
             type: ActionTypes.RESET
         });
     }
-}));
+}
 
-module.exports = React.createClass({
-    render: function () {
-        return form({className: 'form-horizontal', onSubmit: this.handleSubmit},
+class SearchForm extends React.Component {
+    render() {
+        return form({className: 'form-horizontal', onSubmit: this.handleSubmit.bind(this), ref: 'form'},
                     div({className: 'row'},
-                        div({className: 'col-md-8'}, SearchInput()),
-                        div({className: 'col-md-2'}, IntervalSelector()),
-                        div({className: 'col-md-2'}, Buttons())
+                        div({className: 'col-md-8'}, React.createFactory(SearchInput)()),
+                        div({className: 'col-md-2'}, React.createFactory(IntervalSelector)()),
+                        div({className: 'col-md-2'}, React.createFactory(Buttons)())
                        )
                    );
-    },
+    }
 
-    handleSubmit: function (e) {
+    handleSubmit(e) {
         e.preventDefault();
-        var form = this.getDOMNode();
+        var form = this.refs.form.getDOMNode();
 
         if (form.query.value.trim().length) {
             SearchAppDispatcher.handleViewAction({
@@ -113,4 +111,6 @@ module.exports = React.createClass({
             SearchAppDispatcher.handleViewAction({type: ActionTypes.RESET });
         }
     }
-});
+}
+
+module.exports = SearchForm;

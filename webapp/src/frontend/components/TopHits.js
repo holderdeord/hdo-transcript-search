@@ -12,26 +12,28 @@ var a    = React.DOM.a;
 
 moment.locale('nb');
 
-module.exports = React.createClass({
-    getInitialState: function () {
-        return { hits: [], totalCount: 0, hitCount: 0};
-    },
+class TopHits extends React.Component {
 
-    componentDidMount: function () {
-        this.dispatchToken = SearchAppDispatcher.register(function (payload) {
+    constructor(props) {
+        super(props);
+        this.state = { hits: [], totalCount: 0, hitCount: 0};
+    }
+
+    componentDidMount() {
+        this.dispatchToken = SearchAppDispatcher.register(payload => {
             if (payload.action.type === ActionTypes.SEARCH_RESULT) {
                 this.setState(payload.action.result);
             } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState(this.getInitialState());
+                this.setState({ hits: [], totalCount: 0, hitCount: 0});
             }
-        }.bind(this));
-    },
+        });
+    }
 
-    componentWillUnmount: function () {
+    componentWillUnmount() {
         SearchAppDispatcher.unregister(this.dispatchToken);
-    },
+    }
 
-    render: function () {
+    render() {
         var elements     = this.state.hits.map(this.renderHit);
         var hitCountText = this.state.hitCount + ' av ' + this.state.totalCount + ' innlegg';
 
@@ -40,9 +42,9 @@ module.exports = React.createClass({
                    h3(null, 'Treff'),
                    ol(null, elements)
                   );
-    },
+    }
 
-    renderHit: function (hit) {
+    renderHit(hit) {
         var source    = hit._source;
         var timestamp = moment(source.time).format('LLL');
         var person    = source.name + ' (' + (source.party || source.title) + ')';
@@ -55,4 +57,6 @@ module.exports = React.createClass({
                   div({className: 'text-muted', dangerouslySetInnerHTML: {__html: hit.highlight.text}})
                  );
     }
-});
+}
+
+module.exports = TopHits;

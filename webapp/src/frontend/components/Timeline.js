@@ -1,31 +1,34 @@
-var React                  = require('react');
-var c3                     = require('c3');
-var TranscriptStore        = require('../stores/TranscriptStore');
-var div                    = React.DOM.div;
+import React from 'react';
+import c3 from 'c3';
+import TranscriptStore from '../stores/TranscriptStore';
 
-var Timeline = React.createClass({
-    componentDidMount: function () {
-        var node = this.getDOMNode();
-        this.renderChartTo(node);
-        TranscriptStore.addChangeListener(this.onChange);
-    },
+var div = React.DOM.div;
 
-    componentWillUnmount: function () {
+class Timeline extends React.Component {
+    componentDidMount() {
+        this.renderChart();
+        TranscriptStore.addChangeListener(this.onChange.bind(this));
+    }
+
+    componentWillUnmount() {
         this.chart.unload();
-        TranscriptStore.removeChangeListener(this.onChange);
-    },
+        TranscriptStore.removeChangeListener(this.onChange.bind(this));
+    }
 
-    render: function () {
-        return div({className: 'row'});
-    },
+    render() {
+        return div({
+            className: 'row',
+            ref: 'chart'
+        });
+    }
 
     // helpers
 
-    addData: function(query, data) {
+    addData(query, data) {
         var dates = [];
         var vals = [];
 
-        data.forEach(function (e) {
+        data.forEach(e => {
             dates.push(new Date(e.date));
             vals.push(e.pct);
         });
@@ -36,9 +39,9 @@ var Timeline = React.createClass({
         ];
 
         this.chart.load({ columns: cols });
-    },
+    }
 
-    onChange: function () {
+    onChange() {
         var query = TranscriptStore.getQuery();
         var result = TranscriptStore.getResult();
 
@@ -47,11 +50,11 @@ var Timeline = React.createClass({
         } else {
             this.chart.unload();
         }
-    },
+    }
 
-    renderChartTo: function (node) {
+    renderChart() {
         this.chart = c3.generate({
-            bindto: node,
+            bindto: this.refs.chart.getDOMNode(),
             data: {
                 x: 'x',
                 columns: [
@@ -68,7 +71,7 @@ var Timeline = React.createClass({
                 },
                 y: {
                     tick: {
-                        format: function (d) { return d + '%'; }
+                        format: d => { return d + '%'; }
                     },
                     // max: 100,
                     min: 0,
@@ -81,6 +84,6 @@ var Timeline = React.createClass({
             //        color: { pattern: ["#111", "#fadd00", "#b8bfcc", "#ccc", "#455068"] }
         });
     }
-});
+}
 
 module.exports = Timeline;

@@ -1,13 +1,14 @@
-var React       = require('react');
-var div         = React.DOM.div;
-var hr          = React.DOM.hr;
-var SearchForm  = React.createFactory(require('./SearchForm'));
-var Timeline    = React.createFactory(require('./Timeline'));
-var ResultStats = React.createFactory(require('./ResultStats'));
+import React from 'react';
+import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
+import ActionTypes         from '../constants/ActionTypes';
+import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
-var TranscriptSearchAPI = require('../utils/TranscriptSearchAPI');
+var SearchForm    = React.createFactory(require('./SearchForm'));
+var Timeline      = React.createFactory(require('./Timeline'));
+var ResultDetails = React.createFactory(require('./ResultDetails'));
+
+var div           = React.DOM.div;
+var hr            = React.DOM.hr;
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
@@ -16,14 +17,16 @@ SearchAppDispatcher.register(function (payload) {
     }
 });
 
-module.exports = React.createClass({
-    render: function () {
+class SearchApp extends React.Component {
+    render() {
         return div(null,
                    SearchForm(),
                    hr(),
                    Timeline(),
                    hr(),
-                   ResultStats()
+                   ResultDetails()
                   );
     }
-});
+}
+
+module.exports = SearchApp;

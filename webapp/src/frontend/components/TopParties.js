@@ -7,27 +7,29 @@ var h3                  = React.DOM.h3;
 var ol                  = React.DOM.ol;
 var li                  = React.DOM.li;
 
-module.exports = React.createClass({
-    getInitialState: function () {
-        return { counts: {}};
-    },
+class TopParties extends React.Component {
 
-    componentDidMount: function () {
-        this.dispatchToken = SearchAppDispatcher.register(function (payload) {
+    constructor(props) {
+        super(props);
+        this.state = {counts: {}};
+    }
+
+    componentDidMount() {
+        this.dispatchToken = SearchAppDispatcher.register(payload => {
             if (payload.action.type === ActionTypes.SEARCH_RESULT) {
                 this.setState({counts: payload.action.result.partyCounts});
             } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState(this.getInitialState());
+                this.setState({counts: {}});
             }
-        }.bind(this));
-    },
+        });
+    }
 
-    componentWillUnmount: function () {
+    componentWillUnmount() {
         SearchAppDispatcher.unregister(this.dispatchToken);
-    },
+    }
 
-    render: function () {
-        var counts = this.state.counts;
+    render() {
+        var counts   = this.state.counts;
         var elements = Object.keys(counts).map(function (k) {
             return li({key: k}, k + ": " + counts[k]);
         });
@@ -38,4 +40,6 @@ module.exports = React.createClass({
             ol(null, elements)
         );
     }
-});
+}
+
+module.exports = TopParties;

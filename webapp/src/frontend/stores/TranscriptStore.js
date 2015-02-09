@@ -1,52 +1,56 @@
 var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
 var ActionTypes         = require('../constants/ActionTypes');
-var assign              = require('object-assign');
-var EventEmitter        = require('events').EventEmitter;
 
-var _state = {};
+import EventEmitter from 'events';
 
-var TranscriptStore = assign({}, EventEmitter.prototype, {
-    emitChange: function () {
-        this.emit('change');
-    },
-
-    addChangeListener: function (callback) {
-        this.on('change', callback);
-    },
-
-    removeChangeListener: function (callback) {
-        this.removeListener('change', callback);
-    },
-
-    getQuery: function () {
-        return _state.query;
-    },
-
-    getResult: function () {
-        return _state.result;
+class TranscriptStore extends EventEmitter {
+    constructor() {
+        super();
+        this.state = {};
+        this.dispatchToken = SearchAppDispatcher.register(this._handleAction.bind(this));
     }
-});
 
-TranscriptStore.dispatchToken = SearchAppDispatcher.register(function (payload) {
-    var action = payload.action;
+    emitChange() {
+        this.emit('change');
+    }
 
-    switch(action.type) {
+    addChangeListener(callback) {
+        this.on('change', callback);
+    }
+
+    removeChangeListener(callback) {
+        this.removeListener('change', callback);
+    }
+
+    getQuery() {
+        return this.state.query;
+    }
+
+    getResult() {
+        return this.state.result;
+    }
+
+    _handleAction(payload) {
+        var action = payload.action;
+
+        switch(action.type) {
         case ActionTypes.SEARCH_RESULT:
-          _state.result = action.result;
-          _state.query  = action.query;
+            this.state.result = action.result;
+            this.state.query  = action.query;
 
-          TranscriptStore.emitChange();
+            this.emitChange();
 
-          break;
+            break;
 
         case ActionTypes.RESET:
-          _state = {};
-          TranscriptStore.emitChange();
-          break;
+            this.state = {};
+            this.emitChange();
+            break;
 
         default:
-          // do nothing
+            // do nothing
+        }
     }
-});
+}
 
-module.exports = TranscriptStore;
+module.exports = new TranscriptStore();

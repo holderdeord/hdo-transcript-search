@@ -7,28 +7,30 @@ var h3                  = React.DOM.h3;
 var ol                  = React.DOM.ol;
 var li                  = React.DOM.li;
 
-module.exports = React.createClass({
-    getInitialState: function () {
-        return { counts: {}};
-    },
+class TopPeople extends React.Component {
 
-    componentDidMount: function () {
-        this.dispatchToken = SearchAppDispatcher.register(function (payload) {
+    constructor(props) {
+        super(props);
+        this.state = {counts: this.props.initialCounts};
+    }
+
+    componentDidMount() {
+        this.dispatchToken = SearchAppDispatcher.register(payload => {
             if (payload.action.type === ActionTypes.SEARCH_RESULT) {
                 this.setState({counts: payload.action.result.peopleCounts});
             } else if (payload.action.type === ActionTypes.RESET) {
-                this.setState(this.getInitialState());
+                this.setState({counts: this.props.initialCounts});
             }
-        }.bind(this));
-    },
+        });
+    }
 
-    componentWillUnmount: function () {
+    componentWillUnmount() {
         SearchAppDispatcher.unregister(this.dispatchToken);
-    },
+    }
 
-    render: function () {
+    render() {
         var counts = this.state.counts;
-        var elements = Object.keys(counts).map(function (k) {
+        var elements = Object.keys(counts).map(k => {
             return li({key: k}, k + ": " + counts[k]);
         });
 
@@ -38,4 +40,8 @@ module.exports = React.createClass({
             ol(null, elements)
         );
     }
-});
+}
+
+TopPeople.defaultProps = { initialCounts: {} };
+
+module.exports = TopPeople;

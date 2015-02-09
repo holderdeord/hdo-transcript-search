@@ -1,9 +1,10 @@
-var express = require('express');
-var logger  = require('morgan');
-var api     = require('./api');
-var config  = require('../../config');
-var app     = express();
-var path    = require('path');
+import express from 'express';
+import logger from 'morgan';
+import api from './api';
+import config from '../../config';
+import path from 'path';
+
+var app = express();
 
 // config
 app.use(logger('short'));
@@ -23,19 +24,18 @@ if(app.get('env') === 'development') {
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
 // routes
-app.get('/api/search', function (req, res) {
+app.get('/api/search', (req, res) => {
     if (req.query.query) {
-        api.search(req.query).then(function (results) { res.json(results); });
+        api.search(req.query).then(results => { res.json(results); });
     } else {
         res.status(400).json({error: "missing query param"});
     }
 });
 
-app.get('/api/speeches/:id', function (req, res) {
-    api.getSpeech(req.params.id).then(function (results) {
-        res.json(results);
-    }).catch(function (e) {
-        res.status(500).json({error: e});
+app.get('/api/speeches/:id', (req, res) => {
+    api.getSpeech(req.params.id)
+        .then(results => { res.json(results); })
+        .catch(err => { res.status(500).json({error: err});
     });
 });
 

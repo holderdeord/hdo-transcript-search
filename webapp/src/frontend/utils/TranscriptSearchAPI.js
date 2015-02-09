@@ -2,8 +2,8 @@ var reqwest             = require('reqwest');
 var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
 var ActionTypes         = require('../constants/ActionTypes');
 
-var TranscriptSearchAPI = {
-    search: function (query, interval) {
+class TranscriptSearchAPI {
+    search(query, interval) {
         var path = '/api/search?interval=' + encodeURIComponent(interval) + '&query=' + encodeURIComponent(query);
 
         return reqwest(path).then(function (result) {
@@ -14,6 +14,6 @@ var TranscriptSearchAPI = {
             });
         });
     }
-};
+}
 
-module.exports = TranscriptSearchAPI;
+module.exports = new TranscriptSearchAPI();
