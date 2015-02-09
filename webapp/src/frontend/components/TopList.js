@@ -3,7 +3,7 @@ import TranscriptStore from '../stores/TranscriptStore';
 
 var {div,h3,ol,li} = React.DOM;
 
-class TopPeople extends React.Component {
+class TopList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,21 +19,27 @@ class TopPeople extends React.Component {
     }
 
     onChange() {
-        this.setState({counts: TranscriptStore.getResult().peopleCounts});
+        var result = TranscriptStore.getResult();
+        this.setState({counts: result[this.props.resultKey]});
     }
 
     render() {
-        var counts = this.state.counts;
-        var elements = Object.keys(counts).map(k => {
+        var counts   = this.state.counts;
+        var elements = Object.keys(counts).map(function (k) {
             return li({key: k}, `${k}: ${counts[k]}`);
         });
 
         return div(
             null,
-            h3(null, 'Personer'),
+            h3(null, this.props.title),
             ol(null, elements)
         );
     }
 }
 
-module.exports = TopPeople;
+TopList.propTypes = {
+    title: React.PropTypes.string,
+    key: React.PropTypes.string
+};
+
+module.exports = TopList;
