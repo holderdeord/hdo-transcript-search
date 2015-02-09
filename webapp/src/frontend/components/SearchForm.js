@@ -15,7 +15,7 @@ class SearchInput extends React.Component {
     }
 
     reset() {
-        var node = this.refs.query.getDOMNode();
+        var node = React.findDOMNode(this.refs.query);
 
         node.value = '';
         node.focus();
@@ -94,7 +94,7 @@ class SearchForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        var form = this.refs.form.getDOMNode();
+        var form = React.findDOMNode(this.refs.form);
 
         if (form.query.value.trim().length) {
             SearchAppDispatcher.handleViewAction({

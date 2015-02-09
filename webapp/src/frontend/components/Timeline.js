@@ -54,7 +54,7 @@ class Timeline extends React.Component {
 
     renderChart() {
         this.chart = c3.generate({
-            bindto: this.refs.chart.getDOMNode(),
+            bindto: React.findDOMNode(this.refs.chart),
             data: {
                 x: 'x',
                 columns: [
