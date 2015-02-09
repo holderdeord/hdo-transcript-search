@@ -31,4 +31,12 @@ app.get('/api/search', function (req, res) {
     }
 });
 
+app.get('/api/speeches/:id', function (req, res) {
+    api.getSpeech(req.params.id).then(function (results) {
+        res.json(results);
+    }).catch(function (e) {
+        res.status(500).json({error: e});
+    });
+});
+
 module.exports = app;

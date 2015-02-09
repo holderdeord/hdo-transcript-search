@@ -6,6 +6,8 @@ var debug      = debugg('elasticsearch');
 var debugCache = debugg('cache');
 var cache      = LRU({max: 500});
 
+var INDEX_NAME = 'hdo-transcripts';
+
 function parseAggregation(response, key) {
     var counts = {};
 
@@ -124,7 +126,7 @@ function countsFor(opts) {
 
         debug('request', JSON.stringify(body));
 
-        return es.search({ index: 'hdo-transcripts', body: body })
+        return es.search({ index: INDEX_NAME, body: body })
             .then(parseResponse).then(function (result) {
                 debugCache("caching response for", opts);
 
@@ -134,36 +136,43 @@ function countsFor(opts) {
     }
 }
 
-function search(opts) {
-    opts.interval = opts.interval || 'month';
 
-    return Promise.join(
-        countsFor({query: '*', interval: opts.interval} ),
-        countsFor(opts)
-    ).spread(function (allResults, queryResults) {
-        var keys = Object.keys(allResults.counts);
+module.exports = {
+    search: function (opts) {
+        opts.interval = opts.interval || 'month';
 
-        var counts = keys.map(function (key) {
-            var total = allResults.counts[key];
-            var val   = queryResults.counts[key] || 0.0;
+        return Promise.join(
+            countsFor({query: '*', interval: opts.interval} ),
+            countsFor(opts)
+        ).spread(function (allResults, queryResults) {
+            var keys = Object.keys(allResults.counts);
+
+            var counts = keys.map(function (key) {
+                var total = allResults.counts[key];
+                var val   = queryResults.counts[key] || 0.0;
+
+                return {
+                    date: key,
+                    count: val,
+                    total: total,
+                    pct: (val / total) * 100
+                };
+            });
 
             return {
-                date: key,
-                count: val,
-                total: total,
-                pct: (val / total) * 100
+                totalCount: allResults.total,
+                hitCount: queryResults.total,
+                counts: counts,
+                hits: queryResults.hits,
+                partyCounts: queryResults.parties,
+                peopleCounts: queryResults.people
             };
         });
+    },
 
-        return {
-            totalCount: allResults.total,
-            hitCount: queryResults.total,
-            counts: counts,
-            hits: queryResults.hits,
-            partyCounts: queryResults.parties,
-            peopleCounts: queryResults.people
-        };
-    });
-}
-
-module.exports = {  search: search };
+    getSpeech: function (id) {
+        return es
+            .get({ index: INDEX_NAME, type: 'speech', id: id })
+            .then(function (response) { return response._source;});
+    }
+};

@@ -8,6 +8,7 @@ var h3   = React.DOM.h3;
 var ol   = React.DOM.ol;
 var li   = React.DOM.li;
 var span = React.DOM.span;
+var a    = React.DOM.a;
 
 moment.locale('nb');
 
@@ -35,10 +36,10 @@ module.exports = React.createClass({
         var hitCountText = this.state.hitCount + ' av ' + this.state.totalCount + ' innlegg';
 
         return div(null,
-            span({className: 'pull-right text-muted'}, hitCountText),
-            h3(null, 'Treff'),
-            ol(null, elements)
-        );
+                   span({className: 'pull-right text-muted'}, hitCountText),
+                   h3(null, 'Treff'),
+                   ol(null, elements)
+                  );
     },
 
     renderHit: function (hit) {
@@ -46,8 +47,10 @@ module.exports = React.createClass({
         var timestamp = moment(source.time).format('LLL');
         var person    = source.name + ' (' + (source.party || source.title) + ')';
 
-        return li({key: hit._id || i, className: 'hit'},
-                  div({className: 'pull-right'}, timestamp),
+        return li({key: hit._id, className: 'hit'},
+                  div({className: 'pull-right'},
+                      // FIXME: don't hardcode paths
+                      a({href: '/api/speeches/' + hit._id, style: {color: 'inherit'}}, timestamp)),
                   div(null, person),
                   div({className: 'text-muted', dangerouslySetInnerHTML: {__html: hit.highlight.text}})
                  );
