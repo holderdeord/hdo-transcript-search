@@ -1,8 +1,9 @@
-var reqwest             = require('reqwest');
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
+import reqwest from 'reqwest';
+import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
+import ActionTypes from '../constants/ActionTypes';
 
 class TranscriptSearchAPI {
+
     search(query, interval) {
         var path = '/api/search?interval=' + encodeURIComponent(interval) + '&query=' + encodeURIComponent(query);
 
@@ -14,6 +15,7 @@ class TranscriptSearchAPI {
             });
         });
     }
+
 }
 
 module.exports = new TranscriptSearchAPI();
