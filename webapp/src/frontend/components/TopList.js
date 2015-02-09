@@ -7,7 +7,7 @@ class TopList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {counts: {}};
+        this.state = this._getCounts();
     }
 
     componentDidMount() {
@@ -19,8 +19,7 @@ class TopList extends React.Component {
     }
 
     onChange() {
-        var result = TranscriptStore.getResult();
-        this.setState({counts: result[this.props.resultKey]});
+        this.setState(this._getCounts());
     }
 
     render() {
@@ -34,6 +33,14 @@ class TopList extends React.Component {
             h3(null, this.props.title),
             ol(null, elements)
         );
+    }
+
+    _getCounts() {
+        var result = TranscriptStore.getResult();
+
+        return {
+            counts: result[this.props.resultKey]
+        };
     }
 }
 

@@ -3,7 +3,7 @@ import React from 'react';
 var TopHits = React.createFactory(require('./TopHits'));
 var TopList = React.createFactory(require('./TopList'));
 
-var div        = React.DOM.div;
+var div = React.DOM.div;
 
 class ResultDetails {
     render() {
