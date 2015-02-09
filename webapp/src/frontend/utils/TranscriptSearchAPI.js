@@ -3,7 +3,6 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
 
 class TranscriptSearchAPI {
-
     search(query, interval) {
         var path = '/api/search?interval=' + encodeURIComponent(interval) + '&query=' + encodeURIComponent(query);
 
@@ -15,7 +14,6 @@ class TranscriptSearchAPI {
             });
         });
     }
-
 }
 
 module.exports = new TranscriptSearchAPI();
