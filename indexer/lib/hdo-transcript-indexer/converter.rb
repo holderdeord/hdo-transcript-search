@@ -56,7 +56,7 @@ module Hdo
 
         case node.name
         when 'innlegg'
-          name_str = node.css('navn').text.strip
+          name_str = node.css('navn').text
           text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
 
           return if IGNORED_NAMES.include?(name_str)
@@ -92,7 +92,7 @@ module Hdo
       end
 
       DATE_EXP  = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
-      PARTY_EXP = /\s*[\( ](SV|KrF|V|A|MDG|FrP|Frp|H|Sp)[\) ]\s*?/
+      PARTY_EXP = /\s*[\( ](SV|KrF|V|A|MDG|FrP|Frp|H|Sp|TF)[\) ]\s*?/
 
       def parse_name_string(str)
         result = Hashie::Mash.new
@@ -100,9 +100,11 @@ module Hdo
         str.gsub!("[ [", "[")
         str.gsub!(" [klokkeslett mangler]", "")
         str.gsub!(" ", "")
+        str.gsub!(/\xC2\xA0/, "")
+        str.strip!
 
         case str
-        when ""
+        when "", ":"
           # ignored
         when /^(Statsminister|Statsråd|.+minister|.+president) (.+?)(?:#{DATE_EXP})?:?$/
           result.name  = $2.strip
