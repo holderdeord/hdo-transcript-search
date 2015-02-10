@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'hdo-transcript-indexer'
+
+puts Hdo::Transcript::Converter.parse(ARGV.first).to_json

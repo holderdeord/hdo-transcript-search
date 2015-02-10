@@ -12,6 +12,7 @@ GEM
       multi_json
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
+    hashie (3.3.1)
     method_source (0.8.2)
     mini_portile (0.6.2)
     multi_json (1.10.1)
@@ -30,6 +31,7 @@ PLATFORMS
 
 DEPENDENCIES
   elasticsearch
+  hashie
   nokogiri
   patron
   pry

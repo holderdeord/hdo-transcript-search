@@ -21,6 +21,10 @@ Download and index transcripts (requires a local elasticsearch):
     $ bundle install
     $ bundle exec ruby -Ilib bin/hdo-transcript-indexer
 
+Convert a single XML transcript to indexable JSON:
+
+    $ bundle exec ruby -Ilib bin/hdo-transcript-converter transcript.xml
+
 ## webapp
 
 Start the webapp in dev mode (with elasticsearch):

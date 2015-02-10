@@ -1,28 +1,30 @@
 # -*- coding: utf-8 -*-
 require 'time'
 require 'set'
+require 'hashie/mash'
 
 module Hdo
   module Transcript
     class Converter
 
       def self.parse(file)
-        if file =~ /s(\d{2})(\d{2})(\d{2})\.xml/
-          year  = "20#{$1}"
-          month = $2.to_i
-          day   = $3.to_i
-          doc   = Nokogiri::XML.parse(File.read(file))
+        if file =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/
+          short_year = $1.to_i
+          month      = $2.to_i
+          day        = $3.to_i
+          year       = short_year > 50 ? "19#{short_year}" : "20#{short_year}"
+          doc        = Nokogiri::XML.parse(File.read(file))
 
           new(doc, Time.new(year, month, day))
         else
           raise "could not parse date from #{file}"
         end
-
       end
 
       def initialize(doc, time)
-        @time = time
-        @doc = doc
+        @time         = time
+        @doc          = doc
+        @current_node = nil
       end
 
       def sections
@@ -50,6 +52,8 @@ module Hdo
       IGNORED_NAMES = ["Representantene"]
 
       def parse_section(node)
+        @current_node = node
+
         case node.name
         when 'innlegg'
           name_str = node.css('navn').text.strip
@@ -57,20 +61,20 @@ module Hdo
 
           return if IGNORED_NAMES.include?(name_str)
 
-          name, party, time, title = parse_name_string(name_str)
+          parsed = parse_name_string(name_str)
 
-          if name =~ /\(|\)/
+          if parsed.name =~ /\(|\)/
             raise "invalid name: #{name.inspect}"
           end
 
-          party = 'FrP' if party == 'Frp'
+          parsed.party = 'FrP' if parsed.party == 'Frp'
 
           {
-            :name  => name ? name.strip : name,
-            :party => party,
-            :time  => time ? time.iso8601 : time,
+            :name  => parsed.name ? parsed.name.strip : parsed.name,
+            :party => parsed.party,
+            :time  => parsed.time ? parsed.time.iso8601 : parsed.time,
             :text  => text,
-            :title => title
+            :title => parsed.title || "Representant"
           }
         when 'presinnl'
           {
@@ -91,34 +95,48 @@ module Hdo
       PARTY_EXP = /\s*[\( ](SV|KrF|V|A|MDG|FrP|Frp|H|Sp)[\) ]\s*?/
 
       def parse_name_string(str)
-        return [] if str.empty?
+        result = Hashie::Mash.new
+
         str.gsub!("[ [", "[")
         str.gsub!(" [klokkeslett mangler]", "")
         str.gsub!(" ", "")
 
         case str
+        when ""
+          # ignored
         when /^(Statsminister|Statsråd|.+minister|.+president) (.+?)(?:#{DATE_EXP})?:?$/
-          res = [$2.strip, nil, create_time($3, $4, $5), $1]
+          result.name  = $2.strip
+          result.party = nil
+          result.time  = create_time($3, $4, $5)
+          result.title = $1
 
-          if res[0] =~ PARTY_EXP
-            res[1] = $1
-            res[0] = res[0].sub(PARTY_EXP, '').strip
+          if result.name =~ PARTY_EXP
+            result.party = $1
+            result.name  = result.name.sub(PARTY_EXP, '').strip
           else
-            res[1] = party_for(res[0])
+            result.party = party_for(result.name)
           end
-
-          res
         when /^(.+?)#{PARTY_EXP}#{DATE_EXP}:?$/
-          [$1, $2, create_time($3, $4, $5), nil]
+          result.name  = $1
+          result.party = $2
+          result.time  = create_time($3, $4, $5)
         when /^(.+?)#{DATE_EXP}:?$/
-          [$1, nil, create_time($2, $3, $4), nil]
+          result.name = $1
+          result.time = create_time($2, $3, $4)
         when /^(.+?)#{PARTY_EXP} (\[klokkeslett mangler\]|\(fra salen\)):?$/
-          [$1, $2, nil, nil]
+          result.name  = $1
+          result.party = $2
         when /^(.+?)#{PARTY_EXP}:?$/
-          [$1, $2, nil, nil]
+          result.name  = $1
+          result.party = $2
+        when /^\s*presidenten:?\s*$/i
+          result.name  = "Presidenten"
+          result.title = "President"
         else
-          raise "could not parse name string: #{str.inspect}"
+          raise "could not parse name string from #{str.inspect} in #{@current_node.to_s}"
         end
+
+        result
       end
 
       def create_time(hour, minute, second)
