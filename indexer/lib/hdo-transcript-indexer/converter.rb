@@ -10,10 +10,10 @@ module Hdo
       class << self
         def parse(file)
           if file.to_s =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/
-            short_year = $1.to_i
+            short_year = $1
             month      = $2.to_i
             day        = $3.to_i
-            year       = (short_year > 50 ? "19#{short_year}" : "20#{short_year}").to_i
+            year       = (short_year.to_i > 50 ? "19#{short_year}" : "20#{short_year}").to_i
             doc        = Nokogiri::XML.parse(File.read(file))
 
             new(doc, Time.new(year, month, day))
