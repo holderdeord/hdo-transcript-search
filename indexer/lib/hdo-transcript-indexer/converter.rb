@@ -92,7 +92,7 @@ module Hdo
           {
             :name  => parsed.name ? parsed.name.strip : parsed.name,
             :party => parsed.party,
-            :time  => parsed.time ? parsed.time.iso8601 : parsed.time,
+            :time  => parsed.time ? parsed.time.iso8601 : @time.iso8601,
             :text  => text,
             :title => parsed.title || (parsed.party ? 'Representant' : nil)
           }
@@ -101,7 +101,7 @@ module Hdo
             :name  => "Presidenten",
             :party => nil,
             :text  => clean_text(node.text),
-            :time  => nil,
+            :time  => @time.iso8601,
             :title => "President"
           }
         end

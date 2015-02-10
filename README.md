@@ -34,3 +34,6 @@ Start the webapp in dev mode (with elasticsearch):
     $ npm run dev
     # open your browser at http://localhost:7575/
 
+### Caveats
+
+* Because of deficiencies in the transcripts, we don't know the correct time for all speeches. The "time" field will in these cases be set to midnight.
