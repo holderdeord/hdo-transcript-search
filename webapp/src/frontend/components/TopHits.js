@@ -38,7 +38,13 @@ class TopHits extends React.Component {
     renderHit(hit) {
         var source    = hit._source;
         var timestamp = moment(source.time).format('LLL');
-        var person    = `${source.name} (${source.party || source.title})`;
+        var person    = source.name;
+        var roles     = [source.title, source.party].filter(s => s && s !== 'President' && s !== 'Representant');
+
+        if (roles.length) {
+            person = `${person} (${roles.join(', ')})`;
+        }
+
         var href      = `/api/speeches/${hit._id}`; // FIXME: don't hardcode paths
 
         return li({key: hit._id, className: 'hit'},
