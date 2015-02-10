@@ -26,7 +26,9 @@ app.use(express.static(path.resolve(__dirname, '../../public')));
 // routes
 app.get('/api/search', (req, res) => {
     if (req.query.query) {
-        api.search(req.query).then(results => { res.json(results); });
+        api.search(req.query)
+            .then(results => res.json(results))
+            .catch(err => res.status(500).json({error: err}));
     } else {
         res.status(400).json({error: "missing query param"});
     }
@@ -34,9 +36,8 @@ app.get('/api/search', (req, res) => {
 
 app.get('/api/speeches/:id', (req, res) => {
     api.getSpeech(req.params.id)
-        .then(results => { res.json(results); })
-        .catch(err => { res.status(500).json({error: err});
-    });
+        .then(results => res.json(results))
+        .catch(err => res.status(500).json({error: err}));
 });
 
 module.exports = app;

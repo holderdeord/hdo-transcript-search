@@ -6,7 +6,8 @@ import debugg from 'debug';
 var debug      = debugg('elasticsearch');
 var debugCache = debugg('cache');
 
-var INDEX_NAME = 'hdo-transcripts';
+const INDEX_NAME = 'hdo-transcripts';
+const INDEX_TYPE = 'speech';
 
 class SearchAPI {
     constructor() {
@@ -17,7 +18,7 @@ class SearchAPI {
         opts.interval = opts.interval || 'month';
 
         return Promise.join(
-            this._countsFor({query: '*', interval: opts.interval} ),
+            this._countsFor({query: '*', interval: opts.interval}),
             this._countsFor(opts)
         ).spread((allResults, queryResults) => {
             return {
@@ -33,8 +34,8 @@ class SearchAPI {
 
     getSpeech(id) {
         return es
-            .get({ index: INDEX_NAME, type: 'speech', id: id })
-            .then(response => { return response._source; });
+            .get({index: INDEX_NAME, type: INDEX_TYPE, id: id})
+            .then(response => response._source);
     }
 
     _calculatePercentages(subset, set) {

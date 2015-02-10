@@ -6,13 +6,13 @@ var div = React.DOM.div;
 
 class Timeline extends React.Component {
     componentDidMount() {
-        this.renderChart();
-        TranscriptStore.addChangeListener(this.onChange.bind(this));
+        TranscriptStore.addChangeListener(this._onChange.bind(this));
+        this._renderChart();
     }
 
     componentWillUnmount() {
-        this.chart.unload();
-        TranscriptStore.removeChangeListener(this.onChange.bind(this));
+        TranscriptStore.removeChangeListener(this._onChange.bind(this));
+        this._unloadChart();
     }
 
     render() {
@@ -22,9 +22,7 @@ class Timeline extends React.Component {
         });
     }
 
-    // helpers
-
-    addData(query, data) {
+    _addData(query, data) {
         var dates = [];
         var vals = [];
 
@@ -41,18 +39,18 @@ class Timeline extends React.Component {
         this.chart.load({ columns: cols });
     }
 
-    onChange() {
+    _onChange() {
         var query = TranscriptStore.getQuery();
         var result = TranscriptStore.getResult();
 
         if (query && result) {
-            this.addData(query, result.counts);
+            this._addData(query, result.counts);
         } else {
             this.chart.unload();
         }
     }
 
-    renderChart() {
+    _renderChart() {
         this.chart = c3.generate({
             bindto: React.findDOMNode(this.refs.chart),
             data: {
@@ -73,6 +71,7 @@ class Timeline extends React.Component {
                     tick: {
                         format: d => { return d + '%'; }
                     },
+                    label: { text: 'Prosent av alle innlegg', position: 'outer-middle' },
                     // max: 100,
                     min: 0,
                     padding: { top: 0, bottom: 0 }
@@ -81,8 +80,13 @@ class Timeline extends React.Component {
             point: { show: false },
             subchart: { show: false }
 
-            //        color: { pattern: ["#111", "#fadd00", "#b8bfcc", "#ccc", "#455068"] }
+            // TODO: find a more HDOish color pattern
+            // color: { pattern: ["#111", "#fadd00", "#b8bfcc", "#ccc", "#455068"] }
         });
+    }
+
+    _unloadChart() {
+        this.chart.unload();
     }
 }
 
