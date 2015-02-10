@@ -7,18 +7,26 @@ module Hdo
   module Transcript
     class Converter
 
-      def self.parse(file)
-        if file =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/
-          short_year = $1.to_i
-          month      = $2.to_i
-          day        = $3.to_i
-          year       = short_year > 50 ? "19#{short_year}" : "20#{short_year}"
-          doc        = Nokogiri::XML.parse(File.read(file))
+      class << self
+        def parse(file)
+          if file.to_s =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/
+            short_year = $1.to_i
+            month      = $2.to_i
+            day        = $3.to_i
+            year       = (short_year > 50 ? "19#{short_year}" : "20#{short_year}").to_i
+            doc        = Nokogiri::XML.parse(File.read(file))
 
-          new(doc, Time.new(year, month, day))
-        else
-          raise "could not parse date from #{file}"
+            new(doc, Time.new(year, month, day))
+          else
+            raise "could not parse date from #{file}"
+          end
         end
+
+        def party_cache
+          @party_cache ||= {}
+        end
+
+        attr_writer :party_cache
       end
 
       def initialize(doc, time)
@@ -82,8 +90,7 @@ module Hdo
               parsed.party = @last_section[:party]
               parsed.title ||= @last_section[:title]
             else
-              binding.pry
-              raise "name and party is missing: #{parsed.to_hash.inspect}"
+#              raise "name and party is missing: #{parsed.to_hash.inspect}: #{@current_node}"
             end
           end
 
@@ -171,7 +178,13 @@ module Hdo
       end
 
       def party_for(name)
-        # TODO - må kunne hente parti for statsråder
+        party = self.class.party_cache[name]
+
+        if party
+          party
+        else
+          nil
+        end
       end
 
     end

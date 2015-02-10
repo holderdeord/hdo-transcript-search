@@ -45,11 +45,58 @@ module Hdo
       end
 
       def convert
-        Pathname.glob(@data_dir.join('s*.xml')).each { |input| convert_to_json(input) }
+        if load_party_cache
+          xml_transcripts.each { |input| convert_to_json(input) }
+        else
+          @logger.info "building name -> party cache, this could take a while"
+          xml_transcripts.each { |input| build_party_cache(input) }
+          party_cache_path.open('w') { |io| io << Converter.party_cache.to_json }
+          json_transcripts.each { |t| t.delete }
+
+          convert
+        end
       end
 
       def index_docs
-        Pathname.glob(@data_dir.join('s*.json')).each { |input| index_file(input) }
+        json_transcripts.each { |input| index_file(input) }
+      end
+
+      def xml_transcripts
+        Pathname.glob(@data_dir.join('s*.xml'))
+      end
+
+      def json_transcripts
+        Pathname.glob(@data_dir.join('s*.json'))
+      end
+
+      def party_cache_path
+        @party_cache_path ||= (
+          p = @data_dir.join('cache/name-to-party.json')
+          p.dirname.mkpath unless p.dirname.exist?
+
+          p
+        )
+      end
+
+      def load_party_cache
+        found = party_cache_path.exist?
+
+        if found
+          Converter.party_cache = JSON.parse(party_cache_path.read)
+        end
+
+        found
+      end
+
+      def build_party_cache(input_file)
+        Converter.parse(input_file).sections.each do |section|
+          n = section[:name]
+          p = section[:party]
+
+          if n && p
+            Converter.party_cache[n] ||= p
+          end
+        end
       end
 
       def data_dir_from(options)
@@ -99,8 +146,9 @@ module Hdo
           id = "#{transcript_id}-#{idx}"
 
           doc = {
-            'time'       => data['date'],
-            'presidents' => data['presidents']
+            'presidents' => data['presidents'],
+            'transcript' => transcript_id,
+            'order'      => idx
           }.merge(section)
 
           res = @es.index index: @index_name, type: 'speech', id: id, body: doc
