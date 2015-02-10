@@ -1,6 +1,6 @@
 import express from 'express';
 import logger from 'morgan';
-import api from './api';
+import api from './search-api';
 import config from '../../config';
 import path from 'path';
 
