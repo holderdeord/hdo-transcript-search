@@ -25,14 +25,15 @@ module Hdo
         @time         = time
         @doc          = doc
         @current_node = nil
+        @last_section = {}
       end
 
       def sections
-        @doc.css('presinnl, innlegg').map { |node| parse_section(node) }.compact
+        @doc.css('presinnl, innlegg').map { |node| @last_section = parse_section(node) }.compact
       end
 
       def president_names
-        @president_name ||= @doc.css('president').text.split("\n").map(&:strip).uniq
+        @president_name ||= @doc.css('president').text.gsub(/president:?\s*/i, '').split(/\r?\n/).map(&:strip).uniq
       end
 
       def as_json(opts = nil)
@@ -51,12 +52,20 @@ module Hdo
 
       IGNORED_NAMES = ["Representantene"]
 
+      def validate(section, before)
+        if section[:party].nil? && section[:title].nil?
+          raise "both party and title is nil - #{section.to_json}"
+        end
+
+        section
+      end
+
       def parse_section(node)
         @current_node = node
 
         case node.name
         when 'innlegg'
-          name_str = node.css('navn').text
+          name_str = node.css('navn').text.strip
           text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
 
           return if IGNORED_NAMES.include?(name_str)
@@ -64,7 +73,18 @@ module Hdo
           parsed = parse_name_string(name_str)
 
           if parsed.name =~ /\(|\)/
-            raise "invalid name: #{name.inspect}"
+            raise "invalid name: #{parsed.to_hash.inspect}"
+          end
+
+          if parsed.name.nil? && parsed.party.nil?
+            if @last_section[:name] && @last_section[:text].empty?
+              parsed.name = @last_section[:name]
+              parsed.party = @last_section[:party]
+              parsed.title ||= @last_section[:title]
+            else
+              binding.pry
+              raise "name and party is missing: #{parsed.to_hash.inspect}"
+            end
           end
 
           parsed.party = 'FrP' if parsed.party == 'Frp'
@@ -74,7 +94,7 @@ module Hdo
             :party => parsed.party,
             :time  => parsed.time ? parsed.time.iso8601 : parsed.time,
             :text  => text,
-            :title => parsed.title || "Representant"
+            :title => parsed.title || (parsed.party ? 'Representant' : nil)
           }
         when 'presinnl'
           {
