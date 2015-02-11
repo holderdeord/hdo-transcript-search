@@ -29,7 +29,7 @@ class TopHits extends React.Component {
         var hitCountText = `${this.state.hitCount} av ${this.state.totalCount} innlegg`;
 
         return div(null,
-                   span({className: 'pull-right text-muted'}, hitCountText),
+                   span({className: 'text-muted'}, hitCountText),
                    h3(null, 'Treff'),
                    ol(null, elements)
                   );
