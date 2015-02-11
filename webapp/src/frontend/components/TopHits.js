@@ -2,14 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import TranscriptStore from '../stores/TranscriptStore';
 
-var {div,h3,ol,li,span,a} = React.DOM;
+var {div,h3,ol,li,small,a} = React.DOM;
 moment.locale('nb');
 
 class TopHits extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = TranscriptStore.getResult();
+        this.state = {result: TranscriptStore.getResult(), query: TranscriptStore.getQuery()};
     }
 
     componentDidMount() {
@@ -21,21 +21,26 @@ class TopHits extends React.Component {
     }
 
     onChange() {
-        this.setState(TranscriptStore.getResult());
+        this.setState({result: TranscriptStore.getResult(), query: TranscriptStore.getQuery()});
     }
 
     render() {
-        var elements     = this.state.hits.map(this.renderHit);
-        var hitCountText = `${this.state.hitCount} av ${this.state.totalCount} innlegg`;
+        var result       = this.state.result;
+        var hitCountText = `${result.hitCount} av ${result.totalCount} innlegg`;
+
+        if (this.state.query.length) {
+            hitCountText = `Fant '${this.state.query}' i ${hitCountText}`;
+        }
 
         return div(null,
-                   span({className: 'text-muted'}, hitCountText),
-                   h3(null, 'Treff'),
-                   ol(null, elements)
+                   h3(null, 'Treff',
+                      small({className: 'pull-right text-muted'}, hitCountText)),
+                   ol(null, result.hits.map(this.renderHit))
                   );
     }
 
     renderHit(hit) {
+        var href      = `/api/speeches/${hit._id}`; // FIXME: don't hardcode paths
         var source    = hit._source;
         var timestamp = moment(source.time).format('LLL');
         var person    = source.name;
@@ -44,8 +49,6 @@ class TopHits extends React.Component {
         if (roles.length) {
             person = `${person} (${roles.join(', ')})`;
         }
-
-        var href      = `/api/speeches/${hit._id}`; // FIXME: don't hardcode paths
 
         return li({key: hit._id, className: 'hit'},
                   div({className: 'pull-right'},

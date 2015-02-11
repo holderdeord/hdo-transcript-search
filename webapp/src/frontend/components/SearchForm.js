@@ -59,7 +59,7 @@ class IntervalSelector extends React.Component {
 
 class Buttons extends React.Component {
     render() {
-        return div({},
+        return div({className: 'form-group'},
                    input({
                        type: 'submit',
                        className: 'btn btn-default btn-sm',
