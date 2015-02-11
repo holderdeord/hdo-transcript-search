@@ -2,3 +2,4 @@
 npm-debug.log
 /indexer/.bundle
 /indexer/vendor/
+.tern-port
