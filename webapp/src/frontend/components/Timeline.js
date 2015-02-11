@@ -1,6 +1,7 @@
 import React from 'react';
 import c3 from 'c3';
 import TranscriptStore from '../stores/TranscriptStore';
+import Colors from '../utils/Colors';
 
 var div = React.DOM.div;
 
@@ -78,10 +79,8 @@ class Timeline extends React.Component {
                 }
             },
             point: { show: false },
-            subchart: { show: false }
-
-            // TODO: find a more HDOish color pattern
-            // color: { pattern: ["#111", "#fadd00", "#b8bfcc", "#ccc", "#455068"] }
+            subchart: { show: false },
+            color: { pattern: Colors.pattern }
         });
     }
 
