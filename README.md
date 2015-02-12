@@ -7,11 +7,16 @@ Visualize language usage in the Norwegian parliament.
 
 ![image](https://cloud.githubusercontent.com/assets/572/6088832/f9052628-ae5a-11e4-9a26-d78e36b23a9d.png)
 
-
 This project consists of two parts:
 
 * `indexer/` - download and index Stortinget transcripts in ElasticSearch
 * `webapp/`  - web frontend to present / visualize the data
+
+## Requirements
+
+* elasticsearch
+* node.js
+* ruby
 
 ## indexer
 

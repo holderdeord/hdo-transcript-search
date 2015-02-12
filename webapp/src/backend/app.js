@@ -8,7 +8,7 @@ var app = express();
 
 // config
 app.use(logger('short'));
-app.set('port', config.get('PORT'));
+app.set('port', +config.get('PORT'));
 app.disable('x-powered-by');
 
 if(app.get('env') === 'development') {
