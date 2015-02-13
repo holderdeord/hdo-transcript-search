@@ -14,7 +14,7 @@ class TopHits extends React.Component {
             hitCountText = `Fant '${this.props.query}' i ${hitCountText}`;
         }
 
-        return div(null,
+        return div({style: {display: this.props.query.length ? 'block' : 'none'}},
                    h3(null, 'Treff',
                       small({className: 'pull-right text-muted'}, hitCountText)),
                    ol(null, result.hits.map(this.renderHit))

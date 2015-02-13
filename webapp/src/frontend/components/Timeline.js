@@ -7,8 +7,9 @@ var div = React.DOM.div;
 class Timeline extends React.Component {
     render() {
         return div({
-            className: 'row',
-            ref: 'chart'
+            className: 'row timeline',
+            ref: 'chart',
+            style: { display: this.props.query.length ? 'block' : 'none' }
         });
     }
 
@@ -31,7 +32,7 @@ class Timeline extends React.Component {
                 },
                 y: {
                     tick: {
-                        format: d => { return d + '%'; }
+                        format: d => d + '%'
                     },
                     label: { text: 'Prosent av alle innlegg', position: 'outer-middle' },
                     // max: 100,

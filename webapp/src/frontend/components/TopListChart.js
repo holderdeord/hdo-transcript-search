@@ -20,7 +20,7 @@ class TopListChart extends React.Component {
 
     render() {
         return div(
-            null,
+            {style: {display: Object.keys(this.props.counts).length ? 'block' : 'none'}},
             h3(null, this.props.title),
             div({ref: 'chart'})
         );
@@ -66,7 +66,6 @@ class TopListChart extends React.Component {
             this._unloadChart();
         }
     }
-
 }
 
 TopListChart.propTypes = {

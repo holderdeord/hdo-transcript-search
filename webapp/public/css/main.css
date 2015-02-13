@@ -18,3 +18,8 @@
     color: black;
     font-style: normal;
 }
+
+.timeline, .result-details {
+    padding: 2em 0;
+}
+

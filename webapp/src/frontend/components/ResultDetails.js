@@ -9,7 +9,7 @@ class ResultDetails extends React.Component {
     render() {
         return div(
             null,
-            div({className: 'row'},
+            div({className: 'row result-details'},
                 div({className: 'col-md-6'}, TopListChart({title: 'Personer', counts: this.props.result.peopleCounts})),
                 div({className: 'col-md-6'}, TopListChart({title: 'Partier', counts: this.props.result.partyCounts}))
                ),

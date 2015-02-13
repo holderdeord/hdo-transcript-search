@@ -8,7 +8,7 @@ var SearchForm    = React.createFactory(require('./SearchForm'));
 var Timeline      = React.createFactory(require('./Timeline'));
 var ResultDetails = React.createFactory(require('./ResultDetails'));
 
-var {div,hr} = React.DOM;
+var {div} = React.DOM;
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
@@ -45,9 +45,7 @@ class SearchApp extends React.Component {
     render() {
         return div(null,
                    SearchForm(),
-                   hr(),
                    Timeline(this.state),
-                   hr(),
                    ResultDetails(this.state)
                   );
     }
