@@ -1,5 +1,4 @@
 import React from 'react';
-import TranscriptStore from '../stores/TranscriptStore';
 import Colors from '../utils/Colors';
 import c3 from 'c3';
 
@@ -9,21 +8,14 @@ class TopListChart extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = this._getCounts();
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.onChange.bind(this));
         this._renderChart();
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.onChange.bind(this));
         this._unloadChart();
-    }
-
-    onChange() {
-        this.setState(this._getCounts());
     }
 
     render() {
@@ -61,12 +53,12 @@ class TopListChart extends React.Component {
     }
 
     _loadData() {
-        var keys = Object.keys(this.state.counts);
+        var keys = Object.keys(this.props.counts);
 
         if (keys.length) {
             var cols = [
                 ['x'].concat(keys),
-                ['Antall innlegg'].concat(keys.map(k => this.state.counts[k]))
+                ['Antall innlegg'].concat(keys.map(k => this.props.counts[k]))
             ];
 
             this.chart.load({columns: cols});
@@ -75,18 +67,11 @@ class TopListChart extends React.Component {
         }
     }
 
-    _getCounts() {
-        var result = TranscriptStore.getResult();
-
-        return {
-            counts: result[this.props.resultKey]
-        };
-    }
 }
 
 TopListChart.propTypes = {
-    title: React.PropTypes.string,
-    key: React.PropTypes.string
+    title: React.PropTypes.string.isRequired,
+    counts: React.PropTypes.object.isRequired
 };
 
 module.exports = TopListChart;

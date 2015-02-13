@@ -5,16 +5,16 @@ var TopListChart = React.createFactory(require('./TopListChart'));
 
 var {div,hr} = React.DOM;
 
-class ResultDetails {
+class ResultDetails extends React.Component {
     render() {
         return div(
             null,
             div({className: 'row'},
-                div({className: 'col-md-6'}, TopListChart({title: 'Personer', resultKey: 'peopleCounts'})),
-                div({className: 'col-md-6'}, TopListChart({title: 'Partier', resultKey: 'partyCounts'}))
+                div({className: 'col-md-6'}, TopListChart({title: 'Personer', counts: this.props.result.peopleCounts})),
+                div({className: 'col-md-6'}, TopListChart({title: 'Partier', counts: this.props.result.partyCounts}))
                ),
             hr(),
-            div({className: 'row'}, TopHits())
+            div({className: 'row'}, TopHits({query: this.props.query, result: this.props.result}))
         );
     }
 }

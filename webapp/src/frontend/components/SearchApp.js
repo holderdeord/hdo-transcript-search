@@ -1,7 +1,8 @@
-import React from 'react';
+import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
+import TranscriptStore     from '../stores/TranscriptStore';
 
 var SearchForm    = React.createFactory(require('./SearchForm'));
 var Timeline      = React.createFactory(require('./Timeline'));
@@ -17,13 +18,37 @@ SearchAppDispatcher.register(function (payload) {
 });
 
 class SearchApp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = this.fetchState();
+    }
+
+    componentDidMount() {
+        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+    }
+
+    componentWillUnmount() {
+        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+    }
+
+    handleChange() {
+        this.setState(this.fetchState());
+    }
+
+    fetchState() {
+        return {
+            query: TranscriptStore.getQuery(),
+            result: TranscriptStore.getResult()
+        };
+    }
+
     render() {
         return div(null,
                    SearchForm(),
                    hr(),
-                   Timeline(),
+                   Timeline(this.state),
                    hr(),
-                   ResultDetails()
+                   ResultDetails(this.state)
                   );
     }
 }

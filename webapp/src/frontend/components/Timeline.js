@@ -1,21 +1,10 @@
 import React from 'react';
 import c3 from 'c3';
-import TranscriptStore from '../stores/TranscriptStore';
 import Colors from '../utils/Colors';
 
 var div = React.DOM.div;
 
 class Timeline extends React.Component {
-    componentDidMount() {
-        TranscriptStore.addChangeListener(this._onChange.bind(this));
-        this._renderChart();
-    }
-
-    componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this._onChange.bind(this));
-        this._unloadChart();
-    }
-
     render() {
         return div({
             className: 'row',
@@ -23,35 +12,7 @@ class Timeline extends React.Component {
         });
     }
 
-    _addData(query, data) {
-        var dates = [];
-        var vals = [];
-
-        data.forEach(e => {
-            dates.push(new Date(e.date));
-            vals.push(e.pct);
-        });
-
-        var cols = [
-            ['x'].concat(dates),
-            [query].concat(vals)
-        ];
-
-        this.chart.load({ columns: cols });
-    }
-
-    _onChange() {
-        var query = TranscriptStore.getQuery();
-        var result = TranscriptStore.getResult();
-
-        if (query && result) {
-            this._addData(query, result.counts);
-        } else {
-            this.chart.unload();
-        }
-    }
-
-    _renderChart() {
+    componentDidMount() {
         this.chart = c3.generate({
             bindto: React.findDOMNode(this.refs.chart),
             data: {
@@ -84,9 +45,40 @@ class Timeline extends React.Component {
         });
     }
 
+    componentDidUpdate() {
+        if (this.props.query.length && this.props.result) {
+            this._addData(this.props.query, this.props.result.counts);
+        } else {
+            this.chart.unload();
+        }
+    }
+
+
+    _addData(query, data) {
+        var dates = [];
+        var vals = [];
+
+        data.forEach(e => {
+            dates.push(new Date(e.date));
+            vals.push(e.pct);
+        });
+
+        var cols = [
+            ['x'].concat(dates),
+            [query].concat(vals)
+        ];
+
+        this.chart.load({ columns: cols });
+    }
+
     _unloadChart() {
         this.chart.unload();
     }
 }
+
+Timeline.propTypes = {
+    query: React.PropTypes.string.isRequired,
+    result: React.PropTypes.object.isRequired
+};
 
 module.exports = Timeline;

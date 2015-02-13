@@ -1,35 +1,17 @@
 import React from 'react';
 import moment from 'moment';
-import TranscriptStore from '../stores/TranscriptStore';
 
 var {div,h3,ol,li,small,a} = React.DOM;
 moment.locale('nb');
 
 class TopHits extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {result: TranscriptStore.getResult(), query: TranscriptStore.getQuery()};
-    }
-
-    componentDidMount() {
-        TranscriptStore.addChangeListener(this.onChange.bind(this));
-    }
-
-    componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.onChange.bind(this));
-    }
-
-    onChange() {
-        this.setState({result: TranscriptStore.getResult(), query: TranscriptStore.getQuery()});
-    }
-
     render() {
-        var result       = this.state.result;
+        var result       = this.props.result;
         var hitCountText = `${result.hitCount} av ${result.totalCount} innlegg`;
 
-        if (this.state.query.length) {
-            hitCountText = `Fant '${this.state.query}' i ${hitCountText}`;
+        if (this.props.query.length) {
+            hitCountText = `Fant '${this.props.query}' i ${hitCountText}`;
         }
 
         return div(null,
@@ -58,5 +40,14 @@ class TopHits extends React.Component {
                  );
     }
 }
+
+TopHits.propTypes = {
+    query: React.PropTypes.string,
+    result: React.PropTypes.shape({
+        hitCount: React.PropTypes.number.isRequired,
+        totalCount: React.PropTypes.number.isRequired,
+        hits: React.PropTypes.array.isRequired
+    }).isRequired
+};
 
 module.exports = TopHits;
