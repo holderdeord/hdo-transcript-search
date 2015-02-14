@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'nokogiri'
 require 'elasticsearch'
 require 'pathname'
@@ -5,9 +6,12 @@ require 'uri'
 require 'logger'
 require 'json'
 require 'time'
+require 'set'
 require 'pry'
+require 'forwardable'
 
 require 'hdo-transcript-indexer/converter'
+require 'hdo-transcript-indexer/cache'
 
 Faraday.default_adapter = :patron
 Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
@@ -24,11 +28,15 @@ module Hdo
         @create_index = options.fetch(:create_index)
         @index_name   = options.fetch(:index_name)
         @force        = options.fetch(:force)
+        @errors       = []
 
         @es = Elasticsearch::Client.new(
           log: false,
           url: options.fetch(:elasticsearch_url)
         )
+
+        @party_cache = Cache.new(party_cache_path)
+        @party_cache.load if party_cache_path.exist?
       end
 
       def execute
@@ -45,12 +53,16 @@ module Hdo
       end
 
       def convert
-        if load_party_cache
+        if @party_cache.size > 0
+          @logger.info "found name -> party cache"
           xml_transcripts.each { |input| convert_to_json(input) }
         else
           @logger.info "building name -> party cache, this could take a while"
+
           xml_transcripts.each { |input| build_party_cache(input) }
-          party_cache_path.open('w') { |io| io << Converter.party_cache.to_json }
+          load_extras_cache
+          @party_cache.save
+
           json_transcripts.each { |t| t.delete }
 
           convert
@@ -58,7 +70,10 @@ module Hdo
       end
 
       def index_docs
-        json_transcripts.each { |input| index_file(input) }
+        json_transcripts.each do |input|
+          index_file(input)
+          @logger.info "indexed #{input}"
+        end
       end
 
       def xml_transcripts
@@ -78,25 +93,20 @@ module Hdo
         )
       end
 
-      def load_party_cache
-        found = party_cache_path.exist?
-
-        if found
-          Converter.party_cache = JSON.parse(party_cache_path.read)
-        end
-
-        found
-      end
-
       def build_party_cache(input_file)
         Converter.parse(input_file).sections.each do |section|
           n = section[:name]
           p = section[:party]
 
           if n && p
-            Converter.party_cache[n] ||= p
+            @party_cache[n] ||= p
           end
         end
+      end
+
+      def load_extras_cache
+        # manually maintained list of people we can't infer from the transcript data
+        @party_cache.merge!(JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/n2p.extras.json", __FILE__))))
       end
 
       def data_dir_from(options)
@@ -134,7 +144,11 @@ module Hdo
           @logger.info "conversion cached: #{dest}"
         else
           @logger.info "converting: #{input_file} => #{dest}"
-          dest.open('w') { |io| io << Converter.parse(input_file.to_s).to_json }
+
+          converter = Converter.parse(input_file.to_s, cache: @party_cache)
+          json = converter.to_json
+
+          dest.open('w') { |io| io << json }
         end
       end
 
@@ -153,7 +167,15 @@ module Hdo
 
           res = @es.index index: @index_name, type: 'speech', id: id, body: doc
 
-          @logger.info "#{id}: #{res.inspect}"
+          unless res['created']
+            raise "failed to index: #{id}:  #{doc.inspect}"
+          end
+        end
+
+        if data['errors']
+          data['errors'].each do |err|
+            @logger.error err.inspect
+          end
         end
       end
 

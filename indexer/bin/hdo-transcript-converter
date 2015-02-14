@@ -2,4 +2,12 @@
 
 require 'hdo-transcript-indexer'
 
-puts Hdo::Transcript::Converter.parse(ARGV.first).to_json
+
+path = File.expand_path("../../../data/cache/name-to-party.json", __FILE__)
+cache = nil
+
+if File.exist?(path)
+  cache = Hdo::Transcript::Cache.new(path)
+  cache.load
+end
+puts Hdo::Transcript::Converter.parse(ARGV.first, cache: cache).to_json

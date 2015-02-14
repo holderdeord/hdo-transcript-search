@@ -8,7 +8,7 @@ module Hdo
     class Converter
 
       class << self
-        def parse(file)
+        def parse(file, options = {})
           if file.to_s =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/
             short_year = $1
             month      = $2.to_i
@@ -16,28 +16,27 @@ module Hdo
             year       = (short_year.to_i > 50 ? "19#{short_year}" : "20#{short_year}").to_i
             doc        = Nokogiri::XML.parse(File.read(file))
 
-            new(doc, Time.new(year, month, day))
+            new(doc, Time.new(year, month, day), options)
           else
             raise "could not parse date from #{file}"
           end
         end
-
-        def party_cache
-          @party_cache ||= {}
-        end
-
-        attr_writer :party_cache
       end
 
-      def initialize(doc, time)
+      def initialize(doc, time, options = {})
         @time         = time
         @doc          = doc
         @current_node = nil
         @last_section = {}
+        @name_cache   = options[:cache] || {}
+        @errors       = Set.new
       end
 
       def sections
-        @doc.css('presinnl, innlegg').map { |node| @last_section = parse_section(node) }.compact
+        @doc.css('presinnl, innlegg').
+          map { |node| @last_section = parse_section(node) }.
+          compact.
+          map { |e| validate(e) }
       end
 
       def president_names
@@ -48,7 +47,8 @@ module Hdo
         {
           date: @time.iso8601,
           presidents: president_names,
-          sections: sections
+          sections: sections,
+          errors: errors
         }
       end
 
@@ -56,13 +56,20 @@ module Hdo
         as_json.to_json(opts)
       end
 
+      def errors
+        @errors.to_a
+      end
+
       private
 
       IGNORED_NAMES = ["Representantene"]
 
-      def validate(section, before)
+      def validate(section)
         if section[:party].nil? && section[:title].nil?
-          raise "both party and title is nil - #{section.to_json}"
+          @errors << {error: "both party and title is null", section: section}
+        elsif section[:party].nil? && section[:name] != "Presidenten"
+          binding.pry if @name_cache.any?
+          @errors << {error: "party missing", name: section[:name], title: section[:title]}
         end
 
         section
@@ -84,14 +91,11 @@ module Hdo
             raise "invalid name: #{parsed.to_hash.inspect}"
           end
 
-          if parsed.name.nil? && parsed.party.nil?
-            if @last_section[:name] && @last_section[:text].empty?
-              parsed.name = @last_section[:name]
-              parsed.party = @last_section[:party]
-              parsed.title ||= @last_section[:title]
-            else
-#              raise "name and party is missing: #{parsed.to_hash.inspect}: #{@current_node}"
-            end
+          # sometimes the name is entered as a separate but empty speech
+          if parsed.name.nil? && parsed.party.nil? && @last_section[:name] && @last_section[:text].empty?
+            parsed.name = @last_section[:name]
+            parsed.party = @last_section[:party]
+            parsed.title ||= @last_section[:title]
           end
 
           parsed.party = 'FrP' if parsed.party == 'Frp'
@@ -151,6 +155,7 @@ module Hdo
           result.time  = create_time($3, $4, $5)
         when /^(.+?)#{DATE_EXP}:?$/
           result.name = $1
+          result.party = party_for(result.name)
           result.time = create_time($2, $3, $4)
         when /^(.+?)#{PARTY_EXP} (\[klokkeslett mangler\]|\(fra salen\)):?$/
           result.name  = $1
@@ -178,13 +183,7 @@ module Hdo
       end
 
       def party_for(name)
-        party = self.class.party_cache[name]
-
-        if party
-          party
-        else
-          nil
-        end
+        @name_cache[name]
       end
 
     end
