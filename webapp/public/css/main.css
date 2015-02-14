@@ -13,7 +13,7 @@
     color: #eee;
 }
 
-.hit em {
+.hit em, .highlight {
     background-color: #fadd00;
     color: black;
     font-style: normal;
@@ -23,3 +23,6 @@
     padding: 2em 0;
 }
 
+.modal-content .hit {
+    padding: 0 0 1em 0;
+}

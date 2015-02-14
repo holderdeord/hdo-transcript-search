@@ -63,8 +63,8 @@ class SearchHit extends React.Component {
         SearchAppDispatcher.handleViewAction({
             type: ActionTypes.SPEECH_CONTEXT,
             transcript: source.transcript,
-            start: source.order - 2,
-            end: source.order + 2
+            start: source.order - 1,
+            end: source.order + 1
         });
     }
 }

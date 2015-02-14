@@ -4,9 +4,10 @@ import ActionTypes         from '../constants/ActionTypes';
 import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 import TranscriptStore     from '../stores/TranscriptStore';
 
-var SearchForm        = React.createFactory(require('./SearchForm'));
-var Timeline          = React.createFactory(require('./Timeline'));
-var ResultDetails     = React.createFactory(require('./ResultDetails'));
+var SearchForm    = React.createFactory(require('./SearchForm'));
+var Timeline      = React.createFactory(require('./Timeline'));
+var ResultDetails = React.createFactory(require('./ResultDetails'));
+var SpeechModal   = React.createFactory(require('./SpeechModal'));
 
 var {div} = React.DOM;
 
@@ -34,6 +35,7 @@ class SearchApp extends React.Component {
 
     componentDidMount() {
         TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        // TODO: use keymaster to provide some instructions on '?'
     }
 
     componentWillUnmount() {
@@ -55,7 +57,8 @@ class SearchApp extends React.Component {
         return div(null,
                    SearchForm(),
                    Timeline(this.state),
-                   ResultDetails(this.state)
+                   ResultDetails(this.state),
+                   SpeechModal()
                   );
     }
 }

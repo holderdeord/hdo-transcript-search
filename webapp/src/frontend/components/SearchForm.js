@@ -1,4 +1,5 @@
-import React from 'react';
+import React               from 'react';
+import keymaster           from 'keymaster';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
@@ -17,10 +18,12 @@ class SearchForm extends React.Component {
 
     componentDidMount() {
         TranscriptStore.addChangeListener(this.reset.bind(this));
+        keymaster('/', this.handleFocus.bind(this));
     }
 
     componentWillUnmount() {
         TranscriptStore.removeChangeListener(this.reset.bind(this));
+        keymaster.unbind('/', this.handleFocus.bind(this));
     }
 
     render() {
@@ -38,6 +41,7 @@ class SearchForm extends React.Component {
             type: 'search',
             className: 'form-control input-lg',
             name: 'query',
+            ref: 'query',
             autoFocus: true,
             placeholder: 'Ord eller eksakt frase',
             tabIndex: 0,
@@ -107,6 +111,11 @@ class SearchForm extends React.Component {
         if (event.keyCode === 13) {
             this.handleSearch();
         }
+    }
+
+    handleFocus(event) {
+        event.preventDefault();
+        React.findDOMNode(this.refs.query).focus();
     }
 }
 
