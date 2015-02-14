@@ -27,6 +27,7 @@ class TopHits extends React.Component {
         var timestamp = moment(source.time).format('LLL');
         var person    = source.name;
         var roles     = [source.title, source.party].filter(s => s && s !== 'President' && s !== 'Representant');
+        var highlight = hit.highlight ? hit.highlight.text : '';
 
         if (roles.length) {
             person = `${person} (${roles.join(', ')})`;
@@ -36,7 +37,7 @@ class TopHits extends React.Component {
                   div({className: 'pull-right'},
                       a({href: href, style: {color: 'inherit'}}, timestamp)),
                   div(null, person),
-                  div({className: 'text-muted', dangerouslySetInnerHTML: {__html: hit.highlight.text}})
+                  div({className: 'text-muted', dangerouslySetInnerHTML: {__html: highlight}})
                  );
     }
 }
