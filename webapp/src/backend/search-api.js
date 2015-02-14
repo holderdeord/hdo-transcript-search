@@ -48,7 +48,8 @@ class SearchAPI {
                     ]
                 }
             },
-            size: end - start + 1
+            size: end - start + 1,
+            sort: 'order'
         };
 
         return es
