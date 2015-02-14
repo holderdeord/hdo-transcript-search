@@ -68,7 +68,6 @@ module Hdo
         if section[:party].nil? && section[:title].nil?
           @errors << {error: "both party and title is null", section: section}
         elsif section[:party].nil? && section[:name] != "Presidenten"
-          binding.pry if @name_cache.any?
           @errors << {error: "party missing", name: section[:name], title: section[:title]}
         end
 
@@ -92,10 +91,17 @@ module Hdo
           end
 
           # sometimes the name is entered as a separate but empty speech
-          if parsed.name.nil? && parsed.party.nil? && @last_section[:name] && @last_section[:text].empty?
-            parsed.name = @last_section[:name]
-            parsed.party = @last_section[:party]
-            parsed.title ||= @last_section[:title]
+          if parsed.name.nil? && parsed.party.nil?
+            if @last_section[:name] && @last_section[:text].empty?
+              parsed.name = @last_section[:name]
+              parsed.party = @last_section[:party]
+              parsed.title ||= @last_section[:title]
+            elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?)ministeren: «(.+?)»/m
+              parsed.name  = $2
+              parsed.title = "Representant"
+              parsed.text  = $4
+              parsed.party = party_for(parsed.name)
+            end
           end
 
           parsed.party = 'FrP' if parsed.party == 'Frp'

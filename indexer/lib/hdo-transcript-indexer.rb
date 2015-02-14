@@ -165,11 +165,7 @@ module Hdo
             'order'      => idx
           }.merge(section)
 
-          res = @es.index index: @index_name, type: 'speech', id: id, body: doc
-
-          unless res['created']
-            raise "failed to index: #{id}:  #{doc.inspect}"
-          end
+          @es.index index: @index_name, type: 'speech', id: id, body: doc
         end
 
         if data['errors']
