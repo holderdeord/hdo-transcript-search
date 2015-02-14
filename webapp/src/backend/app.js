@@ -21,6 +21,10 @@ if(app.get('env') === 'development') {
     app.use(webpackMiddleware(webpack(webpackConf)));
 }
 
+function errorHandler(err) {
+    return this.status(500).json({error: err.toString(),stack: err.stack.split('\n')});
+}
+
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
 // routes
@@ -28,7 +32,7 @@ app.get('/api/search', (req, res) => {
     if (req.query.query) {
         api.search(req.query)
             .then(results => res.json(results))
-            .catch(err => res.status(500).json({error: err}));
+            .catch(errorHandler.bind(res));
     } else {
         res.status(400).json({error: "missing query param"});
     }
@@ -37,7 +41,18 @@ app.get('/api/search', (req, res) => {
 app.get('/api/speeches/:id', (req, res) => {
     api.getSpeech(req.params.id)
         .then(results => res.json(results))
-        .catch(err => res.status(500).json({error: err}));
+        .catch(errorHandler.bind(res));
+});
+
+app.get('/api/context/:id/:start/:end', (req, res) => {
+    var {id,start,end} = req.params;
+
+    console.log(id, start, end);
+
+    api.getContext(id, +start, +end)
+        .then(d => res.json(d))
+        .catch(errorHandler.bind(res));
+
 });
 
 module.exports = app;

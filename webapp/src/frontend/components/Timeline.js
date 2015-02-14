@@ -40,6 +40,7 @@ class Timeline extends React.Component {
                     padding: { top: 0, bottom: 0 }
                 }
             },
+            transition: { duration: 0 },
             point: { show: false },
             subchart: { show: false },
             color: { pattern: Colors.pattern }

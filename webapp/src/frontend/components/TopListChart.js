@@ -6,8 +6,8 @@ var {div,h3} = React.DOM;
 
 class TopListChart extends React.Component {
 
-    constructor(props) {
-        super(props);
+    componentDidUpdate() {
+        this._loadData();
     }
 
     componentDidMount() {
@@ -20,14 +20,10 @@ class TopListChart extends React.Component {
 
     render() {
         return div(
-            {style: {display: Object.keys(this.props.counts).length ? 'block' : 'none'}},
+            null,
             h3(null, this.props.title),
             div({ref: 'chart'})
         );
-    }
-
-    componentDidUpdate() {
-        this._loadData();
     }
 
     _renderChart() {
@@ -62,6 +58,7 @@ class TopListChart extends React.Component {
             ];
 
             this.chart.load({columns: cols});
+            setTimeout(this.chart.flush, 300); // hack for https://github.com/masayuki0812/c3/issues/934
         } else {
             this._unloadChart();
         }

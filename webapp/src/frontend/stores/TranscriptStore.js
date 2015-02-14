@@ -1,25 +1,10 @@
-var SearchAppDispatcher = require('../dispatcher/SearchAppDispatcher');
-var ActionTypes         = require('../constants/ActionTypes');
+import BaseStore from './BaseStore';
+import ActionTypes from '../constants/ActionTypes';
 
-import EventEmitter from 'events';
-
-class TranscriptStore extends EventEmitter {
+class TranscriptStore extends BaseStore {
     constructor() {
         super();
         this._reset();
-        this.dispatchToken = SearchAppDispatcher.register(this._handleAction.bind(this));
-    }
-
-    emitChange() {
-        this.emit('change');
-    }
-
-    addChangeListener(callback) {
-        this.on('change', callback);
-    }
-
-    removeChangeListener(callback) {
-        this.removeListener('change', callback);
     }
 
     getQuery() {
@@ -30,7 +15,7 @@ class TranscriptStore extends EventEmitter {
         return this.state.result;
     }
 
-    _handleAction(payload) {
+    handleAction(payload) {
         var action = payload.action;
 
         switch(action.type) {

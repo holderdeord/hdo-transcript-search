@@ -4,16 +4,25 @@ import ActionTypes         from '../constants/ActionTypes';
 import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 import TranscriptStore     from '../stores/TranscriptStore';
 
-var SearchForm    = React.createFactory(require('./SearchForm'));
-var Timeline      = React.createFactory(require('./Timeline'));
-var ResultDetails = React.createFactory(require('./ResultDetails'));
+var SearchForm        = React.createFactory(require('./SearchForm'));
+var Timeline          = React.createFactory(require('./Timeline'));
+var ResultDetails     = React.createFactory(require('./ResultDetails'));
 
 var {div} = React.DOM;
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
-    if (payload.action.type === ActionTypes.SEARCH) {
+    console.log(payload);
+
+    switch (payload.action.type) {
+    case ActionTypes.SEARCH:
         TranscriptSearchAPI.search(payload.action.query, payload.action.interval);
+        break;
+    case ActionTypes.SPEECH_CONTEXT:
+        TranscriptSearchAPI.speechContext(payload.action.transcript, payload.action.start, payload.action.end);
+        break;
+    default:
+        // nothing
     }
 });
 

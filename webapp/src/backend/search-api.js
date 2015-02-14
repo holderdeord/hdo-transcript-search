@@ -38,6 +38,24 @@ class SearchAPI {
             .then(response => response._source);
     }
 
+    getContext(id, start, end) {
+        var body = {
+            filter: {
+                and: {
+                    filters: [
+                        {term: {transcript: id}},
+                        {range: {order: {gte: start, lte: end}}}
+                    ]
+                }
+            },
+            size: end - start + 1
+        };
+
+        return es
+            .search({index: INDEX_NAME, type: INDEX_TYPE, body: body})
+            .then(response => response.hits.hits ? response.hits.hits.map(h => h._source) : []);
+    }
+
     _calculatePercentages(subset, set) {
         return Object.keys(set).map(key => {
             var total = set[key];
