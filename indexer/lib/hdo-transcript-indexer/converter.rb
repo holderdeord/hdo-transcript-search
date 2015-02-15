@@ -96,7 +96,7 @@ module Hdo
               parsed.name = @last_section[:name]
               parsed.party = @last_section[:party]
               parsed.title ||= @last_section[:title]
-            elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?)ministeren: «(.+?)»/m
+            elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?): «(.+?)»/m
               parsed.name  = $2
               parsed.title = "Representant"
               parsed.text  = $4
