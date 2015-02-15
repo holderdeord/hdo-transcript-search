@@ -165,7 +165,19 @@ module Hdo
             'order'      => idx
           }.merge(section)
 
-          @es.index index: @index_name, type: 'speech', id: id, body: doc
+          retries = 0
+          begin
+            @es.index index: @index_name, type: 'speech', id: id, body: doc
+          rescue Faraday::TimeoutError => ex
+            @logger.info "#{ex.message}, retrying"
+
+            if retries <= 3
+              retries += 1
+              retry
+            else
+              raise
+            end
+          end
         end
 
         if data['errors']
