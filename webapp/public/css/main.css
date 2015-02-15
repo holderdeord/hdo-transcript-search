@@ -3,14 +3,14 @@
     padding-bottom: 2rem;
     margin-bottom: 3rem;
     background-position: 50% 20%;
-    background-image: url(http://files.holderdeord.no/images/blog-header.jpg);
+    background-image: url(http://files.holderdeord.no/images/lion01.jpg);
     background-size: cover;
     text-align: center;
     height: 25rem;
 }
 
 .masthead h1 {
-    color: #eee;
+    color: #111;
 }
 
 .hit em, .highlight {
