@@ -79,53 +79,65 @@ module Hdo
 
         case node.name
         when 'innlegg'
-          name_str = node.css('navn').text.strip
-          text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
-
-          return if IGNORED_NAMES.include?(name_str)
-
-          parsed = parse_name_string(name_str)
-
-          if parsed.name =~ /\(|\)/
-            raise "invalid name: #{parsed.to_hash.inspect}"
-          end
-
-          # sometimes the name is entered as a separate but empty speech
-          if parsed.name.nil? && parsed.party.nil?
-            if @last_section[:name] && @last_section[:text].empty?
-              parsed.name = @last_section[:name]
-              parsed.party = @last_section[:party]
-              parsed.title ||= @last_section[:title]
-            elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?): «(.+?)»/m
-              parsed.name  = $2
-              parsed.title = "Representant"
-              parsed.text  = $4
-              parsed.party = party_for(parsed.name)
-            end
-          end
-
-          parsed.party = 'FrP' if parsed.party == 'Frp'
-
-          {
-            :name  => parsed.name ? parsed.name.strip : parsed.name,
-            :party => parsed.party,
-            :time  => parsed.time ? parsed.time.iso8601 : @time.iso8601,
-            :text  => text,
-            :title => parsed.title || (parsed.party ? 'Representant' : nil)
-          }
+          parse_speech(node)
         when 'presinnl'
-          {
-            :name  => "Presidenten",
-            :party => nil,
-            :text  => clean_text(node.text),
-            :time  => @time.iso8601,
-            :title => "President"
-          }
+          parse_president_speech(node)
         end
+      end
+
+      def parse_speech(node)
+        name_str = node.css('navn').text
+        text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
+
+        return if IGNORED_NAMES.include?(name_str)
+
+        parsed = parse_name_string(name_str)
+
+        # sometimes the name is entered as a separate but empty speech
+        if parsed.name.nil? && parsed.party.nil?
+          if @last_section[:name] && @last_section[:text].empty?
+            parsed.name = @last_section[:name]
+            parsed.party = @last_section[:party]
+            parsed.title ||= @last_section[:title]
+          elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?): «(.+?)»/m
+            parsed.name  = $2
+            parsed.title = "Representant"
+            parsed.text  = $4
+            parsed.party = party_for(parsed.name)
+          end
+        end
+
+        parsed.party = 'FrP' if parsed.party == 'Frp'
+
+        {
+          :name  => parsed.name ? parsed.name.strip : parsed.name,
+          :party => parsed.party,
+          :time  => parsed.time ? parsed.time.iso8601 : @time.iso8601,
+          :text  => text,
+          :title => parsed.title || (parsed.party ? 'Representant' : nil)
+        }
+      end
+
+      def parse_president_speech(node)
+        {
+          :name  => "Presidenten",
+          :party => nil,
+          :text  => clean_text(node.text),
+          :time  => @time.iso8601,
+          :title => "President"
+        }
       end
 
       def clean_text(str)
         str.strip.gsub(/\n\s*/, ' ').gsub(/\s{2,}/, ' ')
+      end
+
+      def clean_name_string(str)
+        str.gsub("[ [", "[").
+          gsub(" [klokkeslett mangler]", "").
+          gsub(" ", ""). # weird space
+          gsub(/\xC2\xA0/, "").
+          strip
       end
 
       DATE_EXP  = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
@@ -133,12 +145,7 @@ module Hdo
 
       def parse_name_string(str)
         result = Hashie::Mash.new
-
-        str.gsub!("[ [", "[")
-        str.gsub!(" [klokkeslett mangler]", "")
-        str.gsub!(" ", "")
-        str.gsub!(/\xC2\xA0/, "")
-        str.strip!
+        str = clean_name_string(str)
 
         case str
         when "", ":"
@@ -174,6 +181,10 @@ module Hdo
           result.title = "President"
         else
           raise "could not parse name string from #{str.inspect} in #{@current_node.to_s}"
+        end
+
+        if result.name =~ /\(|\)/
+          raise "invalid name: #{result.to_hash.inspect}"
         end
 
         result
