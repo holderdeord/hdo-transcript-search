@@ -49,12 +49,18 @@ class TopListChart extends React.Component {
     }
 
     _loadData() {
-        var keys = Object.keys(this.props.counts);
+        let keys = [];
+        let values = [];
+
+        this.props.counts.forEach(e => {
+            keys.push(e.key);
+            values.push(e.count);
+        });
 
         if (keys.length) {
             var cols = [
                 ['x'].concat(keys),
-                ['Antall innlegg'].concat(keys.map(k => this.props.counts[k]))
+                ['Antall innlegg'].concat(values)
             ];
 
             this.chart.load({columns: cols});
@@ -67,7 +73,7 @@ class TopListChart extends React.Component {
 
 TopListChart.propTypes = {
     title: React.PropTypes.string.isRequired,
-    counts: React.PropTypes.object.isRequired
+    counts: React.PropTypes.array.isRequired
 };
 
 module.exports = TopListChart;

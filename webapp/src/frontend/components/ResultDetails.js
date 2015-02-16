@@ -20,8 +20,8 @@ class ResultDetails extends React.Component {
             {style: this.props.query.length ? this.styles.visible : this.styles.hidden},
             div(
                 {className: 'row result-details'},
-                div({className: 'col-md-6'}, TopListChart({title: 'Personer', counts: this.props.result.peopleCounts})),
-                div({className: 'col-md-6'}, TopListChart({title: 'Partier', counts: this.props.result.partyCounts}))
+                div({className: 'col-md-6'}, TopListChart({title: 'Personer', counts: this.props.result.people})),
+                div({className: 'col-md-6'}, TopListChart({title: 'Partier', counts: this.props.result.parties}))
             ),
             hr(),
             div(

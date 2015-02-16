@@ -42,10 +42,10 @@ class TranscriptStore extends BaseStore {
             query: '',
             result: {
                 hits: [],
-                totalCount: 0,
-                hitCount: 0,
-                partyCounts: {},
-                peopleCounts: {}
+                counts: { total: 0, hits: 0, pct: 0 },
+                people: [],
+                parties: [],
+                timeline: []
             }
         };
     }

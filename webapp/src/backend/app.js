@@ -47,8 +47,6 @@ app.get('/api/speeches/:id', (req, res) => {
 app.get('/api/context/:id/:start/:end', (req, res) => {
     var {id,start,end} = req.params;
 
-    console.log(id, start, end);
-
     api.getContext(id, +start, +end)
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));

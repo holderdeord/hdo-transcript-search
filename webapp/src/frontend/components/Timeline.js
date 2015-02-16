@@ -49,7 +49,7 @@ class Timeline extends React.Component {
 
     componentDidUpdate() {
         if (this.props.query.length && this.props.result) {
-            this._addData(this.props.query, this.props.result.counts);
+            this._addData(this.props.query, this.props.result.timeline);
         } else {
             this.chart.unload();
         }
@@ -61,7 +61,7 @@ class Timeline extends React.Component {
         var vals = [];
 
         data.forEach(e => {
-            dates.push(new Date(e.date));
+            dates.push(new Date(e.key));
             vals.push(e.pct);
         });
 

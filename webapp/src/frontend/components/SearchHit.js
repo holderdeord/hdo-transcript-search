@@ -23,14 +23,14 @@ class SearchHit extends React.Component {
     }
 
     renderMetaData() {
-        var source    = this.props.hit._source;
-        var href      = `/api/speeches/${this.props.hit._id}`; // FIXME: don't hardcode paths
-        var person    = source.name;
-        var timestamp = moment(source.time).format('LLL');
-        var title     = this.shouldShowTitle(source) ? source.title : '';
+        var hit       = this.props.hit;
+        var href      = `/api/speeches/${hit.id}`; // FIXME: don't hardcode paths
+        var person    = hit.name;
+        var timestamp = moment(hit.time).format('LLL');
+        var title     = this.shouldShowTitle(hit) ? hit.title : '';
 
-        if (source.party) {
-            person = `${person} (${source.party})`;
+        if (hit.party) {
+            person = `${person} (${hit.party})`;
         }
 
         return div(
@@ -42,11 +42,9 @@ class SearchHit extends React.Component {
     }
 
     renderHighlight() {
-        var highlight = this.props.hit.highlight ? this.props.hit.highlight.text : '';
-
         return div({
             className: 'col-md-5',
-            dangerouslySetInnerHTML: {__html: highlight}
+            dangerouslySetInnerHTML: {__html: this.props.hit.highlight}
         });
     }
 
@@ -58,13 +56,13 @@ class SearchHit extends React.Component {
     }
 
     showContext() {
-        var source = this.props.hit._source;
+        var hit = this.props.hit;
 
         SearchAppDispatcher.handleViewAction({
             type: ActionTypes.SPEECH_CONTEXT,
-            transcript: source.transcript,
-            start: source.order - 1,
-            end: source.order + 1
+            transcript: hit.transcript,
+            start: hit.order - 1,
+            end: hit.order + 1
         });
     }
 }
