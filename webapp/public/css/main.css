@@ -13,6 +13,11 @@
     color: #111;
 }
 
+.masthead a {
+    text-decoration: underline;
+    color: inherit;
+}
+
 .hit em, .highlight {
     background-color: #fadd00;
     color: black;
