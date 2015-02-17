@@ -1,2 +1,11 @@
 node_modules/
 public/bundle.js
+public/bundle.js.map
+public/*woff2
+public/*woff
+public/*svg
+public/*ttf
+public/*eot
+
+
+
