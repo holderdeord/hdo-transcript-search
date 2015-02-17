@@ -32,7 +32,7 @@ class SearchAPI {
 
             var promise = Promise.join(
                 es.search(this._buildAggregationsQuery(opts)),
-                // TODO: replace this second query with top_hits: 
+                // TODO: replace this second query with top_hits:
                 // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html
                 es.search(this._buildHitsQuery(opts))
             );
@@ -74,21 +74,26 @@ class SearchAPI {
         return value;
     }
 
-    _calculatePercentages(subset, set) {
-        return Object.keys(subset).map(key => {
-            let total = set[key];
-            let val   = subset[key];
+    _calculatePercentages(subset, set, opts = {}) {
+        var keys;
 
-            if (total && val) {
-                return {
-                    key: key,
-                    count: val,
-                    total: total,
-                    pct: (val / total) * 100
-                };
-            } else {
-                throw new Error(`missing values for ${key}: total=${total} val=${val}`);
-            }
+        if (opts && opts.combineKeys) {
+            keys = Object.keys(subset).concat(Object.keys(set));
+            keys = keys.filter((k, i) => keys.indexOf(k) === i); // index
+        } else {
+            keys = Object.keys(subset);
+        }
+
+        return keys.map(key => {
+            let total = set[key] || 0.0;
+            let val   = subset[key] || 0.0;
+
+            return {
+                key: key,
+                count: val,
+                total: total,
+                pct: total === 0 ? 0 : (val / total) * 100
+            };
         });
     }
 
@@ -102,7 +107,8 @@ class SearchAPI {
             hits: hitsResponse.hits.hits.map(this._buildHit),
             timeline: this._calculatePercentages(
                 this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
-                this._parseAggregation(aggResponse.aggregations.timeline)
+                this._parseAggregation(aggResponse.aggregations.timeline),
+                {combineKeys: true}
             ),
             parties: this._calculatePercentages(
                 this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
