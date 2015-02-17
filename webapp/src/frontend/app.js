@@ -1,4 +1,5 @@
 import React from 'react';
+require("../../public/css/main.less");
 
 var SearchApp = React.createFactory(require('./components/SearchApp'));
 
