@@ -1,4 +1,4 @@
-require("6to5/register");
+require("babel/register");
 
 var app   = require('./src/backend/app');
 var debug = require('debug')('server');

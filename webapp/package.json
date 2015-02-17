@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "6to5": "^3.5.3",
+    "babel": "^4.0.1",
     "bluebird": "^2.3.11",
     "c3": "^0.4.9",
     "cheerio": "^0.18.0",
@@ -35,8 +35,8 @@
     "reqwest": "^1.1.5"
   },
   "devDependencies": {
-    "6to5-core": "^3.5.3",
-    "6to5-loader": "^3.0.0",
+    "babel-core": "^4.0.1",
+    "babel-loader": "^4.0.0",
     "errorhandler": "^1.2.2",
     "jshint": "^2.6.0",
     "keymaster": "^1.6.2",

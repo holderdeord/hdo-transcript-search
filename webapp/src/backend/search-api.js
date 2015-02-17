@@ -32,6 +32,8 @@ class SearchAPI {
 
             var promise = Promise.join(
                 es.search(this._buildAggregationsQuery(opts)),
+                // TODO: replace this second query with top_hits: 
+                // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html
                 es.search(this._buildHitsQuery(opts))
             );
 
