@@ -98,6 +98,11 @@ class SearchAPI {
     }
 
     _buildResponse(aggResponse, hitsResponse) {
+        let people = this._calculatePercentages(
+            this._parseAggregation(aggResponse.aggregations.filteredPeople.people),
+            this._parseAggregation(aggResponse.aggregations.people)
+        );
+
         return {
             counts: {
                 total: aggResponse.hits.total,
@@ -114,10 +119,10 @@ class SearchAPI {
                 this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
                 this._parseAggregation(aggResponse.aggregations.parties)
             ),
-            people: this._calculatePercentages(
-                this._parseAggregation(aggResponse.aggregations.filteredPeople.people),
-                this._parseAggregation(aggResponse.aggregations.people)
-            )
+            people: {
+                count: people.sort((a,b) => b.count - a.count).slice(0, 10),
+                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 10)
+            }
         };
     }
 
@@ -150,6 +155,8 @@ class SearchAPI {
                 }
             },
             highlight: {
+                pre_tags: ['<mark>'],
+                post_tags: ['</mark>'],
                 fields: { text: {} }
             },
             size: opts.size || 10,
@@ -213,7 +220,7 @@ class SearchAPI {
                     people: {
                         terms: {
                             field: 'name',
-                            size: opts.size || 10
+                            size: 0
                         }
                     }
                 }

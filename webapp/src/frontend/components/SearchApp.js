@@ -37,6 +37,12 @@ class SearchApp extends React.Component {
     componentDidMount() {
         TranscriptStore.addChangeListener(this.handleChange.bind(this));
         // TODO: use keymaster to provide some instructions on '?'
+
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.SEARCH,
+            query: this.initialQuery(),
+            interval: '24w'
+        });
     }
 
     componentWillUnmount() {
@@ -58,11 +64,20 @@ class SearchApp extends React.Component {
         };
     }
 
+    initialQuery() {
+        return 'skatt';
+    }
+
     render() {
         return div(
             null,
-            SearchForm({unit: this.state.unit, onUnitChange: this.handleUnitChange.bind(this)}),
-            Timeline(this.state),
+            SearchForm(),
+            Timeline({
+                unit: this.state.unit,
+                query: this.state.query,
+                result: this.state.result,
+                onUnitChange: this.handleUnitChange.bind(this)
+            }),
             ResultDetails(this.state),
             SpeechModal()
         );

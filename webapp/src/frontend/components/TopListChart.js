@@ -7,6 +7,7 @@ var {div,h3} = React.DOM;
 class TopListChart extends React.Component {
 
     componentDidUpdate() {
+        this._unloadChart();
         this._loadData();
     }
 
@@ -51,11 +52,14 @@ class TopListChart extends React.Component {
     _loadData() {
         let keys = [];
         let values = [];
+        let unit = this.props.unit;
 
-        this.props.counts.forEach(e => {
-            keys.push(e.key);
-            values.push(e[this.props.unit]);
-        });
+        this.props.counts
+            .sort((a,b) => b[unit] - a[unit])
+            .forEach(e => {
+                keys.push(e.key);
+                values.push(e[unit]);
+            });
 
         if (keys.length) {
             var cols = [

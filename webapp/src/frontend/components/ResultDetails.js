@@ -22,11 +22,19 @@ class ResultDetails extends React.Component {
                 {className: 'row result-details'},
                 div(
                     {className: 'col-md-6'},
-                    TopListChart({title: 'Personer', counts: this.props.result.people, unit: this.props.unit})
+                    TopListChart({
+                        title: 'Personer',
+                        counts: this.props.result.people[this.props.unit],
+                        unit: this.props.unit
+                    })
                 ),
                 div(
                     {className: 'col-md-6'},
-                    TopListChart({title: 'Partier', counts: this.props.result.parties, unit: this.props.unit})
+                    TopListChart({
+                        title: 'Partier',
+                        counts: this.props.result.parties,
+                        unit: this.props.unit
+                    })
                 )
             ),
             hr(),

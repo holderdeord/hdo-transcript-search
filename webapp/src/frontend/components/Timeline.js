@@ -2,17 +2,14 @@ import React from 'react';
 import c3 from 'c3';
 import Colors from '../utils/Colors';
 
-var {div,small} = React.DOM;
+var {div,select,option} = React.DOM;
 
 class Timeline extends React.Component {
     render() {
         return div(
-            {className: 'row', style: { display: this.props.query.length ? 'block' : 'none' }},
-            small(null, this.getLabel()),
-            div({
-                className: 'timeline',
-                ref: 'chart'
-            })
+            {className: 'row timeline', style: { display: this.props.query.length ? 'block' : 'none' }},
+            this.renderUnitSelect(),
+            div({ref: 'chart'})
         );
     }
 
@@ -42,7 +39,7 @@ class Timeline extends React.Component {
                 }
             },
             transition: { duration: 0 },
-            point: { show: false },
+            point: { show: true },
             subchart: { show: false },
             color: { pattern: Colors.pattern }
         });
@@ -58,6 +55,14 @@ class Timeline extends React.Component {
 
     getLabel() {
         return this.props.unit === 'pct' ? 'Prosent av alle innlegg' : 'Antall innlegg';
+    }
+
+    renderUnitSelect() {
+        return select(
+            {checked: this.props.unit, onChange: this.props.onUnitChange},
+            option({value: 'pct'}, 'Prosent av alle innlegg'),
+            option({value: 'count'}, 'Antall innlegg')
+        );
     }
 
     formatTick(d) {

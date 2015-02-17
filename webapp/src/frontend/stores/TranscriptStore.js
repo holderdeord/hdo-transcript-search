@@ -43,7 +43,7 @@ class TranscriptStore extends BaseStore {
             result: {
                 hits: [],
                 counts: { total: 0, hits: 0, pct: 0 },
-                people: [],
+                people: { count: [], pct: []},
                 parties: [],
                 timeline: []
             }
