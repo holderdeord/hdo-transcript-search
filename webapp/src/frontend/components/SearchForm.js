@@ -4,7 +4,7 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
 
-var {div,input,select,option} = React.DOM;
+var {div,input,select,option,label} = React.DOM;
 
 class SearchForm extends React.Component {
     constructor(props) {
@@ -29,14 +29,14 @@ class SearchForm extends React.Component {
     render() {
         return div({className: 'form-horizontal'},
                    div({className: 'row'},
-                       div({className: 'col-md-8'}, this.getSearchInput()),
-                       div({className: 'col-md-2'}, this.getIntervalSelect()),
-                       div({className: 'col-md-2'}, this.getButtons())
+                       div({className: 'col-md-8'}, this.renderSearchInput()),
+                       div({className: 'col-md-2'}, this.renderIntervalSelect()),
+                       div({className: 'col-md-2'}, this.renderButtons())
                       )
                   );
     }
 
-    getSearchInput() {
+    renderSearchInput() {
         return input({
             type: 'search',
             className: 'form-control input-lg',
@@ -51,34 +51,46 @@ class SearchForm extends React.Component {
         });
     }
 
-    getIntervalSelect() {
-        return select({ className: 'form-control input-xs',
-                        name: 'interval',
-                        value: this.state.interval,
-                        onChange: this.handleIntervalChange.bind(this)
-                      },
-                      option({value: 'month'}, '1 måned'),
-                      option({value: '12w'}, '3 måneder'),
-                      option({value: '24w'}, '6 måneder'),
-                      option({value: 'year'}, '1 år')
-                     );
+    renderIntervalSelect() {
+        return select(
+            { className: 'form-control input-xs',
+              name: 'interval',
+              value: this.state.interval,
+              onChange: this.handleIntervalChange.bind(this)
+            },
+            option({value: 'month'}, '1 måned'),
+            option({value: '12w'}, '3 måneder'),
+            option({value: '24w'}, '6 måneder'),
+            option({value: 'year'}, '1 år')
+        );
     }
 
-    getButtons() {
-        return div({className: 'form-group'},
-                   input({
-                       type: 'submit',
-                       className: 'btn btn-default btn-sm',
-                       value: 'Legg til ord',
-                       onClick: this.handleSearch.bind(this)
-                   }),
-                   input({
-                       type: 'button',
-                       className: 'btn btn-default btn-sm',
-                       value: 'Nullstill',
-                       onClick: this.handleReset.bind(this)
-                   })
-                  );
+    renderButtons() {
+        return div(
+            {className: 'form-group'},
+            input({
+                type: 'button',
+                className: 'btn btn-default btn-sm',
+                value: 'Nullstill',
+                onClick: this.handleReset.bind(this)
+            }),
+            label({className: 'radio'},
+                 input({
+                     type: 'radio',
+                     value: 'pct',
+                     name: 'unit-pct',
+                     checked: this.props.unit === 'pct',
+                     onChange: this.props.onUnitChange
+                 }), 'Prosent'),
+            label({className: 'radio'},
+                 input({
+                     type: 'radio',
+                     value: 'count',
+                     name: 'unit-count',
+                     checked: this.props.unit === 'count',
+                     onChange: this.props.onUnitChange
+                 }), 'Antall')
+        );
     }
 
     handleSearch() {
@@ -118,5 +130,10 @@ class SearchForm extends React.Component {
         React.findDOMNode(this.refs.query).focus();
     }
 }
+
+SearchForm.propTypes = {
+    onUnitChange: React.PropTypes.func.isRequired,
+    unit: React.PropTypes.string.isRequired
+};
 
 module.exports = SearchForm;

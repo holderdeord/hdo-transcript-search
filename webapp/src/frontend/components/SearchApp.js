@@ -30,7 +30,8 @@ SearchAppDispatcher.register(function (payload) {
 class SearchApp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = this.fetchState();
+        this.state = this.fetchStateFromStore();
+        this.state.unit = 'pct';
     }
 
     componentDidMount() {
@@ -43,10 +44,14 @@ class SearchApp extends React.Component {
     }
 
     handleChange() {
-        this.setState(this.fetchState());
+        this.setState(this.fetchStateFromStore());
     }
 
-    fetchState() {
+    handleUnitChange(event) {
+        this.setState({unit: event.target.value});
+    }
+
+    fetchStateFromStore() {
         return {
             query: TranscriptStore.getQuery(),
             result: TranscriptStore.getResult()
@@ -54,12 +59,13 @@ class SearchApp extends React.Component {
     }
 
     render() {
-        return div(null,
-                   SearchForm(),
-                   Timeline(this.state),
-                   ResultDetails(this.state),
-                   SpeechModal()
-                  );
+        return div(
+            null,
+            SearchForm({unit: this.state.unit, onUnitChange: this.handleUnitChange.bind(this)}),
+            Timeline(this.state),
+            ResultDetails(this.state),
+            SpeechModal()
+        );
     }
 }
 

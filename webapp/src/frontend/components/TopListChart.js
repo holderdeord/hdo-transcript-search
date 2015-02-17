@@ -54,13 +54,13 @@ class TopListChart extends React.Component {
 
         this.props.counts.forEach(e => {
             keys.push(e.key);
-            values.push(e.count);
+            values.push(e[this.props.unit]);
         });
 
         if (keys.length) {
             var cols = [
                 ['x'].concat(keys),
-                ['Antall innlegg'].concat(values)
+                [this._getLabel()].concat(values)
             ];
 
             this.chart.load({columns: cols});
@@ -69,11 +69,17 @@ class TopListChart extends React.Component {
             this._unloadChart();
         }
     }
+
+    _getLabel() {
+        return this.props.unit === 'pct' ? 'Prosent av innlegg' : 'Antall innlegg';
+    }
+
 }
 
 TopListChart.propTypes = {
     title: React.PropTypes.string.isRequired,
-    counts: React.PropTypes.array.isRequired
+    counts: React.PropTypes.array.isRequired,
+    unit: React.PropTypes.string.isRequired
 };
 
 module.exports = TopListChart;

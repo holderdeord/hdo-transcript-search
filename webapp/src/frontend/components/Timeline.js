@@ -2,15 +2,18 @@ import React from 'react';
 import c3 from 'c3';
 import Colors from '../utils/Colors';
 
-var div = React.DOM.div;
+var {div,small} = React.DOM;
 
 class Timeline extends React.Component {
     render() {
-        return div({
-            className: 'row timeline',
-            ref: 'chart',
-            style: { display: this.props.query.length ? 'block' : 'none' }
-        });
+        return div(
+            {className: 'row', style: { display: this.props.query.length ? 'block' : 'none' }},
+            small(null, this.getLabel()),
+            div({
+                className: 'timeline',
+                ref: 'chart'
+            })
+        );
     }
 
     componentDidMount() {
@@ -32,10 +35,8 @@ class Timeline extends React.Component {
                 },
                 y: {
                     tick: {
-                        format: d => d + '%'
+                        format: this.formatTick.bind(this)
                     },
-                    label: { text: 'Prosent av alle innlegg', position: 'outer-middle' },
-                    // max: 100,
                     min: 0,
                     padding: { top: 0, bottom: 0 }
                 }
@@ -55,6 +56,13 @@ class Timeline extends React.Component {
         }
     }
 
+    getLabel() {
+        return this.props.unit === 'pct' ? 'Prosent av alle innlegg' : 'Antall innlegg';
+    }
+
+    formatTick(d) {
+        return this.props.unit === 'pct' ? `${d.toFixed(2)}%` : d;
+    }
 
     _addData(query, data) {
         var dates = [];
@@ -62,7 +70,7 @@ class Timeline extends React.Component {
 
         data.forEach(e => {
             dates.push(new Date(e.key));
-            vals.push(e.pct);
+            vals.push(e[this.props.unit]);
         });
 
         var cols = [
@@ -70,7 +78,9 @@ class Timeline extends React.Component {
             [query].concat(vals)
         ];
 
-        this.chart.load({ columns: cols });
+        this.chart.load({
+            columns: cols
+        });
     }
 
     _unloadChart() {
@@ -80,7 +90,8 @@ class Timeline extends React.Component {
 
 Timeline.propTypes = {
     query: React.PropTypes.string.isRequired,
-    result: React.PropTypes.object.isRequired
+    result: React.PropTypes.object.isRequired,
+    unit: React.PropTypes.string.isRequired
 };
 
 module.exports = Timeline;
