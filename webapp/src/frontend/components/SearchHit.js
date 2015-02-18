@@ -5,7 +5,7 @@ import moment from 'moment';
 
 moment.locale('nb');
 
-var {div,a,button} = React.DOM;
+var {div,a,button,strong} = React.DOM;
 
 class SearchHit extends React.Component {
 
@@ -34,8 +34,10 @@ class SearchHit extends React.Component {
         }
 
         return div(
-            {className: 'col-md-4'},
-            div(null, person),
+            {className: 'col-sm-3 text-right'},
+            div({},
+                strong({}, person)
+            ),
             div(null, title),
             a({className: 'text-muted', href: href}, timestamp)
         );
@@ -43,15 +45,15 @@ class SearchHit extends React.Component {
 
     renderHighlight() {
         return div({
-            className: 'col-md-5',
+            className: 'col-sm-5',
             dangerouslySetInnerHTML: {__html: this.props.hit.highlight}
         });
     }
 
     renderControls() {
         return div(
-            {className: 'col-md-3'},
-            button({className: 'btn btn-sm', onClick: this.showContext.bind(this)}, 'Se kontekst')
+            {className: 'col-sm-2 text-right'},
+            button({className: 'btn btn-default btn-sm', onClick: this.showContext.bind(this)}, 'Se kontekst')
         );
     }
 

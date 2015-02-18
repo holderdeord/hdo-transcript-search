@@ -1,7 +1,7 @@
 import React from 'react';
 var SearchHit = React.createFactory(require('./SearchHit'));
 
-var {div,h3,small} = React.DOM;
+var {div,h3,em} = React.DOM;
 
 
 class TopHits extends React.Component {
@@ -15,9 +15,9 @@ class TopHits extends React.Component {
         let hitCountText = `Fant «${q}» i ${pct}% (${hits} / ${total}) av innlegg.`;
 
         return div(
-            {className: 'col-md-8'},
+            {className: 'col-md-12'},
             h3(null, 'Treff'),
-            small(null, hitCountText),
+            em(null, hitCountText),
             result.hits.map(h => SearchHit({hit: h, key: h.id}))
         );
     }

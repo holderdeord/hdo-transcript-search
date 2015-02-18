@@ -59,7 +59,11 @@ class Timeline extends React.Component {
 
     renderUnitSelect() {
         return select(
-            {checked: this.props.unit, onChange: this.props.onUnitChange},
+            {
+                checked: this.props.unit,
+                onChange: this.props.onUnitChange,
+                className: 'input-sm'
+            },
             option({value: 'pct'}, 'Prosent av alle innlegg'),
             option({value: 'count'}, 'Antall innlegg')
         );
