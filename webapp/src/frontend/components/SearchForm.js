@@ -27,49 +27,42 @@ class SearchForm extends React.Component {
     }
 
     render() {
-        return div({className: 'form-horizontal'},
-                   div({className: 'row'},
-                       div({className: 'col-md-9'}, this.renderSearchInput()),
-                       div({className: 'col-md-3'}, this.renderButtons())
-                      )
-                  );
-    }
-
-    renderSearchInput() {
-        return input({
-            type: 'search',
-            className: 'form-control input-lg',
-            name: 'query',
-            ref: 'query',
-            autoFocus: true,
-            placeholder: 'Søk',
-            tabIndex: 0,
-            value: this.state.query,
-            onChange: this.handleQueryChange.bind(this),
-            onKeyDown: this.handleKeyDown.bind(this)
-        });
-    }
-
-    renderButtons() {
-        return div(
-            null,
-            span(
-                {},
-                input({
-                    type: 'button',
-                    className: 'btn btn-primary btn-lg',
-                    value: 'Legg til ord',
-                    onClick: this.handleSearch.bind(this)
-                })),
-            span(
-                {style: {paddingLeft: '1rem'}}, // resignation!
-                input({
-                    type: 'button',
-                    className: 'btn btn-default btn-lg',
-                    value: 'Nullstill',
-                    onClick: this.handleReset.bind(this)
-                }))
-        );
+        return  div({},
+                    div({className: 'row'},
+                        div({className: 'col-sm-6 col-sm-offset-3'},
+                            div({className: 'input-group'},
+                                input({
+                                    type: 'search',
+                                    className: 'form-control input-lg',
+                                    name: 'query',
+                                    ref: 'query',
+                                    autoFocus: true,
+                                    placeholder: 'Smørkrise, fjas, talefør',
+                                    tabIndex: 0,
+                                    value: this.state.query,
+                                    onChange: this.handleQueryChange.bind(this),
+                                    onKeyDown: this.handleKeyDown.bind(this)
+                                }),
+                                span({className: 'input-group-btn'},
+                                    input({
+                                        type: 'button',
+                                        className: 'btn btn-primary btn-lg',
+                                        value: 'Legg til ord',
+                                        onClick: this.handleSearch.bind(this)
+                                    })
+                                )
+                            )
+                        ),
+                        div({className: 'col-sm-2 text-right'},
+                            input({
+                                type: 'button',
+                                className: 'btn btn-default btn-lg',
+                                value: 'Nullstill',
+                                onClick: this.handleReset.bind(this)
+                            })
+                        )
+                    )
+                );
     }
 
     handleSearch() {
