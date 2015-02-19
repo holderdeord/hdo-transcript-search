@@ -5,7 +5,7 @@ import moment from 'moment';
 
 moment.locale('nb');
 
-var {div,a,button,strong} = React.DOM;
+var {div,button} = React.DOM;
 
 class SearchHit extends React.Component {
 
@@ -23,23 +23,23 @@ class SearchHit extends React.Component {
     }
 
     renderMetaData() {
-        var hit       = this.props.hit;
-        var href      = `/api/speeches/${hit.id}`; // FIXME: don't hardcode paths
-        var person    = hit.name;
-        var timestamp = moment(hit.time).format('LLL');
-        var title     = this.shouldShowTitle(hit) ? hit.title : '';
+        let hit       = this.props.hit;
+        let href      = `/api/speeches/${hit.id}`; // FIXME: don't hardcode paths
+        let person    = hit.name;
+        let timestamp = moment(hit.time).format('LLL');
+        let title     = this.shouldShowTitle(hit) ? hit.title : '';
 
         if (hit.party) {
             person = `${person} (${hit.party})`;
         }
 
-        return div(
-            {className: 'col-sm-3 text-right'},
-            div({},
-                strong({}, person)
-            ),
-            div(null, title),
-            a({className: 'text-muted', href: href}, timestamp)
+        return (
+            <div className="col-sm-3 text-right">
+                <div><strong>{person}</strong></div>
+                <div>{title}</div>
+                <a className="text-muted" href={href}>{timestamp}</a>
+                {this.imageFor(hit)}
+            </div>
         );
     }
 
@@ -55,6 +55,16 @@ class SearchHit extends React.Component {
             {className: 'col-sm-2 text-right'},
             button({className: 'btn btn-default btn-sm', onClick: this.showContext.bind(this)}, 'Se kontekst')
         );
+    }
+
+    imageFor(hit) {
+        if (hit.external_id) {
+            let src = `http://data.stortinget.no/eksport/personbilde?personid=${hit.external_id}&storrelse=middels`;
+            return <img src={src} alt={hit.name}/>;
+        } else {
+            return '';
+        }
+
     }
 
     showContext() {

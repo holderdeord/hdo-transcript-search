@@ -37,6 +37,9 @@ module Hdo
 
         @party_cache = Cache.new(party_cache_path)
         @party_cache.load if party_cache_path.exist?
+
+        @slug_cache = Cache.new(slug_cache_path)
+        @slug_cache.load if slug_cache_path.exist?
       end
 
       def execute
@@ -53,10 +56,7 @@ module Hdo
       end
 
       def convert
-        if @party_cache.size > 0
-          @logger.info "found name -> party cache"
-          xml_transcripts.each { |input| convert_to_json(input) }
-        else
+        if @party_cache.empty?
           @logger.info "building name -> party cache, this could take a while"
 
           xml_transcripts.each { |input| build_party_cache(input) }
@@ -64,9 +64,19 @@ module Hdo
           @party_cache.save
 
           json_transcripts.each { |t| t.delete }
-
-          convert
+        else
+          @logger.info "found name -> party cache"
         end
+
+        if @slug_cache.empty?
+          @logger.info "building name -> slug cache"
+          build_slug_cache
+          @slug_cache.save
+        else
+          @logger.info "found name -> slug cache"
+        end
+
+        xml_transcripts.each { |input| convert_to_json(input) }
       end
 
       def index_docs
@@ -93,6 +103,15 @@ module Hdo
         )
       end
 
+      def slug_cache_path
+        @slug_cache_path ||= (
+          p = @data_dir.join('cache/name-to-slug.json')
+          p.dirname.mkpath unless p.dirname.exist?
+
+          p
+        )
+      end
+
       def build_party_cache(input_file)
         Converter.parse(input_file).sections.each do |section|
           n = section[:name]
@@ -100,6 +119,18 @@ module Hdo
 
           if n && p
             @party_cache[n] ||= p
+          end
+        end
+      end
+
+      def build_slug_cache
+        ['2005-2009', '2009-2013', '2013-2017'].each do |period|
+          res = @faraday.get("http://data.stortinget.no/eksport/representanter?stortingsperiodeid=#{period}&format=json")
+          data = JSON.parse(res.body)
+
+          data['representanter_liste'].each do |rep|
+            full_name = rep.values_at('fornavn', 'etternavn').join(' ')
+            @slug_cache[full_name] = rep['id']
           end
         end
       end
@@ -160,9 +191,10 @@ module Hdo
           id = "#{transcript_id}-#{idx}"
 
           doc = {
-            'presidents' => data['presidents'],
-            'transcript' => transcript_id,
-            'order'      => idx
+            'presidents'  => data['presidents'],
+            'transcript'  => transcript_id,
+            'order'       => idx,
+            'external_id' => @slug_cache[section['name']]
           }.merge(section)
 
           retries = 0
@@ -237,7 +269,8 @@ module Hdo
             name: { type: 'string', index: 'not_analyzed' },
             party: { type: 'string', index: 'not_analyzed' },
             presidents: { type: 'string', index: 'not_analyzed' },
-            title: { type: 'string', index: 'not_analyzed' }
+            title: { type: 'string', index: 'not_analyzed' },
+            external_id: { type: 'string', index: 'not_analyzed' }
           }
         }
       }
