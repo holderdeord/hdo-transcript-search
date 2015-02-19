@@ -25,7 +25,8 @@ class ResultDetails extends React.Component {
                     TopListChart({
                         title: 'Personer',
                         counts: this.props.result.people[this.props.unit],
-                        unit: this.props.unit
+                        unit: this.props.unit,
+                        orientation: this.props.orientation
                     })
                 ),
                 div(
@@ -33,14 +34,18 @@ class ResultDetails extends React.Component {
                     TopListChart({
                         title: 'Partier',
                         counts: this.props.result.parties,
-                        unit: this.props.unit
+                        unit: this.props.unit,
+                        orientation: this.props.orientation
                     })
                 )
             ),
             hr(),
             div(
                 {className: 'row'},
-                TopHits({query: this.props.query, result: this.props.result})
+                TopHits({
+                    query: this.props.query,
+                    result: this.props.result
+                })
             )
         );
     }

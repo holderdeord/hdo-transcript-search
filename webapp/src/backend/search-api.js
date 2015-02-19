@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import LRU from 'lru-cache';
 import es from './es-client';
 import debug from 'debug';
+import moment from 'moment';
 
 var debugCache = debug('cache');
 
@@ -103,6 +104,12 @@ class SearchAPI {
             this._parseAggregation(aggResponse.aggregations.people)
         );
 
+        let timeline = this._calculatePercentages(
+            this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
+            this._parseAggregation(aggResponse.aggregations.timeline),
+            {combineKeys: true}
+        );
+
         return {
             counts: {
                 total: aggResponse.hits.total,
@@ -110,11 +117,7 @@ class SearchAPI {
                 pct: (hitsResponse.hits.total / aggResponse.hits.total) * 100
             },
             hits: hitsResponse.hits.hits.map(this._buildHit),
-            timeline: this._calculatePercentages(
-                this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
-                this._parseAggregation(aggResponse.aggregations.timeline),
-                {combineKeys: true}
-            ),
+            timeline: timeline.sort((a,b) => moment(a.key).valueOf() - moment(b.key).valueOf()),
             parties: this._calculatePercentages(
                 this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
                 this._parseAggregation(aggResponse.aggregations.parties)

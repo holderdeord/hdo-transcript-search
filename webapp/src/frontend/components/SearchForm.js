@@ -9,7 +9,7 @@ var {div,input,span} = React.DOM;
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {interval: '24w', query: ''};
+        this.state = {query: ''};
     }
 
     reset() {
@@ -70,7 +70,7 @@ class SearchForm extends React.Component {
             SearchAppDispatcher.handleViewAction({
                 type: ActionTypes.SEARCH,
                 query: this.state.query,
-                interval: this.state.interval
+                interval: this.props.interval
             });
         } else {
             this.handleReset();
@@ -81,10 +81,6 @@ class SearchForm extends React.Component {
         SearchAppDispatcher.handleViewAction({
             type: ActionTypes.RESET
         });
-    }
-
-    handleIntervalChange(event) {
-        this.setState({interval: event.target.value});
     }
 
     handleQueryChange(event) {

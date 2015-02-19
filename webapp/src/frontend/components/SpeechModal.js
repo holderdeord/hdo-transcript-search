@@ -4,7 +4,7 @@ import moment from 'moment';
 moment.locale('nb');
 
 var ModalDialog = React.createFactory(require('./ModalDialog'));
-var {div,small} = React.DOM;
+var {div,small,mark} = React.DOM;
 
 class SpeechModal extends React.Component {
 
@@ -49,7 +49,7 @@ class SpeechModal extends React.Component {
     }
 
     renderHit(hit, index) {
-        let highlight = (index === Math.floor(this.state.hits.length / 2) ? ' highlight' : '');
+        let textWrapper = (index === Math.floor(this.state.hits.length / 2) ? mark : div);
         let time = moment(hit.time).format('HH:mm');
 
         // this should probably not be done here
@@ -64,8 +64,8 @@ class SpeechModal extends React.Component {
                 div(null, hit.name + (hit.party ? ` (${hit.party})` : '')),
                 small(null, time)
             ),
-            div(
-                {className: `col-md-10 ${highlight}`},
+            textWrapper(
+                {className: "col-md-10"},
                 div(
                     null,
                     div({style: {fontSize: '0.8em'}}, hit.text))

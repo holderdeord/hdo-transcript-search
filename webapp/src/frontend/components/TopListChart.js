@@ -1,81 +1,63 @@
 import React from 'react';
-import Colors from '../utils/Colors';
-import c3 from 'c3';
+var BaseChart = React.createFactory(require('./BaseChart'));
 
 var {div,h3} = React.DOM;
 
 class TopListChart extends React.Component {
 
-    componentDidUpdate() {
-        this._unloadChart();
-        this._loadData();
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: { labels: [], series: []}
+        };
     }
 
-    componentDidMount() {
-        this._renderChart();
-    }
+    componentWillReceiveProps(props) {
+        let unit   = props.unit;
+        let counts = props.counts.sort((a,b) => a[unit] - b[unit]);
 
-    componentWillUnmount() {
-        this._unloadChart();
-    }
-
-    render() {
-        return div(
-            null,
-            h3(null, this.props.title),
-            div({ref: 'chart'})
-        );
-    }
-
-    _renderChart() {
-        this.chart = c3.generate({
-            bindto: React.findDOMNode(this.refs.chart),
+        this.setState({
             data: {
-                x: 'x',
-                columns: [],
-                type: 'bar'
-            },
-            transition: { duration: 0 },
-            axis: {
-                x: { type: 'category', tick: { multiline: false } },
-                rotated: true
-            },
-            color: { pattern: Colors.pattern }
+                labels: counts.map(e => e.key),
+                series: counts.length ? [counts.map(e => e[unit])] : []
+            }
         });
     }
 
-    _unloadChart() {
-        this.chart.unload();
-        this._renderChart();
+    render() {
+        let isHorizontal = this.props.orientation === 'horizontal';
+
+        return div(
+            {className: 'top-list-chart'},
+            h3(null, this.props.title),
+            BaseChart({
+                type: 'Bar',
+                data: this.state.data,
+                aspectRatio: 'major-sixth',
+                options: {
+                    chartPadding: 0,
+                    horizontalBars: isHorizontal,
+                    reverseData: !isHorizontal,
+                    axisX: {
+                        showGrid: isHorizontal,
+                        labelInterpolationFnc: this.formatValue.bind(this)
+                    },
+                    axisY: {
+                        showGrid: !isHorizontal,
+                        labelInterpolationFnc: this.formatValue.bind(this)
+                    }
+
+                }
+            })
+        );
     }
 
-    _loadData() {
-        let keys = [];
-        let values = [];
-        let unit = this.props.unit;
-
-        this.props.counts
-            .sort((a,b) => b[unit] - a[unit])
-            .forEach(e => {
-                keys.push(e.key);
-                values.push(e[unit]);
-            });
-
-        if (keys.length) {
-            var cols = [
-                ['x'].concat(keys),
-                [this._getLabel()].concat(values)
-            ];
-
-            this.chart.load({columns: cols});
-            setTimeout(this.chart.flush, 300); // hack for https://github.com/masayuki0812/c3/issues/934
+    formatValue(value) {
+        if (typeof value === 'number') {
+            return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
         } else {
-            this._unloadChart();
+            return value;
         }
-    }
-
-    _getLabel() {
-        return this.props.unit === 'pct' ? 'Prosent av innlegg' : 'Antall innlegg';
     }
 
 }

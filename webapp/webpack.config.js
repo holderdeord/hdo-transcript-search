@@ -17,7 +17,8 @@ module.exports = {
             { test: /\.woff2$/, loader: "url-loader?limit=10000&minetype=application/font-woff2" },
             { test: /\.ttf$/,   loader: "file-loader" },
             { test: /\.eot$/,   loader: "file-loader" },
-            { test: /\.svg$/,   loader: "file-loader" }
+            { test: /\.svg$/,   loader: "file-loader" },
+            { test: /\.scss$/,  loader: "style!css!sass?includePaths[]=" + (path.resolve(__dirname, "./node_modules")) }
         ]
     },
 
