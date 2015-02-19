@@ -16,13 +16,26 @@ var {div} = React.DOM;
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
     switch (payload.action.type) {
-    case ActionTypes.SEARCH:
-        TranscriptSearchAPI.search(payload.action.query, payload.action.interval);
-        break;
-    case ActionTypes.SPEECH_CONTEXT:
-        TranscriptSearchAPI.speechContext(payload.action.transcript, payload.action.start, payload.action.end);
-        break;
-    default:
+        case ActionTypes.SEARCH:
+            TranscriptSearchAPI.search(payload.action.query, payload.action.interval);
+            var searchPath = `/search/${encodeURIComponent(payload.action.query)}`;
+
+            if (window.location.pathname !== searchPath) {
+                window.history.pushState(
+                    payload.action,
+                    payload.action.query,
+                    searchPath
+                );
+            }
+
+            break;
+        case ActionTypes.SPEECH_CONTEXT:
+            TranscriptSearchAPI.speechContext(payload.action.transcript, payload.action.start, payload.action.end);
+            break;
+        case ActionTypes.RESET:
+            window.history.pushState(null, null, '/');
+            break;
+        default:
         // nothing
     }
 });
@@ -40,6 +53,8 @@ class SearchApp extends React.Component {
 
     componentDidMount() {
         TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        window.addEventListener('popstate', this.handleStateChange.bind(this));
+
         // TODO: use keymaster to provide some instructions on '?'
         // TODO: use keymaster to toggle dev panel
 
@@ -60,6 +75,16 @@ class SearchApp extends React.Component {
 
     handleUnitChange(event) {
         this.setState({unit: event.target.value});
+    }
+
+    handleStateChange(event) {
+        if (event.state) {
+            SearchAppDispatcher.handleViewAction({
+                type: ActionTypes.SEARCH,
+                query: event.state.query,
+                interval: event.state.interval
+            });
+        }
     }
 
     fetchStateFromStore() {
@@ -119,3 +144,4 @@ class SearchApp extends React.Component {
 }
 
 module.exports = SearchApp;
+
