@@ -1,0 +1,11 @@
+[*]
+indent_style = space
+
+[*.js]
+indent_size = 4
+
+[*.less]
+indent_size = 2
+
+[{package.json,.travis.yml}]
+indent_size = 2
