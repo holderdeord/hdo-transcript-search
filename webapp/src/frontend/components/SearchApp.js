@@ -4,6 +4,7 @@ import ActionTypes         from '../constants/ActionTypes';
 import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 import TranscriptStore     from '../stores/TranscriptStore';
 
+var Header        = React.createFactory(require('./Header'));
 var SearchForm    = React.createFactory(require('./SearchForm'));
 var Timeline      = React.createFactory(require('./Timeline'));
 var ResultDetails = React.createFactory(require('./ResultDetails'));
@@ -69,35 +70,38 @@ class SearchApp extends React.Component {
     }
 
     initialQuery() {
-        return 'skatt';
+        let match = window.location.pathname.match(/search\/(.+?)(\/|$)/);
+        return match ? decodeURIComponent(match[1]) : 'skatt';
     }
 
     render() {
-        return div(
-            null,
-            SearchForm({
-                interval: this.state.interval
-            }),
-            Timeline({
-                unit: this.state.unit,
-                query: this.state.query,
-                result: this.state.result,
-                onUnitChange: this.handleUnitChange.bind(this)
-            }),
-            ResultDetails({
-                unit: this.state.unit,
-                query: this.state.query,
-                result: this.state.result,
-                orientation: this.state.orientation
-            }),
-            SpeechModal(),
-            DevPanel({
-                visible: this.state.devPanel.visible,
-                orientation: this.state.orientation,
-                interval: this.state.interval,
-                onOrientationChange: this.handleOrientationChange.bind(this),
-                onIntervalChange: this.handleIntervalChange.bind(this)
-            })
+        return div({},
+            Header(),
+            div({className: 'container'},
+                SearchForm({
+                    interval: this.state.interval
+                }),
+                Timeline({
+                    unit: this.state.unit,
+                    query: this.state.query,
+                    result: this.state.result,
+                    onUnitChange: this.handleUnitChange.bind(this)
+                }),
+                ResultDetails({
+                    unit: this.state.unit,
+                    query: this.state.query,
+                    result: this.state.result,
+                    orientation: this.state.orientation
+                }),
+                SpeechModal(),
+                DevPanel({
+                    visible: this.state.devPanel.visible,
+                    orientation: this.state.orientation,
+                    interval: this.state.interval,
+                    onOrientationChange: this.handleOrientationChange.bind(this),
+                    onIntervalChange: this.handleIntervalChange.bind(this)
+                })
+            )
         );
     }
 
