@@ -74,7 +74,9 @@ class SearchApp extends React.Component {
     }
 
     handleUnitChange(event) {
-        this.setState({unit: event.target.value});
+        this.setState({
+            unit: event.target.value === '%' ? 'pct' : 'count'
+        });
     }
 
     handleStateChange(event) {

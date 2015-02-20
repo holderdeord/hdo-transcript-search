@@ -4,7 +4,7 @@ moment.locale('nb');
 
 var BaseChart = React.createFactory(require('./BaseChart'));
 
-var {div,select,option} = React.DOM;
+var {div} = React.DOM;
 
 class Timeline extends React.Component {
     constructor(props) {
@@ -52,14 +52,25 @@ class Timeline extends React.Component {
     }
 
     renderUnitSelect() {
-        return select(
-            {
-                checked: this.props.unit,
-                onChange: this.props.onUnitChange,
-                className: 'input-sm'
-            },
-            option({value: 'pct'}, 'Prosent av alle innlegg'),
-            option({value: 'count'}, 'Antall innlegg')
+        let pctClass = `btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`;
+        let countClass = `btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`;
+
+        return (
+          <div className="btn-group btn-toggle" onClick={this.props.onUnitChange}>
+            <input
+                type="button"
+                value="%"
+                className={pctClass}
+                //onClick={this.props.onUnitChange}
+            />
+
+            <input
+                type="button"
+                value="#"
+                className={countClass}
+                //onClick={this.props.onUnitChange}
+            />
+          </div>
         );
     }
 
