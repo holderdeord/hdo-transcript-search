@@ -47,7 +47,7 @@ class SearchApp extends React.Component {
 
         this.state             = this.fetchStateFromStore();
         this.state.unit        = 'pct';
-        this.state.devPanel    = { visible: true };
+        this.state.devPanel    = { visible: false };
         this.state.orientation = 'horizontal';
         this.state.interval    = '24w';
     }
