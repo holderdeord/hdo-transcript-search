@@ -3,6 +3,7 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 import TranscriptStore     from '../stores/TranscriptStore';
+import keymaster           from 'keymaster';
 
 var Header        = React.createFactory(require('./Header'));
 var SearchForm    = React.createFactory(require('./SearchForm'));
@@ -56,7 +57,10 @@ class SearchApp extends React.Component {
         window.addEventListener('popstate', this.handleStateChange.bind(this));
 
         // TODO: use keymaster to provide some instructions on '?'
-        // TODO: use keymaster to toggle dev panel
+
+        keymaster('ctrl+`', () => {
+            this.setState({devPanel: {visible: !this.state.devPanel.visible}});
+        });
 
         SearchAppDispatcher.handleViewAction({
             type: ActionTypes.SEARCH,
