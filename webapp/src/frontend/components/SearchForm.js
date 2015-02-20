@@ -37,7 +37,6 @@ class SearchForm extends React.Component {
                                     name: 'query',
                                     ref: 'query',
                                     autoFocus: true,
-                                    placeholder: 'Smørkrise, fjas, talefør',
                                     tabIndex: 0,
                                     value: this.state.query,
                                     onChange: this.handleQueryChange.bind(this),
