@@ -39,6 +39,7 @@
     "errorhandler": "^1.2.2",
     "file-loader": "^0.8.1",
     "jshint": "^2.6.0",
+    "jsxhint": "^0.11.1",
     "keymaster": "^1.6.2",
     "keymirror": "^0.1.1",
     "less": "^2.4.0",
