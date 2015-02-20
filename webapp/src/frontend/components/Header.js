@@ -8,7 +8,7 @@ class Header extends React.Component {
     return div({className: 'masthead'},
         h1({className: 'masthead-title'}, 'Fra Stortingets talerstol'),
         small({},
-            'En visuliasering av språkbruk på Stortinget fra',
+            'En visuliasering av språkbruk på Stortinget fra ',
             a({href: 'https://www.holderdeord.no'}, 'Holder de ord')
         )
     );
