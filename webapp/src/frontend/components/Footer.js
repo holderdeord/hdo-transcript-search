@@ -8,7 +8,12 @@ class Footer extends React.Component {
                 <div className="logo" />
                 <h4>Holder de ord &copy; 2014 - {new Date().getFullYear()}</h4>
 
-                <div>Referater fra <a href="http://data.stortinget.no">data.stortinget.no</a> under <a href="http://data.norge.no/NLOD">NLOD</a>.</div>
+                <p>
+                    <small>
+                        <div>Referater fra <a href="http://data.stortinget.no">data.stortinget.no</a> lisensiert under <a href="http://data.norge.no/NLOD">NLOD</a>.</div>
+                        <div>Kildekode på <a href="https://github.com/holderdeord/hdo-transcript-search">GitHub</a> lisensiert under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD</a>.</div>
+                    </small>
+                </p>
 
                 <div>
                     <a href="https://www.holderdeord.no/" alt="Holder de ord">holderdeord.no</a>

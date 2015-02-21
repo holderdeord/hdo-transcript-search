@@ -57,7 +57,6 @@ class SearchApp extends React.Component {
         let path = this.getUrlPathFromState();
 
         if (window.location.pathname !== path) {
-            console.log('pushState', this.state, path);
             window.history.pushState(this.state, null, path);
         }
     }
