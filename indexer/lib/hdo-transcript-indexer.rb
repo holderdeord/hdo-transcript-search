@@ -28,12 +28,8 @@ module Hdo
         @create_index = options.fetch(:create_index)
         @index_name   = options.fetch(:index_name)
         @force        = options.fetch(:force)
+        @es_url       = options.fetch(:elasticsearch_url)
         @errors       = []
-
-        @es = Elasticsearch::Client.new(
-          log: false,
-          url: options.fetch(:elasticsearch_url)
-        )
 
         @party_cache = Cache.new(party_cache_path)
         @party_cache.load if party_cache_path.exist?
@@ -197,19 +193,7 @@ module Hdo
             'external_id' => @slug_cache[section['name']]
           }.merge(section)
 
-          retries = 0
-          begin
-            @es.index index: @index_name, type: 'speech', id: id, body: doc
-          rescue Faraday::TimeoutError => ex
-            @logger.info "#{ex.message}, retrying"
-
-            if retries <= 3
-              retries += 1
-              retry
-            else
-              raise
-            end
-          end
+          index_with_retry id, doc
         end
 
         if data['errors']
@@ -219,13 +203,36 @@ module Hdo
         end
       end
 
+      def index_with_retry(id, doc)
+        retries = 0
+        begin
+          es.index index: @index_name, type: 'speech', id: id, body: doc
+        rescue Faraday::TimeoutError => ex
+          @logger.info "#{ex.message}, retrying"
+
+          if retries <= 3
+            retries += 1
+            retry
+          else
+            raise
+          end
+        end
+      end
+
       def create_index
         return unless @create_index
 
         @logger.info "recreating index #{@index_name}"
 
-        @es.indices.delete(index: @index_name) if @es.indices.exists(index: @index_name)
-        @es.indices.create index: @index_name, body: { settings: ES_SETTINGS, mappings: ES_MAPPINGS }
+        es.indices.delete(index: @index_name) if es.indices.exists(index: @index_name)
+        es.indices.create index: @index_name, body: { settings: ES_SETTINGS, mappings: ES_MAPPINGS }
+      end
+
+      def es
+        @es ||= Elasticsearch::Client.new(
+          log: false,
+          url: @es_url
+        )
       end
 
       ES_SETTINGS = {
@@ -278,5 +285,3 @@ module Hdo
     end
   end
 end
-
-
