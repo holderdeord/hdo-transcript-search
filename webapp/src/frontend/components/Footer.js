@@ -15,11 +15,11 @@ class Footer extends React.Component {
                     </small>
                 </p>
 
-                <div>
+                <p>
                     <a href="https://www.holderdeord.no/" alt="Holder de ord">holderdeord.no</a>
                     &nbsp; &middot;&nbsp;
                     <a href="https://twitter.com/holderdeord/" alt="Holder de ord på Twitter">@holderdeord</a>
-                </div>
+                </p>
             </footer>
         );
         // jshint ignore:end
