@@ -1,8 +1,7 @@
 import React from 'react';
 import CurrentSpeechStore from '../stores/CurrentSpeechStore';
 import ModalDialog from './ModalDialog';
-import moment from 'moment';
-moment.locale('nb');
+import TimeUtils from '../utils/TimeUtils';
 
 class SpeechModal extends React.Component {
 
@@ -26,7 +25,7 @@ class SpeechModal extends React.Component {
     updateStateFromStore() {
         let hits = CurrentSpeechStore.get();
         let visible = hits.length > 0;
-        let title = visible ? `Innlegg i kontekst: ${moment(hits[0].time).format('LL')}` : '';
+        let title = visible ? `Innlegg i kontekst: ${TimeUtils.formatHitDate(hits[0])}` : '';
 
         return {
             title: title,
@@ -52,19 +51,14 @@ class SpeechModal extends React.Component {
 
     renderHit(hit, index) {
         let text = hit.text;
-        let time = moment(hit.time).format('HH:mm');
-
-        // this should probably not be done here
-        if (hit.name === 'Presidenten' && time === '00:00') {
-            time = '??:??';
-        }
+        let time = TimeUtils.formatHitTime(hit);
 
         if (index === Math.floor(this.state.hits.length / 2)) {
             text = <mark>{hit.text}</mark>;
         }
 
         return (
-            <div className="row hit" key="index">
+            <div className="row hit" key={index}>
                 <div className="col-md-2">
                     <div>{hit.name} {(hit.party ? `(${hit.party})` : '')}</div>
                     <small>{time}</small>

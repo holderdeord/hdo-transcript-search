@@ -21,4 +21,4 @@ class SearchAppDispatcher extends Flux.Dispatcher {
     }
 }
 
-module.exports = new SearchAppDispatcher();
+export default new SearchAppDispatcher();

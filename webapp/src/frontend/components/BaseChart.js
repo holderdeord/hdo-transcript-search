@@ -1,16 +1,13 @@
 import React from 'react';
 import Chartist from 'chartist';
 
-var {div} = React.DOM;
-
 class BaseChart extends React.Component {
     render() {
         let ratio = this.props.aspectRatio || 'minor-eleventh';
 
-        return div({
-            ref: 'chart',
-            className: `ct-chart ct-${ratio}`
-        });
+        return (
+            <div ref="chart" className={`ct-chart ct-${ratio}`} />
+        );
     }
 
     componentDidMount() {

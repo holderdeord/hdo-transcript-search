@@ -1,9 +1,7 @@
 import React from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
-import moment from 'moment';
-
-moment.locale('nb');
+import TimeUtils from '../utils/TimeUtils';
 
 var {div,button} = React.DOM;
 
@@ -26,7 +24,7 @@ class SearchHit extends React.Component {
         let hit       = this.props.hit;
         let href      = `/api/speeches/${hit.id}`; // FIXME: don't hardcode paths
         let person    = hit.name;
-        let timestamp = moment(hit.time).format('LLL');
+        let timestamp = TimeUtils.timestampForHit(hit);
         let title     = this.shouldShowTitle(hit) ? hit.title : '';
 
         if (hit.party) {
@@ -35,9 +33,9 @@ class SearchHit extends React.Component {
 
         return (
             <div className="col-sm-3 text-right">
+                <a className="text-muted" href={href}>{timestamp}</a>
                 <div><strong>{person}</strong></div>
                 <div>{title}</div>
-                <a className="text-muted" href={href}>{timestamp}</a>
                 {this.imageFor(hit)}
             </div>
         );
