@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
 
 app.get('/search/:query/:unit', (req, res) => {
     res.render('index', {
-        title: `${req.params.query} - Referatsøk - Holder de ord`,
+        title: `${req.params.query} - Referatsøk`,
         query: req.params.query
     });
 });
