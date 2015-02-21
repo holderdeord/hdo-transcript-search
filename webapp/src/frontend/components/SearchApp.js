@@ -5,14 +5,12 @@ import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
 import TranscriptStore     from '../stores/TranscriptStore';
 import keymaster           from 'keymaster';
 
-var Header        = React.createFactory(require('./Header'));
-var SearchForm    = React.createFactory(require('./SearchForm'));
-var Timeline      = React.createFactory(require('./Timeline'));
-var ResultDetails = React.createFactory(require('./ResultDetails'));
-var SpeechModal   = React.createFactory(require('./SpeechModal'));
-var DevPanel      = React.createFactory(require('./DevPanel'));
-
-var {div} = React.DOM;
+var Header        = require('./Header');
+var SearchForm    = require('./SearchForm');
+var Timeline      = require('./Timeline');
+var ResultDetails = require('./ResultDetails');
+var SpeechModal   = require('./SpeechModal');
+var DevPanel      = require('./DevPanel');
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
@@ -106,33 +104,38 @@ class SearchApp extends React.Component {
     }
 
     render() {
-        return div({},
-            Header(),
-            div({className: 'container'},
-                SearchForm({
-                    interval: this.state.interval
-                }),
-                Timeline({
-                    unit: this.state.unit,
-                    query: this.state.query,
-                    result: this.state.result,
-                    onUnitChange: this.handleUnitChange.bind(this)
-                }),
-                ResultDetails({
-                    unit: this.state.unit,
-                    query: this.state.query,
-                    result: this.state.result,
-                    orientation: this.state.orientation
-                }),
-                SpeechModal(),
-                DevPanel({
-                    visible: this.state.devPanel.visible,
-                    orientation: this.state.orientation,
-                    interval: this.state.interval,
-                    onOrientationChange: this.handleOrientationChange.bind(this),
-                    onIntervalChange: this.handleIntervalChange.bind(this)
-                })
-            )
+        return (
+            <div>
+                <Header />
+
+                <div className="container">
+                    <SearchForm interval={this.state.interval} />
+
+                    <Timeline
+                        unit={this.state.unit}
+                        query={this.state.query}
+                        result={this.state.result}
+                        onUnitChange={this.handleUnitChange.bind(this)}
+                    />
+
+                    <ResultDetails
+                        unit={this.state.unit}
+                        query={this.state.query}
+                        result={this.state.result}
+                        orientation={this.state.orientation}
+                    />
+
+                    <SpeechModal />
+
+                    <DevPanel
+                        visible={this.state.devPanel.visible}
+                        orientation={this.state.orientation}
+                        interval={this.state.interval}
+                        onOrientationChange={this.handleOrientationChange.bind(this)}
+                        onIntervalChange={this.handleIntervalChange.bind(this)}
+                    />
+                </div>
+            </div>
         );
     }
 

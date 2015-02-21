@@ -2,9 +2,7 @@ import React from 'react';
 import moment from 'moment';
 moment.locale('nb');
 
-var BaseChart = React.createFactory(require('./BaseChart'));
-
-var {div} = React.DOM;
+var BaseChart = require('./BaseChart');
 
 class Timeline extends React.Component {
     constructor(props) {
@@ -26,28 +24,33 @@ class Timeline extends React.Component {
     }
 
     render() {
-        return div(
-            {className: 'row timeline', style: { display: this.props.query.length ? 'block' : 'none' }},
-            div(
-                null,
-                div({className: 'lead pull-right'}, this.props.query),
-                this.renderUnitSelect()
-            ),
-            BaseChart({
-                type: 'Line',
-                data: this.state.data,
-                aspectRatio: 'double-octave',
-                options: {
-                    low: 0,
-                    axisX: {
-                        showGrid: false
-                    },
-                    axisY: {
-                        showGrid: true,
-                        labelInterpolationFnc: this.formatValue.bind(this)
-                    }
-                }
-            })
+        let chartOptions = {
+            low: 0,
+            axisX: {
+                showGrid: false
+            },
+            axisY: {
+                showGrid: true,
+                labelInterpolationFnc: this.formatValue.bind(this)
+            }
+        };
+
+        let style = {display: this.props.query.length ? 'block' : 'none'};
+
+        return (
+            <div className="row timeline" style={style}>
+                <div>
+                    <div className="lead pull-right">{this.props.query}</div>
+                    {this.renderUnitSelect()}
+                </div>
+
+                <BaseChart
+                    type="Line"
+                    data={this.state.data}
+                    aspectRatio="double-octave"
+                    options={chartOptions}
+                />
+            </div>
         );
     }
 
@@ -61,14 +64,12 @@ class Timeline extends React.Component {
                 type="button"
                 value="%"
                 className={pctClass}
-                //onClick={this.props.onUnitChange}
             />
 
             <input
                 type="button"
                 value="#"
                 className={countClass}
-                //onClick={this.props.onUnitChange}
             />
           </div>
         );

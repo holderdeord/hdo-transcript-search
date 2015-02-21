@@ -1,9 +1,7 @@
 import React from 'react';
 
-var TopHits      = React.createFactory(require('./TopHits'));
-var TopListChart = React.createFactory(require('./TopListChart'));
-
-var {div,hr} = React.DOM;
+var TopHits      = require('./TopHits');
+var TopListChart = require('./TopListChart');
 
 class ResultDetails extends React.Component {
     constructor(props) {
@@ -16,37 +14,34 @@ class ResultDetails extends React.Component {
     }
 
     render() {
-        return div(
-            {style: this.props.query.length ? this.styles.visible : this.styles.hidden},
-            div(
-                {className: 'row result-details'},
-                div(
-                    {className: 'col-md-6'},
-                    TopListChart({
-                        title: 'Personer',
-                        counts: this.props.result.people[this.props.unit],
-                        unit: this.props.unit,
-                        orientation: this.props.orientation
-                    })
-                ),
-                div(
-                    {className: 'col-md-6'},
-                    TopListChart({
-                        title: 'Partier',
-                        counts: this.props.result.parties,
-                        unit: this.props.unit,
-                        orientation: this.props.orientation
-                    })
-                )
-            ),
-            hr(),
-            div(
-                {className: 'row'},
-                TopHits({
-                    query: this.props.query,
-                    result: this.props.result
-                })
-            )
+        return (
+            <div style={this.props.query.length ? this.styles.visible : this.styles.hidden}>
+                <div className="row result-details">
+                    <div className="col-md-6">
+                        <TopListChart
+                            title="Personer"
+                            counts={this.props.result.people[this.props.unit]}
+                            unit={this.props.unit}
+                            orientation={this.props.orientation}
+                        />
+                    </div>
+
+                    <div className="col-md-6">
+                        <TopListChart
+                            title="Partier"
+                            counts={this.props.result.parties}
+                            unit={this.props.unit}
+                            orientation={this.props.orientation}
+                        />
+                    </div>
+                </div>
+
+                <hr />
+
+                <div className="row">
+                    <TopHits query={this.props.query} result={this.props.result} />
+                </div>
+            </div>
         );
     }
 }

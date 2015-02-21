@@ -1,7 +1,5 @@
 import React from 'react';
-var BaseChart = React.createFactory(require('./BaseChart'));
-
-var {div,h3} = React.DOM;
+var BaseChart = require('./BaseChart');
 
 class TopListChart extends React.Component {
 
@@ -26,29 +24,31 @@ class TopListChart extends React.Component {
 
     render() {
         let isHorizontal = this.props.orientation === 'horizontal';
+        let chartOptions = {
+            chartPadding: 0,
+            horizontalBars: isHorizontal,
+            reverseData: !isHorizontal,
+            axisX: {
+                showGrid: isHorizontal,
+                labelInterpolationFnc: this.formatValue.bind(this)
+            },
+            axisY: {
+                showGrid: !isHorizontal,
+                labelInterpolationFnc: this.formatValue.bind(this)
+            }
+        };
 
-        return div(
-            {className: 'top-list-chart'},
-            h3(null, this.props.title),
-            BaseChart({
-                type: 'Bar',
-                data: this.state.data,
-                aspectRatio: 'major-sixth',
-                options: {
-                    chartPadding: 0,
-                    horizontalBars: isHorizontal,
-                    reverseData: !isHorizontal,
-                    axisX: {
-                        showGrid: isHorizontal,
-                        labelInterpolationFnc: this.formatValue.bind(this)
-                    },
-                    axisY: {
-                        showGrid: !isHorizontal,
-                        labelInterpolationFnc: this.formatValue.bind(this)
-                    }
+        return (
+            <div className="top-list-chart">
+                <h3>{this.props.title}</h3>
 
-                }
-            })
+                <BaseChart
+                    type="Bar"
+                    data={this.state.data}
+                    aspectRatio="major-sixth"
+                    options={chartOptions}
+                />
+            </div>
         );
     }
 

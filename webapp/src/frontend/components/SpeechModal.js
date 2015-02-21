@@ -3,8 +3,7 @@ import CurrentSpeechStore from '../stores/CurrentSpeechStore';
 import moment from 'moment';
 moment.locale('nb');
 
-var ModalDialog = React.createFactory(require('./ModalDialog'));
-var {div,small,mark} = React.DOM;
+var ModalDialog = require('./ModalDialog');
 
 class SpeechModal extends React.Component {
 
@@ -38,9 +37,13 @@ class SpeechModal extends React.Component {
     }
 
     render() {
-        return ModalDialog(
-            {title: this.state.title, visible: this.state.visible, onClose: this.handleClose.bind(this)},
-            this.state.hits.map(this.renderHit.bind(this))
+        return (
+            <ModalDialog
+                title={this.state.title}
+                visible={this.state.visible}
+                onClose={this.handleClose.bind(this)}>
+                    {this.state.hits.map(this.renderHit.bind(this))}
+            </ModalDialog>
         );
     }
 
@@ -49,7 +52,7 @@ class SpeechModal extends React.Component {
     }
 
     renderHit(hit, index) {
-        let textWrapper = (index === Math.floor(this.state.hits.length / 2) ? mark : div);
+        let text = hit.text;
         let time = moment(hit.time).format('HH:mm');
 
         // this should probably not be done here
@@ -57,19 +60,21 @@ class SpeechModal extends React.Component {
             time = '??:??';
         }
 
-        return div(
-            {className: 'row hit', key: index},
-            div(
-                {className: `col-md-2`},
-                div(null, hit.name + (hit.party ? ` (${hit.party})` : '')),
-                small(null, time)
-            ),
-            textWrapper(
-                {className: "col-md-10"},
-                div(
-                    null,
-                    div({style: {fontSize: '0.8em'}}, hit.text))
-            )
+        if (index === Math.floor(this.state.hits.length / 2)) {
+            text = <mark>{hit.text}</mark>;
+        }
+
+        return (
+            <div className="row hit" key="index">
+                <div className="col-md-2">
+                    <div>{hit.name} {(hit.party ? `(${hit.party})` : '')}</div>
+                    <small>{time}</small>
+                </div>
+
+                <div className="col-md-10" style={{fontSize: '0.8em'}}>
+                    {text}
+                </div>
+            </div>
         );
     }
 }

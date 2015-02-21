@@ -1,24 +1,23 @@
 import React from 'react';
-var SearchHit = React.createFactory(require('./SearchHit'));
-
-var {div,h3,em} = React.DOM;
-
+var SearchHit = require('./SearchHit');
 
 class TopHits extends React.Component {
 
     render() {
-        let result       = this.props.result;
-        let q            = this.props.query;
-        let pct          = result.counts.pct.toFixed(2);
-        let hits         = result.counts.hits;
-        let total        = result.counts.total;
-        let hitCountText = `Fant «${q}» i ${pct}% (${hits} / ${total}) av innlegg.`;
+        let result = this.props.result;
+        let q      = this.props.query;
+        let pct    = result.counts.pct.toFixed(2);
+        let hits   = result.counts.hits;
+        let total  = result.counts.total;
 
-        return div(
-            {className: 'col-md-12'},
-            h3(null, 'Treff'),
-            em(null, hitCountText),
-            result.hits.map(h => SearchHit({hit: h, key: h.id}))
+        return (
+            <div className="col-md-12">
+                <h3>Treff</h3>
+                <em>
+                    Fant «{q}» i {pct}% ({hits} / {total}) av innlegg.
+                </em>
+                {result.hits.map(h => <SearchHit hit={h} key={h.id} />)}
+            </div>
         );
     }
 }

@@ -2,9 +2,9 @@ import React from 'react';
 require("./styles/main.less");
 require('./styles/chartist.scss');
 
-var SearchApp = React.createFactory(require('./components/SearchApp'));
+var SearchApp = require('./components/SearchApp');
 
 React.render(
-    SearchApp(),
+    <SearchApp />,
     document.getElementById('content')
 );
