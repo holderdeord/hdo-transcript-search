@@ -1,5 +1,4 @@
 import React from 'react';
-
 import TopHits from './TopHits';
 import TopListChart from './TopListChart';
 import TranscriptStore from '../stores/TranscriptStore';

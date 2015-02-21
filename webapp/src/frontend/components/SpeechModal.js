@@ -1,9 +1,8 @@
 import React from 'react';
 import CurrentSpeechStore from '../stores/CurrentSpeechStore';
+import ModalDialog from './ModalDialog';
 import moment from 'moment';
 moment.locale('nb');
-
-var ModalDialog = require('./ModalDialog');
 
 class SpeechModal extends React.Component {
 

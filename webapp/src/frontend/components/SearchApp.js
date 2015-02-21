@@ -3,12 +3,13 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import keymaster           from 'keymaster';
 
-var Header        = require('./Header');
-var SearchForm    = require('./SearchForm');
-var Timeline      = require('./Timeline');
-var ResultDetails = require('./ResultDetails');
-var SpeechModal   = require('./SpeechModal');
-var DevPanel      = require('./DevPanel');
+import Header        from './Header';
+import Footer        from './Footer';
+import SearchForm    from './SearchForm';
+import Timeline      from './Timeline';
+import ResultDetails from './ResultDetails';
+import SpeechModal   from './SpeechModal';
+import DevPanel      from './DevPanel';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -133,6 +134,8 @@ class SearchApp extends React.Component {
                     />
 
                     <SpeechModal />
+
+                    <Footer />
 
                     <DevPanel
                         visible={this.state.devPanel.visible}

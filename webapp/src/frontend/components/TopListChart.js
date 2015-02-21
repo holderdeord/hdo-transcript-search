@@ -1,5 +1,5 @@
 import React from 'react';
-var BaseChart = require('./BaseChart');
+import BaseChart from './BaseChart';
 
 class TopListChart extends React.Component {
 

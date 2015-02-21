@@ -1,9 +1,9 @@
 import React from 'react';
-import moment from 'moment';
-moment.locale('nb');
+import BaseChart from './BaseChart';
 import TranscriptStore from '../stores/TranscriptStore';
+import moment from 'moment';
 
-var BaseChart = require('./BaseChart');
+moment.locale('nb');
 
 class Timeline extends React.Component {
     constructor(props) {

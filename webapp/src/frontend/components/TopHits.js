@@ -1,5 +1,5 @@
 import React from 'react';
-var SearchHit = require('./SearchHit');
+import SearchHit from './SearchHit';
 
 class TopHits extends React.Component {
 
