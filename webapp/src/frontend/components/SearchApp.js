@@ -41,7 +41,7 @@ class SearchApp extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('popstate', this.handleHistoryChange.bind(this));
+        window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
         SearchAppDispatcher.register(this.handleAppEvent.bind(this));
 
         // TODO: use keymaster to provide some instructions on '?'
@@ -57,7 +57,7 @@ class SearchApp extends React.Component {
         let path = this.getUrlPathFromState();
 
         if (window.location.pathname !== path) {
-            window.history.pushState(this.state, null, path);
+            window.History.pushState(this.state, null, path);
         }
     }
 
