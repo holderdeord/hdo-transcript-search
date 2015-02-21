@@ -52,3 +52,4 @@ class TranscriptStore extends BaseStore {
 }
 
 module.exports = new TranscriptStore();
+

@@ -1,8 +1,6 @@
 import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
-import TranscriptSearchAPI from '../utils/TranscriptSearchAPI';
-import TranscriptStore     from '../stores/TranscriptStore';
 import keymaster           from 'keymaster';
 
 var Header        = require('./Header');
@@ -12,47 +10,38 @@ var ResultDetails = require('./ResultDetails');
 var SpeechModal   = require('./SpeechModal');
 var DevPanel      = require('./DevPanel');
 
-// really not sure if this belongs here
-SearchAppDispatcher.register(function (payload) {
-    switch (payload.action.type) {
-        case ActionTypes.SEARCH:
-            TranscriptSearchAPI.search(payload.action.query, payload.action.interval);
-            var searchPath = `/search/${encodeURIComponent(payload.action.query)}`;
-
-            if (window.location.pathname !== searchPath) {
-                window.history.pushState(
-                    payload.action,
-                    payload.action.query,
-                    searchPath
-                );
-            }
-
-            break;
-        case ActionTypes.SPEECH_CONTEXT:
-            TranscriptSearchAPI.speechContext(payload.action.transcript, payload.action.start, payload.action.end);
-            break;
-        case ActionTypes.RESET:
-            window.history.pushState(null, null, '/');
-            break;
-        default:
-        // nothing
-    }
-});
-
 class SearchApp extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state             = this.fetchStateFromStore();
-        this.state.unit        = 'pct';
-        this.state.devPanel    = { visible: false };
-        this.state.orientation = 'horizontal';
-        this.state.interval    = '24w';
+        this.state = {
+            unit: 'pct',
+            devPanel: { visible: false},
+            orientation: 'horizontal',
+            interval: '24w',
+            query: ''
+        };
+    }
+
+    handleAppEvent(payload) {
+        switch (payload.action.type) {
+            case ActionTypes.SEARCH:
+                this.setState({query: payload.action.query, interval: payload.action.interval});
+                break;
+            case ActionTypes.SEARCH_RESULT:
+                this.updateHistoryFromState();
+                break;
+            case ActionTypes.RESET:
+                this.setState({query: ''}, this.updateHistoryFromState.bind(this));
+                break;
+            default:
+                // nothing
+        }
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.handleChange.bind(this));
-        window.addEventListener('popstate', this.handleStateChange.bind(this));
+        window.addEventListener('popstate', this.handleHistoryChange.bind(this));
+        SearchAppDispatcher.register(this.handleAppEvent.bind(this));
 
         // TODO: use keymaster to provide some instructions on '?'
 
@@ -60,68 +49,86 @@ class SearchApp extends React.Component {
             this.setState({devPanel: {visible: !this.state.devPanel.visible}});
         });
 
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.SEARCH,
-            query: this.initialQuery(),
-            interval: this.state.interval
-        });
+        this.updateStateFromUrl();
     }
 
-    componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
-    }
+    updateHistoryFromState() {
+        let path = this.getUrlPathFromState();
 
-    handleChange() {
-        this.setState(this.fetchStateFromStore());
-    }
-
-    handleUnitChange(event) {
-        this.setState({
-            unit: event.target.value === '%' ? 'pct' : 'count'
-        });
-    }
-
-    handleStateChange(event) {
-        if (event.state) {
-            SearchAppDispatcher.handleViewAction({
-                type: ActionTypes.SEARCH,
-                query: event.state.query,
-                interval: event.state.interval
-            });
+        if (window.location.pathname !== path) {
+            console.log('pushState', this.state, path);
+            window.history.pushState(this.state, null, path);
         }
     }
 
-    fetchStateFromStore() {
-        return {
-            query: TranscriptStore.getQuery(),
-            result: TranscriptStore.getResult()
-        };
+    getUrlPathFromState() {
+        let query = encodeURIComponent(this.state.query);
+        let unit  = this.state.unit;
+
+        let result = query === '' ? '/' : `/search/${query}/${unit}`;
+
+        return result;
     }
 
-    initialQuery() {
-        let match = window.location.pathname.match(/search\/(.+?)(\/|$)/);
-        return match ? decodeURIComponent(match[1]) : 'skatt';
+    handleUnitChange(event) {
+        let newUnit = event.target.value === '%' ? 'pct' : 'count';
+
+        this.setState({ unit: newUnit }, this.updateHistoryFromState.bind(this));
+    }
+
+    handleHistoryChange(event) {
+        if (event.state) {
+            this.setState(event.state, this.syncState.bind(this));
+        }
+    }
+
+    updateStateFromUrl() {
+        let [,, query, unit] = window.location.pathname.split('/');
+        let newState = {query: ''};
+
+        if (unit && unit.length && ['pct', 'count'].indexOf(unit) !== -1) {
+            newState.unit = decodeURIComponent(unit);
+        }
+
+        if (query && query.length) {
+            newState.query = decodeURIComponent(query);
+        }
+
+        this.setState(newState, this.syncState.bind(this));
+    }
+
+    syncState() {
+        if (this.state.query.length) {
+            SearchAppDispatcher.handleViewAction({
+                type: ActionTypes.SEARCH,
+                query: this.state.query,
+                interval: this.state.interval
+            });
+        } else {
+            SearchAppDispatcher.handleViewAction({
+                type: ActionTypes.RESET
+            });
+        }
     }
 
     render() {
         return (
             <div>
-                <Header />
+                <Header
+                    title={document.body.getAttribute('data-title')}
+                    description={document.body.getAttribute('data-description')}
+                />
 
                 <div className="container">
                     <SearchForm interval={this.state.interval} />
 
                     <Timeline
                         unit={this.state.unit}
-                        query={this.state.query}
-                        result={this.state.result}
                         onUnitChange={this.handleUnitChange.bind(this)}
                     />
 
                     <ResultDetails
                         unit={this.state.unit}
-                        query={this.state.query}
-                        result={this.state.result}
                         orientation={this.state.orientation}
                     />
 
@@ -140,15 +147,11 @@ class SearchApp extends React.Component {
     }
 
     handleOrientationChange(event) {
-        this.setState({
-            orientation: event.target.value
-        });
+        this.setState({orientation: event.target.value });
     }
 
     handleIntervalChange(event) {
-        this.setState({
-            interval: event.target.value
-        });
+        this.setState({interval: event.target.value});
     }
 }
 

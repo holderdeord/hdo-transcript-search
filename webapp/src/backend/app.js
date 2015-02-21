@@ -1,8 +1,13 @@
 import express from 'express';
 import logger from 'morgan';
+import hbs from 'express-hbs';
 import api from './search-api';
 import config from '../../config';
 import path from 'path';
+
+function errorHandler(err) {
+    return this.status(500).json({error: err.toString(),stack: err.stack.split('\n')});
+}
 
 var app = express();
 
@@ -10,6 +15,12 @@ var app = express();
 app.use(logger('short'));
 app.set('port', +config.get('PORT'));
 app.disable('x-powered-by');
+app.engine('hbs', hbs.express4());
+app.set('view engine', 'hbs');
+app.set('views', path.resolve(__dirname, '../../views'));
+
+app.locals.appTitle = 'Fra Stortingets talerstol';
+app.locals.description = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
@@ -21,13 +32,25 @@ if(app.get('env') === 'development') {
     app.use(webpackMiddleware(webpack(webpackConf)));
 }
 
-function errorHandler(err) {
-    return this.status(500).json({error: err.toString(),stack: err.stack.split('\n')});
-}
-
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
+app.use((req, res, next) => {
+    res.locals.absoluteUrl = req.protocol + "://" + req.get('host') + req.originalUrl;
+    return next();
+});
+
 // routes
+app.get('/', (req, res) => {
+    res.redirect('/search/skatt/pct');
+});
+
+app.get('/search/:query/:unit', (req, res) => {
+    res.render('index', {
+        title: `${req.params.query} - Referatsøk - Holder de ord`,
+        query: req.params.query
+    });
+});
+
 app.get('/api/search', (req, res) => {
     if (req.query.query) {
         api.search(req.query)
@@ -51,10 +74,6 @@ app.get('/api/context/:id/:start/:end', (req, res) => {
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
 
-});
-
-app.get('/search/*', (req, res) => {
-    res.sendFile('index.html', {root: './public'});
 });
 
 module.exports = app;
