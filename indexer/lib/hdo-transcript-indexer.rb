@@ -128,6 +128,15 @@ module Hdo
             full_name = rep.values_at('fornavn', 'etternavn').join(' ')
             @slug_cache[full_name] = rep['id']
           end
+
+          res = @raday
+        end
+
+        res = @faraday.get('http://data.stortinget.no/eksport/dagensrepresentanter?format=json')
+        data = JSON.parse(res.body)
+        data['dagensrepresentanter_liste'].each do |rep|
+          full_name = rep.values_at('fornavn', 'etternavn').join(' ')
+          @slug_cache[full_name] = rep['id']
         end
       end
 
@@ -241,19 +250,19 @@ module Hdo
             analyzer: {
               analyzer_shingle: {
                 tokenizer: "standard",
-                filter: ["standard", "lowercase", "filter_stop", "filter_shingle"]
+                filter:    ["standard", "lowercase", "filter_stop", "filter_shingle"]
               }
             },
             filter: {
               filter_shingle: {
-                type: "shingle",
+                type:             "shingle",
                 max_shingle_size: 5,
                 min_shignle_size: 2,
-                output_unigrams: true
+                output_unigrams:  true
               },
               filter_stop: {
-                type: "stop",
-                stopwords: "_norwegian_"
+                type:       "stop",
+                stopwords:  "_norwegian_"
                 # enable_position_increments: false
               }
             }
@@ -265,18 +274,18 @@ module Hdo
         speech: {
           properties: {
             time: {
-              type: 'date',
+              type:   'date',
               format: 'date_time_no_millis'
             },
             text: {
-              search_analyzer: 'analyzer_shingle',
-              index_analyzer: 'analyzer_shingle',
-              type: 'string'
+              search_analyzer:  'analyzer_shingle',
+              index_analyzer:   'analyzer_shingle',
+              type:             'string'
             },
-            name: { type: 'string', index: 'not_analyzed' },
-            party: { type: 'string', index: 'not_analyzed' },
-            presidents: { type: 'string', index: 'not_analyzed' },
-            title: { type: 'string', index: 'not_analyzed' },
+            name:        { type: 'string', index: 'not_analyzed' },
+            party:       { type: 'string', index: 'not_analyzed' },
+            presidents:  { type: 'string', index: 'not_analyzed' },
+            title:       { type: 'string', index: 'not_analyzed' },
             external_id: { type: 'string', index: 'not_analyzed' }
           }
         }
