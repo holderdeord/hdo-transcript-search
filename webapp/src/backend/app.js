@@ -20,7 +20,7 @@ app.set('view engine', 'hbs');
 app.set('views', path.resolve(__dirname, '../../views'));
 
 app.locals.appTitle = 'Fra Stortingets talerstol';
-app.locals.description = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
+app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
@@ -35,7 +35,8 @@ if(app.get('env') === 'development') {
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
 app.use((req, res, next) => {
-    res.locals.absoluteUrl = req.protocol + "://" + req.get('host') + req.originalUrl;
+    res.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
+    res.locals.absoluteUrl = res.locals.baseUrl + req.originalUrl;
     return next();
 });
 
@@ -49,6 +50,11 @@ app.get('/search/:query/:unit', (req, res) => {
         title: `${req.params.query} - Referatsøk - Holder de ord`,
         query: req.params.query
     });
+});
+
+app.get('/opensearch', (req, res) => {
+    res.type('application/opensearchdescription+xml');
+    res.render('opensearch');
 });
 
 app.get('/api/search', (req, res) => {
