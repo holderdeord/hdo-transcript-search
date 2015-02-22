@@ -1,4 +1,4 @@
-import BaseStore from './BaseStore';
+import BaseStore   from './BaseStore';
 import ActionTypes from '../constants/ActionTypes';
 
 class TranscriptStore extends BaseStore {
@@ -7,6 +7,7 @@ class TranscriptStore extends BaseStore {
         this._reset();
     }
 
+    // TODO: this doesn't belong here
     getQuery() {
         return this.state.query;
     }
@@ -51,5 +52,5 @@ class TranscriptStore extends BaseStore {
     }
 }
 
-module.exports = new TranscriptStore();
+export default new TranscriptStore();
 

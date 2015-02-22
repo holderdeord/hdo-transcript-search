@@ -1,15 +1,15 @@
 import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
+import Intervals           from '../constants/Intervals';
 import keymaster           from 'keymaster';
-
-import Header        from './Header';
-import Footer        from './Footer';
-import SearchForm    from './SearchForm';
-import Timeline      from './Timeline';
-import ResultDetails from './ResultDetails';
-import SpeechModal   from './SpeechModal';
-import DevPanel      from './DevPanel';
+import Header              from './Header';
+import Footer              from './Footer';
+import SearchForm          from './SearchForm';
+import Timeline            from './Timeline';
+import ResultDetails       from './ResultDetails';
+import SpeechModal         from './SpeechModal';
+import DevPanel            from './DevPanel';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class SearchApp extends React.Component {
             unit: 'pct',
             devPanel: { visible: false},
             orientation: 'horizontal',
-            interval: '24w',
+            interval: Intervals.YEAR,
             query: ''
         };
     }
@@ -124,6 +124,7 @@ class SearchApp extends React.Component {
 
                     <Timeline
                         unit={this.state.unit}
+                        interval={this.state.interval}
                         onUnitChange={this.handleUnitChange.bind(this)}
                     />
 

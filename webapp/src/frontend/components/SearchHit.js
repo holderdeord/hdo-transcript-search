@@ -1,18 +1,17 @@
-import React from 'react';
+import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import ActionTypes from '../constants/ActionTypes';
-import TimeUtils from '../utils/TimeUtils';
-
-var {div,button} = React.DOM;
+import ActionTypes         from '../constants/ActionTypes';
+import TimeUtils           from '../utils/TimeUtils';
 
 class SearchHit extends React.Component {
 
     render() {
-        return div(
-            {className: 'row hit'},
-            this.renderMetaData(),
-            this.renderHighlight(),
-            this.renderControls()
+        return (
+            <div className="row hit">
+                {this.renderMetaData()}
+                {this.renderHighlight()}
+                {this.renderControls()}
+            </div>
         );
     }
 
@@ -42,23 +41,31 @@ class SearchHit extends React.Component {
     }
 
     renderHighlight() {
-        return div({
-            className: 'col-sm-5',
-            dangerouslySetInnerHTML: {__html: this.props.hit.highlight}
-        });
+        return (
+            <div
+                className="col-sm-5"
+                dangerouslySetInnerHTML={{__html: this.props.hit.highlight}}
+            />
+        );
     }
 
     renderControls() {
-        return div(
-            {className: 'col-sm-2 text-right'},
-            button({className: 'btn btn-default btn-sm', onClick: this.showContext.bind(this)}, 'Se kontekst')
+        return (
+            <div className="col-sm-2 text-right">
+                <button
+                    className="btn btn-default btn-sm"
+                    onClick={this.showContext.bind(this)}>
+                    Se kontekst
+                </button>
+            </div>
         );
+
     }
 
     imageFor(hit) {
         if (hit.external_id) {
             let src = `http://data.stortinget.no/eksport/personbilde?personid=${hit.external_id}&storrelse=middels`;
-            return <img src={src} alt={hit.name}/>;
+            return <img src={src} alt={hit.name} />;
         } else {
             return '';
         }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React     from 'react';
 import BaseChart from './BaseChart';
 
 class TopListChart extends React.Component {
@@ -6,7 +6,7 @@ class TopListChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: { labels: [], series: []}
+            data: {labels: [], series: []}
         };
     }
 

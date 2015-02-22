@@ -1,16 +1,13 @@
-import React from 'react';
-import BaseChart from './BaseChart';
+import React           from 'react';
+import BaseChart       from './BaseChart';
 import TranscriptStore from '../stores/TranscriptStore';
-import moment from 'moment';
-
-moment.locale('nb');
+import TimeUtils       from '../utils/TimeUtils';
 
 class Timeline extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {data: {labels: [], series: []}, query: ''};
-
+        this.state = this.fetchStateFromStore();
     }
 
     componentDidMount() {
@@ -22,21 +19,14 @@ class Timeline extends React.Component {
     }
 
     handleChange() {
-        let result = TranscriptStore.getResult();
-        let unit   = this.props.unit;
-        let series = [];
+        this.setState(this.fetchStateFromStore);
+    }
 
-        if (result.timeline.length) {
-            series = [{data: result.timeline.map(e => e[unit].toFixed(2))}];
-        }
-
-        this.setState({
-            data: {
-                labels: result.timeline.map(e => moment(e.key).format('MMM YYYY')),
-                series: series
-            },
-            query: TranscriptStore.getQuery()
-        });
+    fetchStateFromStore() {
+        return {
+            query: TranscriptStore.getQuery(),
+            result: TranscriptStore.getResult()
+        };
     }
 
     render() {
@@ -51,12 +41,29 @@ class Timeline extends React.Component {
             }
         };
 
-        let style = {display: this.state.query.length ? 'block' : 'none'};
+
+        let result = TranscriptStore.getResult();
+        let query  = TranscriptStore.getQuery();
+        let unit   = this.props.unit;
+        let series = [];
+
+        if (result.timeline.length) {
+            series = [
+                { data: result.timeline.map(e => e[unit].toFixed(2)) }
+            ];
+        }
+
+        let data = {
+            labels: result.timeline.map(this.formatLabel.bind(this)),
+            series: series
+        };
+
+        let style = {display: query.length ? 'block' : 'none'};
 
         return (
             <div className="row timeline" style={style}>
                 <div>
-                    <div className="lead pull-right">{this.state.query}</div>
+                    <div className="lead pull-right">{query}</div>
                         <div className="btn-group btn-toggle"
                              onClick={this.props.onUnitChange}>
                             <input
@@ -75,12 +82,16 @@ class Timeline extends React.Component {
 
                 <BaseChart
                     type="Line"
-                    data={this.state.data}
+                    data={data}
                     aspectRatio="double-octave"
                     options={chartOptions}
                 />
             </div>
         );
+    }
+
+    formatLabel(d) {
+       return TimeUtils.formatIntervalLabel(d.key, this.props.interval);
     }
 
     formatValue(value) {
@@ -89,8 +100,9 @@ class Timeline extends React.Component {
 }
 
 Timeline.propTypes = {
-    unit: React.PropTypes.string.isRequired,
-    onUnitChange: React.PropTypes.func
+    unit         : React.PropTypes.string.isRequired,
+    interval     : React.PropTypes.string.isRequired,
+    onUnitChange : React.PropTypes.func
 };
 
 module.exports = Timeline;

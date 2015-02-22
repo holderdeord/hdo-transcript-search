@@ -1,4 +1,5 @@
-import React from 'react';
+import React     from 'react';
+import Intervals from '../constants/Intervals';
 
 class DevPanel extends React.Component {
     render() {
@@ -23,10 +24,10 @@ class DevPanel extends React.Component {
                             name='interval'
                             value={this.props.interval}
                             onChange={this.props.onIntervalChange}>
-                                <option value='month'>month</option>
-                                <option value='12w'>3 months</option>
-                                <option value='24w'>6 months</option>
-                                <option value='year'>year</option>
+                                <option value={Intervals.MONTH}>month</option>
+                                <option value={Intervals.THREE_MONTHS}>3 months</option>
+                                <option value={Intervals.SIX_MONTHS}>6 months</option>
+                                <option value={Intervals.YEAR}>year</option>
                         </select>
                     </div>
                 </div>

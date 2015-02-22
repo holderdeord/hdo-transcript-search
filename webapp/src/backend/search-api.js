@@ -1,8 +1,8 @@
 import Promise from 'bluebird';
-import LRU from 'lru-cache';
-import es from './es-client';
-import debug from 'debug';
-import moment from 'moment';
+import LRU     from 'lru-cache';
+import es      from './es-client';
+import debug   from 'debug';
+import moment  from 'moment';
 
 var debugCache = debug('cache');
 
@@ -108,6 +108,16 @@ class SearchAPI {
             this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
             this._parseAggregation(aggResponse.aggregations.timeline),
             {combineKeys: true}
+        ).sort((a,b) => {
+            return moment(a.key).valueOf() - moment(b.key).valueOf();
+        });
+
+        // we remove the last data point since it is incomplete and may cause odd outliers
+        timeline = timeline.slice(0, -1);
+
+        let parties = this._calculatePercentages(
+            this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
+            this._parseAggregation(aggResponse.aggregations.parties)
         );
 
         return {
@@ -117,14 +127,11 @@ class SearchAPI {
                 pct: (hitsResponse.hits.total / aggResponse.hits.total) * 100
             },
             hits: hitsResponse.hits.hits.map(this._buildHit),
-            timeline: timeline.sort((a,b) => moment(a.key).valueOf() - moment(b.key).valueOf()),
-            parties: this._calculatePercentages(
-                this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
-                this._parseAggregation(aggResponse.aggregations.parties)
-            ),
+            timeline: timeline,
+            parties: parties,
             people: {
-                count: people.sort((a,b) => b.count - a.count).slice(0, 10),
-                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 10)
+                count: people.sort((a,b) => b.count - a.count).slice(0, 10), // only top 10
+                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 10) // only top 10
             }
         };
     }
@@ -133,7 +140,7 @@ class SearchAPI {
         return Object.assign({
             id: hit._id,
             score: hit._score,
-            highlight: hit.highlight ? hit.highlight.text.join(' ') : ''
+            highlight: hit.highlight ? hit.highlight.text[0] : ''
         }, hit._source);
     }
 

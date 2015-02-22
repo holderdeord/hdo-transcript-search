@@ -1,4 +1,4 @@
-import Flux from 'flux';
+import Flux           from 'flux';
 import PayloadSources from '../constants/PayloadSources';
 
 class SearchAppDispatcher extends Flux.Dispatcher {

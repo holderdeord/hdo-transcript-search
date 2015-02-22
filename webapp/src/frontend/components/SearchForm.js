@@ -4,8 +4,6 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
 
-var {div,input,span} = React.DOM;
-
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
@@ -27,41 +25,43 @@ class SearchForm extends React.Component {
     }
 
     render() {
-        return  div({},
-                    div({className: 'row'},
-                        div({className: 'col-sm-6 col-sm-offset-3'},
-                            div({className: 'input-group'},
-                                input({
-                                    type: 'search',
-                                    className: 'form-control input-lg',
-                                    name: 'query',
-                                    ref: 'query',
-                                    autoFocus: true,
-                                    tabIndex: 0,
-                                    value: this.state.query,
-                                    onChange: this.handleQueryChange.bind(this),
-                                    onKeyDown: this.handleKeyDown.bind(this)
-                                }),
-                                span({className: 'input-group-btn'},
-                                    input({
-                                        type: 'button',
-                                        className: 'btn btn-primary btn-lg',
-                                        value: 'Legg til ord',
-                                        onClick: this.handleSearch.bind(this)
-                                    })
-                                )
-                            )
-                        ),
-                        div({className: 'col-sm-2 text-right'},
-                            input({
-                                type: 'button',
-                                className: 'btn btn-default btn-lg',
-                                value: 'Nullstill',
-                                onClick: this.handleReset.bind(this)
-                            })
-                        )
-                    )
-                );
+        return (
+            <div className="row">
+                <div className="col-sm-6 col-sm-offset-3">
+                    <div className="input-group">
+                        <input
+                            type="search"
+                            className="form-control input-lg"
+                            name="query"
+                            ref="query"
+                            autoFocus="true"
+                            tabIndex="0"
+                            value={this.state.query}
+                            onChange={this.handleQueryChange.bind(this)}
+                            onKeyDown={this.handleKeyDown.bind(this)}
+                        />
+
+                        <span className="input-group-btn">
+                            <input
+                                type="button"
+                                className="btn btn-primary btn-lg"
+                                value="Legg til ord"
+                                onClick={this.handleSearch.bind(this)}
+                            />
+                        </span>
+                    </div>
+                </div>
+
+                <div className="col-sm-2 text-right">
+                    <input
+                        type="button"
+                        className="btn btn-default btn-lg"
+                        value="Nullstill"
+                        onClick={this.handleReset.bind(this)}
+                    />
+                </div>
+            </div>
+        );
     }
 
     handleSearch() {

@@ -1,9 +1,9 @@
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import EventEmitter from 'events';
+import EventEmitter        from 'events';
 
 var CHANGE_EVENT = 'change';
 
-class BaseStore extends EventEmitter {
+export default class BaseStore extends EventEmitter {
     constructor() {
         super();
         this.dispatchToken = SearchAppDispatcher.register(this.handleAction.bind(this));
@@ -21,5 +21,3 @@ class BaseStore extends EventEmitter {
         this.removeListener(CHANGE_EVENT, callback);
     }
 }
-
-module.exports = BaseStore;

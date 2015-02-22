@@ -1,6 +1,6 @@
-import reqwest from 'reqwest';
+import reqwest             from 'reqwest';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import ActionTypes from '../constants/ActionTypes';
+import ActionTypes         from '../constants/ActionTypes';
 
 class TranscriptSearchAPI {
     search(query, interval) {
@@ -27,4 +27,4 @@ class TranscriptSearchAPI {
     }
 }
 
-module.exports = new TranscriptSearchAPI();
+export default new TranscriptSearchAPI();

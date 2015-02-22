@@ -1,7 +1,7 @@
-import React from 'react';
+import React              from 'react';
 import CurrentSpeechStore from '../stores/CurrentSpeechStore';
-import ModalDialog from './ModalDialog';
-import TimeUtils from '../utils/TimeUtils';
+import ModalDialog        from './ModalDialog';
+import TimeUtils          from '../utils/TimeUtils';
 
 class SpeechModal extends React.Component {
 

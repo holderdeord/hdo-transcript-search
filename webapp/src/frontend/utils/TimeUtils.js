@@ -1,5 +1,14 @@
-import moment from 'moment';
+import Intervals from '../constants/Intervals';
+import moment    from 'moment';
+
 moment.locale('nb');
+
+const DATE_FORMATS = {
+    [Intervals.MONTH]: 'MMM YYYY',
+    [Intervals.THREE_MONTHS]: 'MMM YYYY',
+    [Intervals.SIX_MONTHS]: 'MMM YYYY',
+    [Intervals.YEAR]: 'YYYY'
+};
 
 export default class TimeUtils {
     static timestampForHit(hit) {
@@ -25,5 +34,9 @@ export default class TimeUtils {
         } else {
             return str;
         }
+    }
+
+    static formatIntervalLabel(str, interval) {
+        return moment(str).format(DATE_FORMATS[interval]);
     }
 }

@@ -1,6 +1,6 @@
-import BaseStore from './BaseStore';
+import BaseStore           from './BaseStore';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import ActionTypes from '../constants/ActionTypes';
+import ActionTypes         from '../constants/ActionTypes';
 
 class CurrentSpeechStore extends BaseStore {
     constructor() {
@@ -35,4 +35,4 @@ class CurrentSpeechStore extends BaseStore {
 
 }
 
-module.exports = new CurrentSpeechStore();
+export default new CurrentSpeechStore();
