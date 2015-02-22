@@ -28,20 +28,24 @@ class ResultDetails extends React.Component {
     }
 
     fetchStateFromStore() {
-        return {
-            query: TranscriptStore.getQuery(),
-            result: TranscriptStore.getResult()
-        };
+        return {results: TranscriptStore.getResults()};
     }
 
     render() {
+        var lastResult = this.state.results[this.state.results.length - 1];
+
+        if (!lastResult) {
+            return <div/>;
+        }
+
         return (
-            <div style={this.state.query.length ? this.styles.visible : this.styles.hidden}>
+            <div style={this.state.results.length ? this.styles.visible : this.styles.hidden}>
+
                 <div className="row result-details">
                     <div className="col-md-6">
                         <TopListChart
                             title="Personer"
-                            counts={this.state.result.people[this.props.unit]}
+                            counts={lastResult.result.people[this.props.unit]}
                             unit={this.props.unit}
                             orientation={this.props.orientation}
                         />
@@ -50,7 +54,7 @@ class ResultDetails extends React.Component {
                     <div className="col-md-6">
                         <TopListChart
                             title="Partier"
-                            counts={this.state.result.parties}
+                            counts={lastResult.result.parties}
                             unit={this.props.unit}
                             orientation={this.props.orientation}
                         />
@@ -60,7 +64,7 @@ class ResultDetails extends React.Component {
                 <hr />
 
                 <div className="row">
-                    <TopHits query={this.state.query} result={this.state.result} />
+                    <TopHits query={lastResult.query} result={lastResult.result} />
                 </div>
             </div>
         );

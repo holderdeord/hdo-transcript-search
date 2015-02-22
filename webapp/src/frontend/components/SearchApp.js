@@ -2,6 +2,7 @@ import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import Intervals           from '../constants/Intervals';
+import TranscriptStore     from '../stores/TranscriptStore';
 import keymaster           from 'keymaster';
 import Header              from './Header';
 import Footer              from './Footer';
@@ -19,30 +20,14 @@ class SearchApp extends React.Component {
             unit: 'pct',
             devPanel: { visible: false},
             orientation: 'horizontal',
-            interval: Intervals.YEAR,
-            query: ''
+            interval: Intervals.YEAR
         };
     }
 
-    handleAppEvent(payload) {
-        switch (payload.action.type) {
-            case ActionTypes.SEARCH:
-                this.setState({query: payload.action.query, interval: payload.action.interval});
-                break;
-            case ActionTypes.SEARCH_RESULT:
-                this.updateHistoryFromState();
-                break;
-            case ActionTypes.RESET:
-                this.setState({query: ''}, this.updateHistoryFromState.bind(this));
-                break;
-            default:
-                // nothing
-        }
-    }
-
     componentDidMount() {
-        window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
-        SearchAppDispatcher.register(this.handleAppEvent.bind(this));
+        // window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
+        window.addEventListener('popstate', this.handleHistoryChange.bind(this));
+        TranscriptStore.addChangeListener(this.updateHistory.bind(this));
 
         // TODO: use keymaster to provide some instructions on '?'
 
@@ -50,65 +35,71 @@ class SearchApp extends React.Component {
             this.setState({devPanel: {visible: !this.state.devPanel.visible}});
         });
 
-        this.updateStateFromUrl();
+        this.updateFromUrl();
     }
 
-    updateHistoryFromState() {
-        let path = this.getUrlPathFromState();
+    componentWillUnmount() {
+        TranscriptStore.removeChangeListener(this.updateHistory.bind(this));
+    }
+
+    updateHistory() {
+        let query = encodeURIComponent(TranscriptStore.getQueries().join(','));
+        let unit  = this.state.unit;
+        let path  = query === '' ? '/' : `/search/${query}/${unit}`;
 
         if (window.location.pathname !== path) {
-            window.History.pushState(this.state, null, path);
+            window.history.pushState({
+                unit: this.state.unit,
+                queries: TranscriptStore.getQueries()
+            }, null, path);
         }
-    }
-
-    getUrlPathFromState() {
-        let query = encodeURIComponent(this.state.query);
-        let unit  = this.state.unit;
-
-        let result = query === '' ? '/' : `/search/${query}/${unit}`;
-
-        return result;
     }
 
     handleUnitChange(event) {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
 
-        this.setState({ unit: newUnit }, this.updateHistoryFromState.bind(this));
+        this.setState({ unit: newUnit }, this.updateHistory.bind(this));
     }
 
     handleHistoryChange(event) {
+        // this code currently assumes this is popstate, and that we should load
+        // the given state immediately
         if (event.state) {
-            this.setState(event.state, this.syncState.bind(this));
+            this.setState({unit: event.state.unit});
+            this.dispatchMultiSearch(event.state.queries);
         }
     }
 
-    updateStateFromUrl() {
+    updateFromUrl() {
         let [,, query, unit] = window.location.pathname.split('/');
-        let newState = {query: ''};
 
         if (unit && unit.length && ['pct', 'count'].indexOf(unit) !== -1) {
-            newState.unit = decodeURIComponent(unit);
+            this.setState({unit: unit});
         }
 
         if (query && query.length) {
-            newState.query = decodeURIComponent(query);
-        }
+            let queries = decodeURIComponent(query).split(',');
 
-        this.setState(newState, this.syncState.bind(this));
+            if (queries.length) {
+                this.dispatchMultiSearch(queries);
+            } else {
+                this.dispatchReset();
+            }
+        }
     }
 
-    syncState() {
-        if (this.state.query.length) {
-            SearchAppDispatcher.handleViewAction({
-                type: ActionTypes.SEARCH,
-                query: this.state.query,
-                interval: this.state.interval
-            });
-        } else {
-            SearchAppDispatcher.handleViewAction({
-                type: ActionTypes.RESET
-            });
-        }
+    dispatchMultiSearch(queries) {
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.SEARCH_MULTI,
+            queries: queries,
+            interval: this.state.interval
+        });
+    }
+
+    dispatchReset() {
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.RESET
+        });
     }
 
     render() {
@@ -133,9 +124,9 @@ class SearchApp extends React.Component {
                         orientation={this.state.orientation}
                     />
 
-                    <SpeechModal />
-
                     <Footer />
+
+                    <SpeechModal />
 
                     <DevPanel
                         visible={this.state.devPanel.visible}

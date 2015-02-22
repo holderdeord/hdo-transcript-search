@@ -7,13 +7,20 @@ class TranscriptStore extends BaseStore {
         this._reset();
     }
 
-    // TODO: this doesn't belong here
-    getQuery() {
-        return this.state.query;
+    getResults() {
+        return this.results;
     }
 
-    getResult() {
-        return this.state.result;
+    getQueries() {
+        return this.results.map(e => e.query);
+    }
+
+    hasQuery(q) {
+        return this.getQueries().indexOf(q) !== -1;
+    }
+
+    eachResult(callback) {
+        this.results.forEach((r) => callback(r.query, r.result));
     }
 
     handleAction(payload) {
@@ -21,34 +28,31 @@ class TranscriptStore extends BaseStore {
 
         switch(action.type) {
         case ActionTypes.SEARCH_RESULT:
-            this.state.result = action.result;
-            this.state.query  = action.query;
+            this.results.push({
+                query: action.query,
+                result: action.result
+            });
 
             this.emitChange();
+            break;
+        case ActionTypes.SEARCH_MULTI_RESULT:
+            console.log(payload);
+            this.results = action.results;
 
+            this.emitChange();
             break;
 
         case ActionTypes.RESET:
             this._reset();
             this.emitChange();
             break;
-
         default:
             // do nothing
         }
     }
 
     _reset() {
-        this.state = {
-            query: '',
-            result: {
-                hits: [],
-                counts: { total: 0, hits: 0, pct: 0 },
-                people: { count: [], pct: []},
-                parties: [],
-                timeline: []
-            }
-        };
+        this.results = [];
     }
 }
 

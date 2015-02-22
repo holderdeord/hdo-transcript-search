@@ -1,16 +1,30 @@
+import Promise             from 'bluebird';
 import reqwest             from 'reqwest';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 
 class TranscriptSearchAPI {
     search(query, interval) {
-        var path = `/api/search?interval=${interval}&query=${query}`;
+        var path = this.searchPathFor(query, interval);
 
         return reqwest(path).then(result => {
             SearchAppDispatcher.handleServerAction({
                 type: ActionTypes.SEARCH_RESULT,
                 query: query,
                 result: result
+            });
+        });
+    }
+
+    searchMultiple(queries, interval) {
+        return Promise.map(queries, q => {
+            return reqwest(this.searchPathFor(q, interval)).then((r) => {
+                return {query: q, result: r};
+            });
+        }).then(results => {
+            SearchAppDispatcher.handleServerAction({
+                type: ActionTypes.SEARCH_MULTI_RESULT,
+                results: results
             });
         });
     }
@@ -24,6 +38,10 @@ class TranscriptSearchAPI {
                 result: result
             });
         });
+    }
+
+    searchPathFor(query, interval) {
+        return `/api/search?interval=${interval}&query=${query}`;
     }
 }
 

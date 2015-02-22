@@ -38,8 +38,6 @@ class BaseChart extends React.Component {
     }
 
     _detachChart() {
-        console.log('detaching');
-
         if (this.chart) {
             this.chart.detach();
             this.chart = null;

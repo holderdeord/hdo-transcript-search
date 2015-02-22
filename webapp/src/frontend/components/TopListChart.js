@@ -3,27 +3,17 @@ import BaseChart from './BaseChart';
 
 class TopListChart extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: {labels: [], series: []}
-        };
-    }
-
-    componentWillReceiveProps(props) {
-        let unit   = props.unit;
-        let counts = props.counts.sort((a,b) => a[unit] - b[unit]);
-
-        this.setState({
-            data: {
-                labels: counts.map(e => e.key),
-                series: counts.length ? [counts.map(e => e[unit])] : []
-            }
-        });
-    }
-
     render() {
+        let unit   = this.props.unit;
+        let counts = this.props.counts.sort((a,b) => a[unit] - b[unit]);
+
+        let data = {
+            labels: counts.map(e => e.key),
+            series: counts.length ? [counts.map(e => e[unit])] : []
+        };
+
         let isHorizontal = this.props.orientation === 'horizontal';
+
         let chartOptions = {
             chartPadding: 0,
             horizontalBars: isHorizontal,
@@ -44,7 +34,7 @@ class TopListChart extends React.Component {
 
                 <BaseChart
                     type="Bar"
-                    data={this.state.data}
+                    data={data}
                     aspectRatio="major-sixth"
                     options={chartOptions}
                 />

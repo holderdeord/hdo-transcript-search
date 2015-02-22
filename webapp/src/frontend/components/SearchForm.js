@@ -65,10 +65,16 @@ class SearchForm extends React.Component {
     }
 
     handleSearch() {
-        if (this.state.query.trim().length) {
+        let q = this.state.query.trim();
+
+        if (TranscriptStore.hasQuery(q)) {
+            return;
+        }
+
+        if (q.length) {
             SearchAppDispatcher.handleViewAction({
                 type: ActionTypes.SEARCH,
-                query: this.state.query,
+                query: q,
                 interval: this.props.interval
             });
         } else {

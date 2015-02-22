@@ -7,7 +7,7 @@ class Timeline extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = this.fetchStateFromStore();
+        this.state = {results: TranscriptStore.getResults()};
     }
 
     componentDidMount() {
@@ -19,14 +19,7 @@ class Timeline extends React.Component {
     }
 
     handleChange() {
-        this.setState(this.fetchStateFromStore);
-    }
-
-    fetchStateFromStore() {
-        return {
-            query: TranscriptStore.getQuery(),
-            result: TranscriptStore.getResult()
-        };
+        this.setState({results: TranscriptStore.getResults()});
     }
 
     render() {
@@ -41,29 +34,31 @@ class Timeline extends React.Component {
             }
         };
 
+        let unit    = this.props.unit;
+        let queries = [];
+        let data    = {labels: [], series: []};
 
-        let result = TranscriptStore.getResult();
-        let query  = TranscriptStore.getQuery();
-        let unit   = this.props.unit;
-        let series = [];
+        this.state.results.forEach((r) => {
+            let result = r.result;
+            queries.push(r.query);
 
-        if (result.timeline.length) {
-            series = [
-                { data: result.timeline.map(e => e[unit].toFixed(2)) }
-            ];
-        }
+            if (!data.labels.length && result.timeline.length) {
+                data.labels = result.timeline.map(this.formatLabel.bind(this));
+            }
 
-        let data = {
-            labels: result.timeline.map(this.formatLabel.bind(this)),
-            series: series
+            data.series.push({
+                data: result.timeline.map(e => e[unit].toFixed(2))
+            });
+        });
+
+        let style = {
+            display: this.state.results.length ? 'block' : 'none'
         };
-
-        let style = {display: query.length ? 'block' : 'none'};
 
         return (
             <div className="row timeline" style={style}>
                 <div>
-                    <div className="lead pull-right">{query}</div>
+                    <div className="lead pull-right">{queries.join(', ')}</div>
                         <div className="btn-group btn-toggle"
                              onClick={this.props.onUnitChange}>
                             <input
