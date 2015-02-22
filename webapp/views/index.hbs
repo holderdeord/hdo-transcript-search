@@ -34,6 +34,15 @@
     <meta name="twitter:site" content="@holderdeord">
     <meta name="twitter:creator" content="@holderdeord">
 
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-precomposed.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch"/>
+
+    {{#if settings.analytics}}<script type="text/javascript" src="/analytics.js"></script>{{/if}}
+  </head>
+
+  <body data-title="{{appTitle}}" data-description="{{appDescription}}">
+    <div id="content"></div>
 
     <!--[if lte IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-shim.min.js"></script>
@@ -44,14 +53,6 @@
     <!-- couldn't find a nice way to load this through npm -->
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/native.history.min.js"></script> -->
 
-
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
-    <link rel="shortcut icon" href="/public/favicon.ico">
-    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch"/>
-  </head>
-
-  <body data-title="{{appTitle}}" data-description="{{appDescription}}">
-    <div id="content"></div>
     <script type="text/javascript" src="/bundle.js" charset="utf-8"></script>
   </body>
 </html>

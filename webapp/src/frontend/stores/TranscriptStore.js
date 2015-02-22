@@ -36,7 +36,6 @@ class TranscriptStore extends BaseStore {
             this.emitChange();
             break;
         case ActionTypes.SEARCH_MULTI_RESULT:
-            console.log(payload);
             this.results = action.results;
 
             this.emitChange();

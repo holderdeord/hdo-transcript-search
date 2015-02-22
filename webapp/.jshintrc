@@ -1,6 +1,7 @@
 {
     "globals": {
-        "Promise"   : true
+        "Promise"   : true,
+        "ga"        : true
     },
 
     "bitwise"       : true,

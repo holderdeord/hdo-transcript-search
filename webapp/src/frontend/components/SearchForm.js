@@ -74,7 +74,7 @@ class SearchForm extends React.Component {
 
         if (q.length) {
             SearchAppDispatcher.handleViewAction({
-                type: ActionTypes.SEARCH,
+                type: ActionTypes.SEARCH_ADD,
                 query: q,
                 interval: this.props.interval
             });
