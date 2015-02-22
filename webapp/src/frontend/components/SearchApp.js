@@ -42,19 +42,6 @@ class SearchApp extends React.Component {
         TranscriptStore.removeChangeListener(this.updateHistory.bind(this));
     }
 
-    updateHistory() {
-        let query = encodeURIComponent(TranscriptStore.getQueries().join(','));
-        let unit  = this.state.unit;
-        let path  = query === '' ? '/' : `/search/${query}/${unit}`;
-
-        if (window.location.pathname !== path) {
-            window.history.pushState({
-                unit: this.state.unit,
-                queries: TranscriptStore.getQueries()
-            }, null, path);
-        }
-    }
-
     handleUnitChange(event) {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
 
@@ -71,14 +58,14 @@ class SearchApp extends React.Component {
     }
 
     updateFromUrl() {
-        let [,, query, unit] = window.location.pathname.split('/');
+        let [,, unit, query] = window.location.pathname.split('/');
 
         if (unit && unit.length && ['pct', 'count'].indexOf(unit) !== -1) {
             this.setState({unit: unit});
         }
 
         if (query && query.length) {
-            let queries = decodeURIComponent(query).split(',');
+            let queries = decodeURIComponent(query).split('.');
 
             if (queries.length) {
                 this.dispatchMultiSearch(queries);
@@ -87,6 +74,22 @@ class SearchApp extends React.Component {
             }
         }
     }
+
+    updateHistory() {
+        let queries = TranscriptStore.getQueries();
+        let query   = encodeURIComponent(queries.join('.'));
+        let unit    = this.state.unit;
+        let path    = query === '' ? '/' : `/search/${unit}/${query}`;
+
+        if (window.location.pathname !== path) {
+            window.history.pushState({
+                unit: this.state.unit,
+                queries: queries
+            }, null, path);
+        }
+    }
+
+
 
     dispatchMultiSearch(queries) {
         SearchAppDispatcher.handleViewAction({

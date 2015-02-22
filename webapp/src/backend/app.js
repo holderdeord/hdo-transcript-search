@@ -42,10 +42,10 @@ app.use((req, res, next) => {
 
 // routes
 app.get('/', (req, res) => {
-    res.redirect('/search/skatt/pct');
+    res.redirect('/search/pct/skatt');
 });
 
-app.get('/search/:query/:unit', (req, res) => {
+app.get('/search/:unit/:query', (req, res) => {
     res.render('index', {
         title: `${req.params.query} - Referatsøk`,
         query: req.params.query

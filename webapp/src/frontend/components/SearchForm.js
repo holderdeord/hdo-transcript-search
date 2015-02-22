@@ -68,6 +68,7 @@ class SearchForm extends React.Component {
         let q = this.state.query.trim();
 
         if (TranscriptStore.hasQuery(q)) {
+            this.reset();
             return;
         }
 
