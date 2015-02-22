@@ -9,7 +9,7 @@ import TranscriptSearchAPI from './utils/TranscriptSearchAPI';
 
 // really not sure if this belongs here
 SearchAppDispatcher.register(function (payload) {
-    console.log(payload);
+    // console.log(payload);
 
     switch (payload.action.type) {
         case ActionTypes.SEARCH:

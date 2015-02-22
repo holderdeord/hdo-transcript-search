@@ -68,13 +68,18 @@ $ct-include-alternative-responsive-containers: $ct-include-classes !default;
 
 // Series names and colors. This can be extended or customized as desired. Just add more series and colors.
 $ct-series-names: (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) !default;
+
+$hdo-primary-color: #606b82;
+$hdo-secondary-color: #fadd00;
+
 $ct-series-colors: (
-  #606b82,
+  $hdo-primary-color,
+  darken($hdo-secondary-color, 5%),
   #d70206,
+  #453d3f,
   #f05b4f,
   #f4c63d,
   #d17905,
-  #453d3f,
   #59922b,
   #0544d3,
   #6b0392,

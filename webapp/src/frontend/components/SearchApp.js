@@ -42,12 +42,6 @@ class SearchApp extends React.Component {
         TranscriptStore.removeChangeListener(this.updateHistory.bind(this));
     }
 
-    handleUnitChange(event) {
-        let newUnit = event.target.value === '%' ? 'pct' : 'count';
-
-        this.setState({ unit: newUnit }, this.updateHistory.bind(this));
-    }
-
     handleHistoryChange(event) {
         // this code currently assumes this is popstate, and that we should load
         // the given state immediately
@@ -88,8 +82,6 @@ class SearchApp extends React.Component {
             }, null, path);
         }
     }
-
-
 
     dispatchMultiSearch(queries) {
         SearchAppDispatcher.handleViewAction({
@@ -150,6 +142,14 @@ class SearchApp extends React.Component {
     handleIntervalChange(event) {
         this.setState({interval: event.target.value});
     }
+
+    handleUnitChange(event) {
+        let newUnit = event.target.value === '%' ? 'pct' : 'count';
+
+        this.setState({ unit: newUnit }, this.updateHistory.bind(this));
+    }
+
+
 }
 
 module.exports = SearchApp;
