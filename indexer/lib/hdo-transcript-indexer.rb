@@ -31,11 +31,11 @@ module Hdo
         @es_url       = options.fetch(:elasticsearch_url)
         @errors       = []
 
-        @party_cache = Cache.new(party_cache_path)
-        @party_cache.load if party_cache_path.exist?
+        @party_cache = Cache.new(cache_path('name-to-party'))
+        @party_cache.load_if_exists
 
-        @slug_cache = Cache.new(slug_cache_path)
-        @slug_cache.load if slug_cache_path.exist?
+        @slug_cache = Cache.new(cache_path('name-to-slug'))
+        @slug_cache.load_if_exists
       end
 
       def execute
@@ -52,25 +52,8 @@ module Hdo
       end
 
       def convert
-        if @party_cache.empty?
-          @logger.info "building name -> party cache, this could take a while"
-
-          xml_transcripts.each { |input| build_party_cache(input) }
-          load_extras_cache
-          @party_cache.save
-
-          json_transcripts.each { |t| t.delete }
-        else
-          @logger.info "found name -> party cache"
-        end
-
-        if @slug_cache.empty?
-          @logger.info "building name -> slug cache"
-          build_slug_cache
-          @slug_cache.save
-        else
-          @logger.info "found name -> slug cache"
-        end
+        build_party_cache
+        build_slug_cache
 
         xml_transcripts.each { |input| convert_to_json(input) }
       end
@@ -83,43 +66,52 @@ module Hdo
       end
 
       def xml_transcripts
-        Pathname.glob(@data_dir.join('s*.xml'))
+        files_matching 's*.xml'
       end
 
       def json_transcripts
-        Pathname.glob(@data_dir.join('s*.json'))
+        files_matching 's*.json'
       end
 
-      def party_cache_path
-        @party_cache_path ||= (
-          p = @data_dir.join('cache/name-to-party.json')
-          p.dirname.mkpath unless p.dirname.exist?
-
-          p
-        )
+      def files_matching(glob)
+        Pathname.glob(@data_dir.join(glob))
       end
 
-      def slug_cache_path
-        @slug_cache_path ||= (
-          p = @data_dir.join('cache/name-to-slug.json')
-          p.dirname.mkpath unless p.dirname.exist?
+      def cache_path(name)
+        p = @data_dir.join("cache/#{name}.json")
+        p.dirname.mkpath unless p.dirname.exist?
 
-          p
-        )
+        p
       end
 
-      def build_party_cache(input_file)
-        Converter.parse(input_file).sections.each do |section|
-          n = section[:name]
-          p = section[:party]
+      def build_party_cache
+          return unless @party_cache.empty?
 
-          if n && p
-            @party_cache[n] ||= p
+          @logger.info "building name -> party cache, this could take a while"
+
+          xml_transcripts.each do |input|
+            Converter.parse(input_file).sections.each do |section|
+              n = section[:name]
+              p = section[:party]
+
+              if n && p
+                @party_cache[n] ||= p
+              end
+            end
           end
-        end
+
+          # manually maintained list of people we can't infer from the transcript data
+          @party_cache.merge!(JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/n2p.extras.json", __FILE__))))
+          @party_cache.save
+
+          json_transcripts.each { |t| t.delete }
       end
 
       def build_slug_cache
+        return unless @slug_cache.empty?
+
+        @logger.info "building name -> slug cache"
+
         ['2005-2009', '2009-2013', '2013-2017'].each do |period|
           res = @faraday.get("http://data.stortinget.no/eksport/representanter?stortingsperiodeid=#{period}&format=json")
           data = JSON.parse(res.body)
@@ -138,11 +130,8 @@ module Hdo
           full_name = rep.values_at('fornavn', 'etternavn').join(' ')
           @slug_cache[full_name] = rep['id']
         end
-      end
 
-      def load_extras_cache
-        # manually maintained list of people we can't infer from the transcript data
-        @party_cache.merge!(JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/n2p.extras.json", __FILE__))))
+        @slug_cache.save
       end
 
       def data_dir_from(options)
@@ -248,6 +237,10 @@ module Hdo
         index: {
           analysis: {
             analyzer: {
+              analyzer_standard: {
+                tokenizer: "standard",
+                filter: ["standard", "lowercase", "filter_stop"]
+              },
               analyzer_shingle: {
                 tokenizer: "standard",
                 filter:    ["standard", "lowercase", "filter_stop", "filter_shingle"]
@@ -256,8 +249,8 @@ module Hdo
             filter: {
               filter_shingle: {
                 type:             "shingle",
-                max_shingle_size: 5,
-                min_shignle_size: 2,
+                max_shingle_size: 2,
+                min_shingle_size: 2,
                 output_unigrams:  true
               },
               filter_stop: {
@@ -279,6 +272,7 @@ module Hdo
             },
             text: {
               type: 'string',
+              analyzer: 'analyzer_standard',
               fields: {
                 shingles: { type: "string", analyzer: "analyzer_shingle"}
               }

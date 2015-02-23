@@ -14,6 +14,10 @@ module Hdo
         @cache.merge! JSON.parse(File.read(@path))
       end
 
+      def load_if_exists
+        load if File.exist?(@path)
+      end
+
       def save
         File.open(@path, 'w') { |io| io << @cache.to_json }
       end
