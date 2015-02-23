@@ -124,8 +124,6 @@ class SearchForm extends React.Component {
     }
 
     handleQueryChange(event) {
-        console.log(event.target.value);
-
         if (!event.target.value.length && this.props.queryType === 'multi') {
             this.handleReset();
         } else {
