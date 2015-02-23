@@ -39,7 +39,7 @@ class DevPanel extends React.Component {
                             value={this.props.queryType}
                             onChange={this.props.onQueryTypeChange}>
                                 <option value='single'>single</option>
-                                <option value='mulit'>multi</option>
+                                <option value='multi'>multi</option>
                         </select>
                     </div>
                 </div>
