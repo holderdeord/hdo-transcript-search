@@ -6,12 +6,6 @@ import TranscriptStore from '../stores/TranscriptStore';
 class ResultDetails extends React.Component {
     constructor(props) {
         super(props);
-
-        this.styles = {
-            hidden: {display: 'none'},
-            visible: {display: 'block'}
-        };
-
         this.state = this.fetchStateFromStore();
     }
 
@@ -34,40 +28,40 @@ class ResultDetails extends React.Component {
     render() {
         var lastResult = this.state.results[this.state.results.length - 1];
 
-        if (!lastResult) {
-            return <div/>;
+        if (lastResult) {
+             return (
+                <div>
+                    <div className="row result-details">
+                        <div className="col-md-6">
+                            <TopListChart
+                                title="Personer"
+                                counts={lastResult.result.people[this.props.unit]}
+                                unit={this.props.unit}
+                                orientation={this.props.orientation}
+                            />
+                        </div>
+
+                        <div className="col-md-6">
+                            <TopListChart
+                                title="Partier"
+                                counts={lastResult.result.parties}
+                                unit={this.props.unit}
+                                orientation={this.props.orientation}
+                            />
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div className="row">
+                        <TopHits query={lastResult.query} result={lastResult.result} />
+                    </div>
+                </div>
+            );
+
+        } else {
+            return <div />;
         }
-
-        return (
-            <div style={this.state.results.length ? this.styles.visible : this.styles.hidden}>
-
-                <div className="row result-details">
-                    <div className="col-md-6">
-                        <TopListChart
-                            title="Personer"
-                            counts={lastResult.result.people[this.props.unit]}
-                            unit={this.props.unit}
-                            orientation={this.props.orientation}
-                        />
-                    </div>
-
-                    <div className="col-md-6">
-                        <TopListChart
-                            title="Partier"
-                            counts={lastResult.result.parties}
-                            unit={this.props.unit}
-                            orientation={this.props.orientation}
-                        />
-                    </div>
-                </div>
-
-                <hr />
-
-                <div className="row">
-                    <TopHits query={lastResult.query} result={lastResult.result} />
-                </div>
-            </div>
-        );
     }
 }
 

@@ -4,6 +4,11 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 
 class BaseChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.groups = this._blankGroups();
+    }
+
     render() {
         let ratio = this.props.aspectRatio || 'minor-eleventh';
 
@@ -14,14 +19,33 @@ class BaseChart extends React.Component {
 
     componentDidMount() {
         this._drawChart(this.props);
+
+        // TODO: get rid of this dependency
+        this.dispatchToken = SearchAppDispatcher.register(this._handleAppEvent.bind(this));
     }
 
     componentWillUnmount() {
         this._detachChart();
+        SearchAppDispatcher.unregister(this.dispatchToken);
     }
 
-    componentDidUpdate() {
-        this._drawChart(this.props);
+    componentWillReceiveProps(newProps) {
+        this._drawChart(newProps);
+    }
+
+    _handleAppEvent(payload) {
+        if (payload.action.type === ActionTypes.RESET) {
+            this.groups = this._blankGroups();
+        }
+    }
+
+    _blankGroups() {
+        var groups = new Map();
+
+        groups.set('point', new Map());
+        groups.set('line', new Map());
+
+        return groups;
     }
 
     _drawChart(props) {
@@ -29,7 +53,7 @@ class BaseChart extends React.Component {
         options = options || {};
 
         if (this.chart) {
-            setTimeout(() => this.chart.update(data, options, true), 0);
+            this.chart.update(data, options, true);
         } else {
             this.chart = new Chartist[props.type](
                 React.findDOMNode(this.refs.chart),
@@ -49,24 +73,20 @@ class BaseChart extends React.Component {
     }
 
     _setupAnimation() {
-        var groups = new Map();
-
-        SearchAppDispatcher.register((payload) => {
-            if (payload.action.type === ActionTypes.RESET) {
-                groups.clear();
-            }
-        });
-
         //
         // http://gionkunz.github.io/chartist-js/examples.html#advanced-smil-animations
         //
 
         this.chart.on('draw', (data) => {
             let groupKey = data.group._node.className.baseVal;
+            let state    = this.groups.get(data.type);
+            let seq      = null;
+            let duration = 500;
 
             switch (data.type) {
                 case 'point':
-                    let seq = groups.set(groupKey, (groups.get(groupKey) || 0) + 1).get(groupKey);
+                    seq = state.get(groupKey) || 0;
+                    seq++;
 
                     if (seq >= (this.props.data.labels.length * 2)) {
                         // we don't want to animate the same group twice
@@ -78,7 +98,7 @@ class BaseChart extends React.Component {
                             // The delay when we like to start the animation
                             begin: data.index * 80,
                             // Duration of the animation
-                            dur: 500,
+                            dur: duration,
                             // The value where the animation should start
                             from: 0,
                             // The value where it should end
@@ -86,7 +106,7 @@ class BaseChart extends React.Component {
                         },
                         x1: {
                             begin: data.index * 80,
-                            dur: 500,
+                            dur: duration,
                             from: data.x - 100,
                             to: data.x,
                             // You can specify an easing function name or use easing
@@ -94,20 +114,32 @@ class BaseChart extends React.Component {
                             easing: Chartist.Svg.Easing.easeOutQuart
                         }
                     });
+
+
+                    state.set(groupKey, seq);
                     break;
                 case 'line':
+                    seq = state.get(groupKey) || 0;
+                    seq++;
+
+                    if (seq > (this.props.data.series.length)) {
+                        return;
+                    }
+
                     data.element.animate({
                         opacity: {
                             // The delay when we like to start the animation
                             begin: seq * 80,
                             // Duration of the animation
-                            dur: 500,
+                            dur: duration,
                             // The value where the animation should start
                             from: 0,
                             // The value where it should end
                             to: 1
                         }
                     });
+
+                    state.set(groupKey, seq);
                     break;
                 default:
                     // noop

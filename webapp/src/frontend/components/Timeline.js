@@ -60,38 +60,38 @@ class Timeline extends React.Component {
     }
 
     render() {
-        let style = {
-            display: this.state.queries.length ? 'block' : 'none'
-        };
+        if (this.state.queries.length) {
+            return (
+                <div className="row timeline">
+                    <div>
+                        <div className="lead pull-right">{this.state.queries.join(', ')}</div>
+                            <div className="btn-group btn-toggle"
+                                 onClick={this.props.onUnitChange}>
+                                <input
+                                    type="button"
+                                    value="%"
+                                    className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
+                                />
 
-        return (
-            <div className="row timeline" style={style}>
-                <div>
-                    <div className="lead pull-right">{this.state.queries.join(', ')}</div>
-                        <div className="btn-group btn-toggle"
-                             onClick={this.props.onUnitChange}>
-                            <input
-                                type="button"
-                                value="%"
-                                className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
-                            />
+                                <input
+                                    type="button"
+                                    value="#"
+                                    className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
+                                />
+                            </div>
+                    </div>
 
-                            <input
-                                type="button"
-                                value="#"
-                                className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
-                            />
-                        </div>
+                    <BaseChart
+                        type="Line"
+                        data={this.state.data[this.props.unit]}
+                        aspectRatio="double-octave"
+                        options={this.chartOptions}
+                    />
                 </div>
-
-                <BaseChart
-                    type="Line"
-                    data={this.state.data[this.props.unit]}
-                    aspectRatio="double-octave"
-                    options={this.chartOptions}
-                />
-            </div>
-        );
+            );
+        } else {
+            return <div className="row timeline"></div>;
+        }
     }
 
     formatLabel(d) {
