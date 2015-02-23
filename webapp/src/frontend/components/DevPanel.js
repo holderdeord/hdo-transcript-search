@@ -30,6 +30,18 @@ class DevPanel extends React.Component {
                                 <option value={Intervals.YEAR}>year</option>
                         </select>
                     </div>
+
+                    <div>
+                        Query type:
+
+                        <select
+                            name='queryType'
+                            value={this.props.queryType}
+                            onChange={this.props.onQueryTypeChange}>
+                                <option value='single'>single</option>
+                                <option value='mulit'>multi</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         );
@@ -38,7 +50,9 @@ class DevPanel extends React.Component {
 }
 
 DevPanel.propTypes = {
-    visible: React.PropTypes.bool.isRequired
+    visible: React.PropTypes.bool.isRequired,
+    interval: React.PropTypes.string.isRequired,
+    queryType: React.PropTypes.string.isRequired
 };
 
 module.exports = DevPanel;

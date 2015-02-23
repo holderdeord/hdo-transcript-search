@@ -157,13 +157,7 @@ class SearchAPI {
 
     _buildHitsQuery(opts) {
         var body = {
-            query: {
-                query_string: {
-                    query: opts.query,
-                    default_operator: 'AND',
-                    default_field: 'text'
-                }
-            },
+            query: this._queryFor(opts.query),
             highlight: {
                 pre_tags: ['<mark>'],
                 post_tags: ['</mark>'],
@@ -181,13 +175,7 @@ class SearchAPI {
     }
 
     _buildAggregationsQuery(opts) {
-        var query = {
-            query_string: {
-                query: opts.query,
-                default_operator: 'AND',
-                default_field: 'text'
-            }
-        };
+        var query = this._queryFor(opts.query);
 
         var aggregations = {
             timeline: {
@@ -246,6 +234,16 @@ class SearchAPI {
             index: INDEX_NAME,
             type: INDEX_TYPE,
             body: body
+        };
+    }
+
+    _queryFor(str) {
+        return {
+            query_string: {
+                query: str,
+                default_operator: 'AND',
+                default_field: 'text'
+            }
         };
     }
 

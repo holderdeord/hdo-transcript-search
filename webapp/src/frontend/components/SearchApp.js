@@ -3,7 +3,7 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import Intervals           from '../constants/Intervals';
 import TranscriptStore     from '../stores/TranscriptStore';
-import keymaster           from 'keymaster';
+import key                 from 'keymaster';
 import Header              from './Header';
 import Footer              from './Footer';
 import SearchForm          from './SearchForm';
@@ -18,9 +18,10 @@ class SearchApp extends React.Component {
 
         this.state = {
             unit: 'pct',
-            devPanel: { visible: false},
+            devPanelVisible: false,
             orientation: 'horizontal',
-            interval: Intervals.YEAR
+            interval: Intervals.YEAR,
+            queryType: 'multi'
         };
     }
 
@@ -28,18 +29,13 @@ class SearchApp extends React.Component {
         // window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
         window.addEventListener('popstate', this.handleHistoryChange.bind(this));
         TranscriptStore.addChangeListener(this.updateHistory.bind(this));
-
-        // TODO: use keymaster to provide some instructions on '?'
-
-        keymaster('ctrl+`', () => {
-            this.setState({devPanel: {visible: !this.state.devPanel.visible}});
-        });
-
+        this.registerKeyBindings();
         this.updateFromUrl();
     }
 
     componentWillUnmount() {
         TranscriptStore.removeChangeListener(this.updateHistory.bind(this));
+        this.unregisterKeyBindings();
     }
 
     handleHistoryChange(event) {
@@ -106,7 +102,10 @@ class SearchApp extends React.Component {
                 />
 
                 <div className="container">
-                    <SearchForm interval={this.state.interval} />
+                    <SearchForm
+                        interval={this.state.interval}
+                        queryType={this.state.queryType}
+                    />
 
                     <Timeline
                         unit={this.state.unit}
@@ -124,11 +123,13 @@ class SearchApp extends React.Component {
                     <SpeechModal />
 
                     <DevPanel
-                        visible={this.state.devPanel.visible}
+                        visible={this.state.devPanelVisible}
                         orientation={this.state.orientation}
                         interval={this.state.interval}
+                        queryType={this.state.queryType}
                         onOrientationChange={this.handleOrientationChange.bind(this)}
                         onIntervalChange={this.handleIntervalChange.bind(this)}
+                        onQueryTypeChange={this.handleQueryTypeChange.bind(this)}
                     />
                 </div>
             </div>
@@ -147,6 +148,38 @@ class SearchApp extends React.Component {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
 
         this.setState({ unit: newUnit }, this.updateHistory.bind(this));
+    }
+
+    handleQueryTypeChange(event) {
+        this.setState({queryType: event.target.value});
+    }
+
+    registerKeyBindings() {
+        // make sure key bindings work also inside the search field
+        key.filter = (event) => {
+            var el = event.target || event.srcElement;
+
+            var nonInput = !(
+                el.tagName === 'INPUT' ||
+                el.tagName === 'SELECT' ||
+                el.tagName === 'TEXTAREA'
+            );
+
+            return nonInput || el.type === 'search';
+        };
+
+        // set up key bindings
+        key('ctrl+`', () => {
+            this.setState({devPanelVisible: !this.state.devPanelVisible});
+        });
+
+        // TODO: use keymaster to provide some instructions on '?'
+
+    }
+
+
+    unregisterKeyBindings() {
+        key.unbind('ctrl+`');
     }
 
 

@@ -22,7 +22,7 @@ export default class TimeUtils {
     }
 
     static formatHitDate(hit) {
-        moment(hit.time).format('LL');
+        return moment(hit.time).format('LL');
     }
 
     static formatHitTime(hit) {

@@ -1,5 +1,5 @@
 import React               from 'react';
-import keymaster           from 'keymaster';
+import key                 from 'keymaster';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
@@ -15,16 +15,18 @@ class SearchForm extends React.Component {
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.reset.bind(this));
-        keymaster('/', this.handleFocus.bind(this));
+        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        key('/', this.handleFocus.bind(this));
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.reset.bind(this));
-        keymaster.unbind('/', this.handleFocus.bind(this));
+        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+        key.unbind('/', this.handleFocus.bind(this));
     }
 
     render() {
+        let buttonName  = this.props.queryType === 'single' ? 'Legg til ord' : 'Søk';
+
         return (
             <div className="row">
                 <div className="col-sm-6 col-sm-offset-3">
@@ -35,6 +37,7 @@ class SearchForm extends React.Component {
                             name="query"
                             ref="query"
                             autoFocus="true"
+                            placeholder="Søkeord"
                             tabIndex="0"
                             value={this.state.query}
                             onChange={this.handleQueryChange.bind(this)}
@@ -45,7 +48,7 @@ class SearchForm extends React.Component {
                             <input
                                 type="button"
                                 className="btn btn-primary btn-lg"
-                                value="Legg til ord"
+                                value={buttonName}
                                 onClick={this.handleSearch.bind(this)}
                             />
                         </span>
@@ -67,19 +70,50 @@ class SearchForm extends React.Component {
     handleSearch() {
         let q = this.state.query.trim();
 
-        if (TranscriptStore.hasQuery(q)) {
+        if (!q.length) {
+            this.handleReset();
+            return;
+        }
+
+        if (this.props.queryType === 'single') {
+            this.executeSingleQuerySearch(q);
+        } else {
+            this.executeMultiQuerySearch(q);
+        }
+    }
+
+    executeSingleQuerySearch(query) {
+        if (TranscriptStore.hasQuery(query)) {
             this.reset();
             return;
         }
 
-        if (q.length) {
-            SearchAppDispatcher.handleViewAction({
-                type: ActionTypes.SEARCH_ADD,
-                query: q,
-                interval: this.props.interval
-            });
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.SEARCH_ADD,
+            query: query,
+            interval: this.props.interval
+        });
+    }
+
+    executeMultiQuerySearch(query) {
+        if (query === TranscriptStore.getJoinedQuery()) {
+            return;
+        }
+
+        let queries = query.split(/\s*,\s*/);
+
+        SearchAppDispatcher.handleViewAction({
+            type: ActionTypes.SEARCH_MULTI,
+            queries: queries,
+            interval: this.props.interval
+        });
+    }
+
+    handleChange() {
+        if (this.props.queryType === 'single') {
+            this.reset();
         } else {
-            this.handleReset();
+            this.setState({query: TranscriptStore.getJoinedQuery()});
         }
     }
 
