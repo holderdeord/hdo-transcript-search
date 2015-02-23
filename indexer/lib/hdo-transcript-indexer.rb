@@ -278,9 +278,10 @@ module Hdo
               format: 'date_time_no_millis'
             },
             text: {
-              search_analyzer:  'analyzer_shingle',
-              index_analyzer:   'analyzer_shingle',
-              type:             'string'
+              type: 'string',
+              fields: {
+                shingles: { type: "string", analyzer: "analyzer_shingle"}
+              }
             },
             name:        { type: 'string', index: 'not_analyzed' },
             party:       { type: 'string', index: 'not_analyzed' },
