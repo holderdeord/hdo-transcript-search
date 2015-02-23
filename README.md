@@ -26,6 +26,10 @@ Download and index transcripts (requires a local elasticsearch):
     $ bundle install
     $ bundle exec ruby -Ilib bin/hdo-transcript-indexer
 
+Re-create the index. This is necessary when a mapping is changed:
+
+    $ bundle exec ruby -Ilib bin/hdo-transcript-indexer --create-index
+
 Convert a single XML transcript to indexable JSON:
 
     $ bundle exec ruby -Ilib bin/hdo-transcript-converter transcript.xml
