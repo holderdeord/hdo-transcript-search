@@ -89,7 +89,7 @@ module Hdo
 
           @logger.info "building name -> party cache, this could take a while"
 
-          xml_transcripts.each do |input|
+          xml_transcripts.each do |input_file|
             Converter.parse(input_file).sections.each do |section|
               n = section[:name]
               p = section[:party]
