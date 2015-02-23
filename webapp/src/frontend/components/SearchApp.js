@@ -21,7 +21,7 @@ class SearchApp extends React.Component {
             devPanelVisible: false,
             orientation: 'horizontal',
             interval: Intervals.YEAR,
-            queryType: 'multi'
+            queryType: 'single'
         };
     }
 
