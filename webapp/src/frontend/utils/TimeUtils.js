@@ -14,7 +14,7 @@ export default class TimeUtils {
     static timestampForHit(hit) {
         let ts = moment(hit.time);
 
-        if (hit.name === 'Presidenten' && ts.format('HH.mm') == '00.00') {
+        if (hit.name === 'Presidenten' && ts.format('HH.mm') === '00.00') {
             return ts.format('LL kl. ??.??');
         } else {
             return ts.format('LLL');
@@ -29,7 +29,7 @@ export default class TimeUtils {
         let ts = moment(hit.time);
         let str = ts.format('HH.mm');
 
-        if (hit.name === 'Presidenten' && str == '00.00') {
+        if (hit.name === 'Presidenten' && str === '00.00') {
             return '??.??';
         } else {
             return str;
