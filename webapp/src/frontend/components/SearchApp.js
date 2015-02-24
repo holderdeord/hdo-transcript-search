@@ -11,6 +11,7 @@ import Timeline            from './Timeline';
 import ResultDetails       from './ResultDetails';
 import SpeechModal         from './SpeechModal';
 import DevPanel            from './DevPanel';
+import SharingLinks        from './SharingLinks';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -18,10 +19,10 @@ class SearchApp extends React.Component {
 
         this.state = {
             unit: 'pct',
-            devPanelVisible: false,
+            showDevPanel: false,
             orientation: 'horizontal',
             interval: Intervals.YEAR,
-            queryType: 'multi',
+            queryType: 'multi'
         };
     }
 
@@ -94,12 +95,15 @@ class SearchApp extends React.Component {
     }
 
     render() {
+        let title = document.body.getAttribute('data-title');
+        let desc  = document.body.getAttribute('data-description');
+        let fbId  = document.body.getAttribute('data-facebook-app-id');
+
         return (
             <div>
-                <Header
-                    title={document.body.getAttribute('data-title')}
-                    description={document.body.getAttribute('data-description')}
-                />
+                <Header title={title} description={desc}>
+                    <SharingLinks facebookAppId={fbId} />
+                </Header>
 
                 <div className="container">
                     <SearchForm
@@ -113,6 +117,7 @@ class SearchApp extends React.Component {
                         onUnitChange={this.handleUnitChange.bind(this)}
                     />
 
+
                     <ResultDetails
                         unit={this.state.unit}
                         orientation={this.state.orientation}
@@ -123,10 +128,11 @@ class SearchApp extends React.Component {
                     <SpeechModal />
 
                     <DevPanel
-                        visible={this.state.devPanelVisible}
+                        visible={this.state.showDevPanel}
                         orientation={this.state.orientation}
                         interval={this.state.interval}
                         queryType={this.state.queryType}
+
                         onOrientationChange={this.handleOrientationChange.bind(this)}
                         onIntervalChange={this.handleIntervalChange.bind(this)}
                         onQueryTypeChange={this.handleQueryTypeChange.bind(this)}
@@ -153,7 +159,6 @@ class SearchApp extends React.Component {
     handleQueryTypeChange(event) {
         this.setState({queryType: event.target.value});
     }
-
     registerKeyBindings() {
         // make sure key bindings work also inside the search field
         key.filter = (event) => {
@@ -170,7 +175,7 @@ class SearchApp extends React.Component {
 
         // set up key bindings
         key('ctrl+`', () => {
-            this.setState({devPanelVisible: !this.state.devPanelVisible});
+            this.setState({showDevPanel: !this.state.showDevPanel});
         });
 
         // TODO: use keymaster to provide some instructions on '?'

@@ -18,7 +18,7 @@
     <meta name="twitter:title"     content="{{title}} - Holder de ord" />
 
     <meta property="og:site_name"  content="{{appTitle}}" />
-    <meta property="fb:app_id"     content="504447209668308" />
+    <meta property="fb:app_id"     content="{{facebookAppId}}" />
     <meta property="og:type"       content="website" />
     <meta property="og:url"        content="{{absoluteUrl}}" />
     <meta property="og:image"      content="http://files.holderdeord.no/images/stortingssalen.jpg" />
@@ -31,8 +31,11 @@
     <meta name="twitter:description"  content="{{appDescription}}">
 
     <meta name="author" content="Holder de ord">
+    <meta name="copyright" content="Holder de ord">
     <meta name="twitter:site" content="@holderdeord">
     <meta name="twitter:creator" content="@holderdeord">
+
+    <meta name="keywords" content="stortinget, visualisering, politikk, politisk, språk, retorikk, debatt, argument, tale, referat, tekst" />
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-precomposed.png">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -41,7 +44,10 @@
     {{#if settings.analytics}}<script type="text/javascript" src="/analytics.js"></script>{{/if}}
   </head>
 
-  <body data-title="{{appTitle}}" data-description="{{appDescription}}">
+  <body data-title="{{appTitle}}"
+        data-description="{{appDescription}}"
+        data-facebook-app-id="{{facebookAppId}}"
+      >
     <div id="content"></div>
 
     <!--[if lte IE 9]>

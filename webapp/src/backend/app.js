@@ -20,8 +20,9 @@ app.set('view engine', 'hbs');
 app.set('views', path.resolve(__dirname, '../../views'));
 app.set('analytics', app.get('env') === 'production');
 
-app.locals.appTitle = 'Fra Stortingets talerstol';
+app.locals.appTitle       = 'Fra Stortingets talerstol';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
+app.locals.facebookAppId  = 504447209668308;
 
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
