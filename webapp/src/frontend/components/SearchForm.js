@@ -4,6 +4,8 @@ import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import TranscriptStore     from '../stores/TranscriptStore';
 import ActionTypes         from '../constants/ActionTypes';
 
+const INVALID_QUERY_CHARS = /[\.]/;
+
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
@@ -55,20 +57,28 @@ class SearchForm extends React.Component {
                     </div>
                 </div>
 
-                <div className="col-sm-2 text-right">
-                    <input
-                        type="button"
-                        className="btn btn-default btn-lg"
-                        value="Nullstill"
-                        onClick={this.handleReset.bind(this)}
-                    />
-                </div>
+                {this.props.queryType === 'single' && this.renderResetButton()}
             </div>
         );
     }
 
+    renderResetButton() {
+        return (
+            <div className="col-sm-2 text-right">
+                <input
+                    type="button"
+                    className="btn btn-default btn-lg"
+                    value="Nullstill"
+                    onClick={this.handleReset.bind(this)}
+                />
+            </div>
+        );
+    }
+
+
+
     handleSearch() {
-        let q = this.state.query.trim();
+        let q = this.state.query.trim().replace(INVALID_QUERY_CHARS, '');
 
         if (!q.length) {
             this.handleReset();

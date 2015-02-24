@@ -13,6 +13,9 @@ class TranscriptSearchAPI {
                 query: query,
                 result: result
             });
+        }).catch((e) => {
+            // TODO: let user know
+            console.error(e.toString());
         });
     }
 
@@ -21,23 +24,33 @@ class TranscriptSearchAPI {
             return reqwest(this.searchPathFor(q, interval)).then((r) => {
                 return {query: q, result: r};
             });
-        }).then(results => {
-            SearchAppDispatcher.handleServerAction({
-                type: ActionTypes.SEARCH_MULTI_RESULT,
-                results: results
+        })
+            .then(results => {
+                SearchAppDispatcher.handleServerAction({
+                    type: ActionTypes.SEARCH_MULTI_RESULT,
+                    results: results
+                });
+            })
+            .catch((e) => {
+               // TODO: let user know
+               console.error(e.toString());
             });
-        });
     }
 
     speechContext(transcriptId, start, end) {
         var path = `/api/context/${transcriptId}/${start}/${end}`;
 
-        return reqwest(path).then(result => {
-            SearchAppDispatcher.handleServerAction({
-                type: ActionTypes.SPEECH_CONTEXT_RESULT,
-                result: result
+        return reqwest(path)
+            .then(result => {
+                SearchAppDispatcher.handleServerAction({
+                    type: ActionTypes.SPEECH_CONTEXT_RESULT,
+                    result: result
+                });
+            })
+            .catch((e) => {
+                // TODO: let user know
+                console.error(e.toString());
             });
-        });
     }
 
     searchPathFor(query, interval) {

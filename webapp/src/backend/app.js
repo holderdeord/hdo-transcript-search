@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 
 app.get('/search/:unit/:query', (req, res) => {
     res.render('index', {
-        title: `${req.params.query} - Referatsøk`,
+        title: `Søk: ${req.params.query}`,
         query: req.params.query
     });
 });
