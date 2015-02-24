@@ -277,11 +277,13 @@ module Hdo
                 shingles: { type: "string", analyzer: "analyzer_shingle"}
               }
             },
-            name:        { type: 'string', index: 'not_analyzed' },
-            party:       { type: 'string', index: 'not_analyzed' },
-            presidents:  { type: 'string', index: 'not_analyzed' },
-            title:       { type: 'string', index: 'not_analyzed' },
-            external_id: { type: 'string', index: 'not_analyzed' }
+            name:        { type: 'string',  index: 'not_analyzed' },
+            party:       { type: 'string',  index: 'not_analyzed' },
+            presidents:  { type: 'string',  index: 'not_analyzed' },
+            title:       { type: 'string',  index: 'not_analyzed' },
+            external_id: { type: 'string',  index: 'not_analyzed' },
+            transcript:  { type: 'string',  index: 'not_analyzed' },
+            order:       { type: 'integer', index: 'not_analyzed' }
           }
         }
       }
