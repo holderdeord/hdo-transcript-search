@@ -3,6 +3,8 @@ import BaseChart       from './BaseChart';
 import TranscriptStore from '../stores/TranscriptStore';
 import TimeUtils       from '../utils/TimeUtils';
 
+const SERIES_CHARS = 'abcdefghijklmno'.split("");
+
 class Timeline extends React.Component {
     constructor(props) {
         super(props);
@@ -64,21 +66,21 @@ class Timeline extends React.Component {
             return (
                 <div className="row timeline">
                     <div>
-                        <div className="lead pull-right">{this.state.queries.join(', ')}</div>
-                            <div className="btn-group btn-toggle"
-                                 onClick={this.props.onUnitChange}>
-                                <input
-                                    type="button"
-                                    value="%"
-                                    className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
-                                />
+                        {this.renderQueries()}
+                        <div className="btn-group btn-toggle"
+                             onClick={this.props.onUnitChange}>
+                            <input
+                                type="button"
+                                value="%"
+                                className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
+                            />
 
-                                <input
-                                    type="button"
-                                    value="#"
-                                    className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
-                                />
-                            </div>
+                            <input
+                                type="button"
+                                value="#"
+                                className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
+                            />
+                        </div>
                     </div>
 
                     <BaseChart
@@ -92,6 +94,26 @@ class Timeline extends React.Component {
         } else {
             return <div className="row timeline"></div>;
         }
+    }
+
+    renderQueries() {
+        // see chartist.scss for colors
+
+        var queries = this.state.queries.map((q, i) => {
+            let last = i === this.state.queries.length - 1;
+            let className = 'hdo-label-' + SERIES_CHARS[i >= SERIES_CHARS.length ? i - SERIES_CHARS.length : i];
+
+            return (
+                <span key={i}>
+                    <span className={className}>{q}</span>
+                    {last ? '' : ', '}
+                </span>
+            );
+        });
+
+        return (
+            <div className="lead pull-right">{queries}</div>
+        );
     }
 
     formatLabel(d) {
