@@ -39,7 +39,7 @@ class SharingLinks {
     handleTwitterShare(event) {
         event.preventDefault();
 
-        let text = 'Se når politikerne snakker om ' + TranscriptStore.getJoinedQuery();
+        let text = `Se når politikerne snakker om «${TranscriptStore.getJoinedQuery()}»`;
 
         let shareUrl = `https://twitter.com/intent/tweet
                             ?text=${encodeURIComponent(text)}
