@@ -20,6 +20,7 @@ class SearchApp extends React.Component {
         this.state = {
             unit: 'pct',
             showDevPanel: false,
+            showResultDetails: false,
             orientation: 'horizontal',
             interval: Intervals.YEAR,
             queryType: 'multi'
@@ -117,11 +118,7 @@ class SearchApp extends React.Component {
                         onUnitChange={this.handleUnitChange.bind(this)}
                     />
 
-
-                    <ResultDetails
-                        unit={this.state.unit}
-                        orientation={this.state.orientation}
-                    />
+                    {this.renderResultDetails()}
 
                     <Footer />
 
@@ -142,6 +139,17 @@ class SearchApp extends React.Component {
         );
     }
 
+    renderResultDetails() {
+        return this.state.showResultDetails ? (
+            <ResultDetails
+                unit={this.state.unit}
+                orientation={this.state.orientation}
+            />
+        ) : <div/>;
+
+
+    }
+
     handleOrientationChange(event) {
         this.setState({orientation: event.target.value });
     }
@@ -159,6 +167,7 @@ class SearchApp extends React.Component {
     handleQueryTypeChange(event) {
         this.setState({queryType: event.target.value});
     }
+
     registerKeyBindings() {
         // make sure key bindings work also inside the search field
         key.filter = (event) => {
@@ -179,7 +188,6 @@ class SearchApp extends React.Component {
         });
 
         // TODO: use keymaster to provide some instructions on '?'
-
     }
 
 

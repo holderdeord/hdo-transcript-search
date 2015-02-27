@@ -5,7 +5,10 @@ class Footer extends React.Component {
         // jshint ignore:start
         return (
             <footer>
-                <div className="logo" />
+                <a href="https://www.holderdeord.no/">
+                    <div className="logo" />
+                </a>
+
                 <h4>Holder de ord &copy; 2014 - {new Date().getFullYear()}</h4>
 
                 <p>

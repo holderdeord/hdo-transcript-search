@@ -13,10 +13,7 @@ class TranscriptSearchAPI {
                 query: query,
                 result: result
             });
-        }).catch((e) => {
-            // TODO: let user know
-            console.error(e.toString());
-        });
+        }).catch(this._logError);
     }
 
     searchMultiple(queries, interval) {
@@ -31,10 +28,7 @@ class TranscriptSearchAPI {
                     results: results
                 });
             })
-            .catch((e) => {
-               // TODO: let user know
-               console.error(e.toString());
-            });
+            .catch(this._logError);
     }
 
     speechContext(transcriptId, start, end) {
@@ -47,14 +41,15 @@ class TranscriptSearchAPI {
                     result: result
                 });
             })
-            .catch((e) => {
-                // TODO: let user know
-                console.error(e.toString());
-            });
+            .catch(this._logError);
     }
 
     searchPathFor(query, interval) {
         return `/api/search?interval=${interval}&query=${query}`;
+    }
+
+    _logError(e) {
+        console.error(e.message, e.stack);
     }
 }
 

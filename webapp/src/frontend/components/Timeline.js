@@ -67,6 +67,7 @@ class Timeline extends React.Component {
                 <div className="row timeline">
                     <div>
                         {this.renderQueries()}
+
                         <div className="btn-group btn-toggle"
                              onClick={this.props.onUnitChange}>
                             <input
