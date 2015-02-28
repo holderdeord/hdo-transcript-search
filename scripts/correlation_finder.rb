@@ -6,6 +6,7 @@ class CorrelationFinder
       min: 0.85,
       flip: false,
       threshold: 5,
+      min_length: 0,
       ignored_words: [
         'rotevatn', 'hansson', 'rasmus', 'sveinung',
         'breivik', 'kjenseth', 'dørum', 'bollestad',
@@ -18,8 +19,8 @@ class CorrelationFinder
   def top_correlations
     correlations.
       select { |e| e[:correlation].abs >= @options[:min] }.
-      sort_by { |e| -e[:correlation].abs }.
       uniq { |e| e[:words] }
+      sort_by { |e| -e[:correlation].abs }.
   end
 
   def correlations
@@ -29,9 +30,10 @@ class CorrelationFinder
       word_to_values.flat_map do |word_left, values_left|
         word_to_values.map do |word_right, values_right|
           next if word_left == word_right
+          next if ignored?(word_left) || ignored?(word_right)
+          next if word_left.length < @options[:min_length] || word_right.length < @options[:min_length]
           next if (values_left.inject(&:+) <= @options[:threshold]) || (values_right.inject(&:+) <= @options[:threshold])
           next if (values_left.count { |v| v > 0 } < 2) || (values_right.count { |v| v > 0 } < 2)
-          next if ignored?(word_left) || ignored?(word_right)
 
           {
             words: [word_left, word_right].sort,

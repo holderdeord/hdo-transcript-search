@@ -6,8 +6,8 @@ require 'fileutils'
 @screenshooter = Screenshooter.new
 
 [
-  {flip: false, threshold: 50},
-  {flip: true, threshold: 50}
+  {flip: false, threshold: 50, min_length: 5},
+  {flip: true, threshold: 50, min_length: 5}
 ].each_with_index do |opts, idx|
   cf = CorrelationFinder.new(opts)
   cf.top_correlations.first(100).each_with_index do |correlation, index|
