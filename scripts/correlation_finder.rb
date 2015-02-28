@@ -16,11 +16,13 @@ class CorrelationFinder
     }.merge(opts)
   end
 
-  def top_correlations
-    correlations.
+  def top_correlations(size = 50)
+    sorted = correlations.
       select { |e| e[:correlation].abs >= @options[:min] }.
-      uniq { |e| e[:words] }
-      sort_by { |e| -e[:correlation].abs }.
+      uniq { |e| e[:words] }.
+      sort_by { |e| e[:correlation] }
+
+    sorted.first(size / 2) + sorted.last(size / 2)
   end
 
   def correlations
