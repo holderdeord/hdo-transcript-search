@@ -11,6 +11,8 @@ class Footer extends React.Component {
 
                 <h4>Holder de ord &copy; 2014 - {new Date().getFullYear()}</h4>
 
+                {this.props.children}
+
                 <p>
                     <small>
                         <div>Referater fra <a href="http://data.stortinget.no">data.stortinget.no</a> lisensiert under <a href="http://data.norge.no/NLOD">NLOD</a>.</div>

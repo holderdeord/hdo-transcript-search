@@ -31,6 +31,7 @@ class TopListChart extends React.Component {
         return (
             <div className="top-list-chart">
                 <h3>{this.props.title}</h3>
+                <small className="text-muted pull-right">{this.props.subtitle}</small>
 
                 <BaseChart
                     type="Bar"
@@ -38,6 +39,7 @@ class TopListChart extends React.Component {
                     aspectRatio="major-sixth"
                     options={chartOptions}
                 />
+
             </div>
         );
     }

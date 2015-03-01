@@ -6,7 +6,7 @@ class SharingLinks {
     render() {
 
         return (
-            <div style={{paddingTop: '1rem'}}>
+            <div>
                 <span style={{paddingRight: '0.8rem'}}>
                     <a href="#" onClick={this.handleFacebookShare.bind(this)}>
                         <small>Facebook</small>

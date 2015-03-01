@@ -26,16 +26,20 @@ class ResultDetails extends React.Component {
     }
 
     render() {
-        var lastResult = this.state.results[this.state.results.length - 1];
+        var firstResult = this.state.results[0];
 
-        if (lastResult) {
+        if (firstResult) {
+            let peopleSubtitle = this.props.unit === 'pct' ? 'Prosent av representantens innlegg' : 'Antall innlegg';
+            let partySubtitle = this.props.unit === 'pct' ? 'Prosent av partiets innlegg': 'Antall innlegg';
+
              return (
                 <div>
                     <div className="row result-details">
                         <div className="col-md-6">
                             <TopListChart
-                                title="Personer"
-                                counts={lastResult.result.people[this.props.unit]}
+                                title={`Hvem snakker mest om ${firstResult.query}?`}
+                                subtitle={peopleSubtitle}
+                                counts={firstResult.result.people[this.props.unit]}
                                 unit={this.props.unit}
                                 orientation={this.props.orientation}
                             />
@@ -43,19 +47,16 @@ class ResultDetails extends React.Component {
 
                         <div className="col-md-6">
                             <TopListChart
-                                title="Partier"
-                                counts={lastResult.result.parties}
+                                title={`Hvilke partier snakker mest om ${firstResult.query}?`}
+                                subtitle={partySubtitle}
+                                counts={firstResult.result.parties}
                                 unit={this.props.unit}
                                 orientation={this.props.orientation}
                             />
                         </div>
                     </div>
 
-                    <hr />
-
-                    <div className="row">
-                        <TopHits query={lastResult.query} result={lastResult.result} />
-                    </div>
+                    {this.renderHits(firstResult)}
                 </div>
             );
 
@@ -63,11 +64,21 @@ class ResultDetails extends React.Component {
             return <div />;
         }
     }
+
+    renderHits(lastResult) {
+        return this.props.showHits ? (
+            <div className="row">
+               <hr />
+               <TopHits query={lastResult.query} result={lastResult.result} />
+            </div>
+        ) : <div/>;
+    }
 }
 
 ResultDetails.propTypes = {
     unit: React.PropTypes.string.isRequired,
-    orientation: React.PropTypes.string.isRequired
+    orientation: React.PropTypes.string.isRequired,
+    showHits: React.PropTypes.bool.isRequired
 };
 
 module.exports = ResultDetails;

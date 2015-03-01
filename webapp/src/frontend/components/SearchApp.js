@@ -20,8 +20,9 @@ class SearchApp extends React.Component {
         this.state = {
             unit: 'pct',
             showDevPanel: false,
-            showResultDetails: false,
-            orientation: 'horizontal',
+            showResultDetails: true,
+            showHits: false,
+            orientation: 'vertical',
             interval: Intervals.YEAR,
             queryType: 'multi'
         };
@@ -102,9 +103,7 @@ class SearchApp extends React.Component {
 
         return (
             <div>
-                <Header title={title} description={desc}>
-                    <SharingLinks facebookAppId={fbId} />
-                </Header>
+                <Header title={title} description={desc} />
 
                 <div className="container">
                     <SearchForm
@@ -120,7 +119,8 @@ class SearchApp extends React.Component {
 
                     {this.renderResultDetails()}
 
-                    <Footer />
+                    <Footer/>
+                    <SharingLinks facebookAppId={fbId} />
 
                     <SpeechModal />
 
@@ -144,6 +144,7 @@ class SearchApp extends React.Component {
             <ResultDetails
                 unit={this.state.unit}
                 orientation={this.state.orientation}
+                showHits={this.state.showHits}
             />
         ) : <div/>;
 
