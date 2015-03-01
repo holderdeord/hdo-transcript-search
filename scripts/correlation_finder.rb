@@ -3,6 +3,7 @@ require 'gsl' # brew install gsl && gem install rb-gsl
 class CorrelationFinder
   def initialize(opts = {})
     @options = {
+      unit: 'count',
       min: 0.85,
       flip: false,
       threshold: 5,
@@ -11,7 +12,11 @@ class CorrelationFinder
         'rotevatn', 'hansson', 'rasmus', 'sveinung',
         'breivik', 'kjenseth', 'dørum', 'bollestad',
         'sponheim', 'kvassheim', 'kersti', 'toppe',
-        'evestuen', 'fylkesnes'
+        'evestuen', 'fylkesnes', 'stoltenberg', 'tørresdal',
+        'senterpartiet', 'arbeiderpartiet', 'sosialistisk',
+        'venstreparti', 'fremskrittspartiet', 'venstre', 'høyre',
+        'kristelig', 'folkeparti',
+        'miljøpartiet', 'de', 'grønne'
       ]
     }.merge(opts)
   end
@@ -31,23 +36,27 @@ class CorrelationFinder
 
       word_to_values.flat_map do |word_left, values_left|
         word_to_values.map do |word_right, values_right|
-          next if word_left == word_right
-          next if ignored?(word_left) || ignored?(word_right)
-          next if word_left.length < @options[:min_length] || word_right.length < @options[:min_length]
-          next if (values_left.inject(&:+) <= @options[:threshold]) || (values_right.inject(&:+) <= @options[:threshold])
-          next if (values_left.count { |v| v > 0 } < 2) || (values_right.count { |v| v > 0 } < 2)
-
-          {
-            words: [word_left, word_right].sort,
-            correlation: correlation(values_left, values_right),
-            euclidean_distance: euclidean_distance(values_left, values_right)
-          }
-        end.compact
-      end.uniq
+          calculate(word_left, word_right, values_left, values_right)
+        end
+      end.compact.uniq
     )
   end
 
   private
+
+  def calculate(word_left, word_right, values_left, values_right)
+    return if word_left == word_right
+    return if ignored?(word_left) || ignored?(word_right)
+    return if word_left.length < @options[:min_length] || word_right.length < @options[:min_length]
+    return if (values_left.inject(&:+) <= @options[:threshold]) || (values_right.inject(&:+) <= @options[:threshold])
+    return if (values_left.count { |v| v > 0 } < 2) || (values_right.count { |v| v > 0 } < 2)
+
+    {
+      words: [word_left, word_right].sort,
+      correlation: correlation(values_left, values_right),
+      euclidean_distance: euclidean_distance(values_left, values_right)
+    }
+  end
 
   def ignored?(n)
     @options[:ignored_words].include?(n)
@@ -69,7 +78,15 @@ class CorrelationFinder
         timeline = st.timeline_for(word)
 
         result   = {}
-        timestamps.each { |k| result[k] = timeline[k] || 0 }
+        timestamps.each do |k|
+          if @options[:unit] == 'count'
+            result[k] = timeline[k] || 0
+          elsif @options[:unit] == 'percent'
+            result[k] = ((timeline[k] || 0) / totals[k].to_f) * 100
+          else
+            raise "invalid unit: #{@options[:unit].inspect}"
+          end
+        end
 
         res[word] = result
         res
@@ -82,7 +99,11 @@ class CorrelationFinder
   end
 
   def timestamps
-    @timestamps ||= st.timeline_for('*').keys.sort[0..-2] # ignore 'current', incomplete data point
+    @timestamps ||= totals.keys.sort[0..-2] # ignore 'current', incomplete data point
+  end
+
+  def totals
+    @totals ||= st.timeline_for('*')
   end
 
   def st

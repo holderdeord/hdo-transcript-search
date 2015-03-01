@@ -3,13 +3,16 @@ require_relative 'correlation_finder'
 require_relative 'screenshooter'
 require 'fileutils'
 
-@screenshooter = Screenshooter.new
+unit = 'percent'
+
+@screenshooter = Screenshooter.new(unit: unit)
 
 [
-  {flip: false, threshold: 50, min_length: 8},
-  {flip: true, threshold: 50, min_length: 8}
+  {flip: false, threshold: 1, min_length: 9, unit: 'percent'},
+  {flip: true, threshold: 1, min_length: 9, unit: 'percent'}
 ].each_with_index do |opts, idx|
   cf = CorrelationFinder.new(opts)
+
   cf.top_correlations(100).each_with_index do |correlation, index|
     score = correlation[:correlation]
     words = correlation[:words]

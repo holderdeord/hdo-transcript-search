@@ -7,7 +7,7 @@ class Screenshooter
   def initialize(opts = {})
     @w = Watir::Browser.new :firefox
     @w.goto "http://localhost:7575/"
-    @w.button(value: opts[:unit] || '#').when_present.click
+    @w.button(value: opts[:unit] == 'count' ? '#' : '%').when_present.click
 
     at_exit { @w.quit }
   end
