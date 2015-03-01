@@ -119,8 +119,9 @@ class SearchApp extends React.Component {
 
                     {this.renderResultDetails()}
 
-                    <Footer/>
-                    <SharingLinks facebookAppId={fbId} />
+                    <Footer>
+                        <SharingLinks facebookAppId={fbId} />
+                    </Footer>
 
                     <SpeechModal />
 

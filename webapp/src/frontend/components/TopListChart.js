@@ -15,7 +15,7 @@ class TopListChart extends React.Component {
         let isHorizontal = this.props.orientation === 'horizontal';
 
         let chartOptions = {
-            chartPadding: 0,
+            chartPadding: {left: 5},
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
             axisX: {
@@ -31,7 +31,7 @@ class TopListChart extends React.Component {
         return (
             <div className="top-list-chart">
                 <h3>{this.props.title}</h3>
-                <small className="text-muted pull-right">{this.props.subtitle}</small>
+                <small className="text-muted">{this.props.subtitle}</small>
 
                 <BaseChart
                     type="Bar"

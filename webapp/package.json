@@ -35,7 +35,7 @@
     "babel-core": "^4.0.1",
     "babel-loader": "^4.0.0",
     "bootstrap": "^3.3.2",
-    "chartist": "^0.7.2",
+    "chartist": "^0.7.3",
     "css-loader": "^0.9.1",
     "errorhandler": "^1.2.2",
     "file-loader": "^0.8.1",
