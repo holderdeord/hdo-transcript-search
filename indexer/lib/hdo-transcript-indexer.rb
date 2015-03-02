@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 require 'nokogiri'
-require 'elasticsearch'
 require 'pathname'
 require 'uri'
 require 'logger'
@@ -12,6 +11,7 @@ require 'forwardable'
 
 require 'hdo-transcript-indexer/converter'
 require 'hdo-transcript-indexer/cache'
+require 'hdo-transcript-indexer/index'
 
 Faraday.default_adapter = :patron
 Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
@@ -26,10 +26,14 @@ module Hdo
         @faraday      = Faraday.new('http://data.stortinget.no')
         @logger       = Logger.new(STDOUT)
         @create_index = options.fetch(:create_index)
-        @index_name   = options.fetch(:index_name)
         @force        = options.fetch(:force)
-        @es_url       = options.fetch(:elasticsearch_url)
         @errors       = []
+
+        @index = Index.new(
+          options.fetch(:elasticsearch_url),
+          options.fetch(:index_name),
+          @logger
+        )
 
         @party_cache = Cache.new(cache_path('name-to-party'))
         @party_cache.load_if_exists
@@ -181,7 +185,7 @@ module Hdo
         transcript_id = file.basename.to_s.sub(file.extname, '')
         data          = JSON.parse(file.read)
 
-        data['sections'].each_with_index do |section, idx|
+        docs = data['sections'].map.with_index do |section, idx|
           id = "#{transcript_id}-#{idx}"
 
           doc = {
@@ -191,8 +195,10 @@ module Hdo
             'external_id' => @slug_cache[section['name']]
           }.merge(section)
 
-          index_with_retry id, doc
+          [id, doc]
         end
+
+        @index.index docs
 
         if data['errors']
           data['errors'].each do |err|
@@ -201,92 +207,12 @@ module Hdo
         end
       end
 
-      def index_with_retry(id, doc)
-        retries = 0
-        begin
-          es.index index: @index_name, type: 'speech', id: id, body: doc
-        rescue Faraday::TimeoutError => ex
-          @logger.info "#{ex.message}, retrying"
-
-          if retries <= 3
-            retries += 1
-            retry
-          else
-            raise
-          end
-        end
-      end
-
       def create_index
         return unless @create_index
 
         @logger.info "recreating index #{@index_name}"
-
-        es.indices.delete(index: @index_name) if es.indices.exists(index: @index_name)
-        es.indices.create index: @index_name, body: { settings: ES_SETTINGS, mappings: ES_MAPPINGS }
+        @index.recreate!
       end
-
-      def es
-        @es ||= Elasticsearch::Client.new(
-          log: false,
-          url: @es_url
-        )
-      end
-
-      ES_SETTINGS = {
-        index: {
-          analysis: {
-            analyzer: {
-              analyzer_standard: {
-                tokenizer: "standard",
-                filter: ["standard", "lowercase", "filter_stop"]
-              },
-              analyzer_shingle: {
-                tokenizer: "standard",
-                filter:    ["standard", "lowercase", "filter_stop", "filter_shingle"]
-              }
-            },
-            filter: {
-              filter_shingle: {
-                type:             "shingle",
-                max_shingle_size: 2,
-                min_shingle_size: 2,
-                output_unigrams:  true
-              },
-              filter_stop: {
-                type:       "stop",
-                stopwords:  "_norwegian_"
-                # enable_position_increments: false
-              }
-            }
-          }
-        }
-      }
-
-      ES_MAPPINGS = {
-        speech: {
-          properties: {
-            time: {
-              type:   'date',
-              format: 'date_time_no_millis'
-            },
-            text: {
-              type: 'string',
-              analyzer: 'analyzer_standard',
-              fields: {
-                shingles: { type: "string", analyzer: "analyzer_shingle"}
-              }
-            },
-            name:        { type: 'string',  index: 'not_analyzed' },
-            party:       { type: 'string',  index: 'not_analyzed' },
-            presidents:  { type: 'string',  index: 'not_analyzed' },
-            title:       { type: 'string',  index: 'not_analyzed' },
-            external_id: { type: 'string',  index: 'not_analyzed' },
-            transcript:  { type: 'string',  index: 'not_analyzed' },
-            order:       { type: 'integer', index: 'not_analyzed' }
-          }
-        }
-      }
 
     end
   end
