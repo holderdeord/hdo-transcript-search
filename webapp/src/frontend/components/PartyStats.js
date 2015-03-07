@@ -65,7 +65,9 @@ class PartyStats extends React.Component {
                 </h2>
 
                 <div className="lead">
-                    <div>har nevnt <strong>{this.state.query}</strong> i</div>
+                    <div>
+                        har nevnt <strong>{this.state.query}</strong> i
+                    </div>
 
                     <span style={{fontSize: '3.5rem', padding: '10px'}}>
                         {num}
