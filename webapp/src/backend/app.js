@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 
 // routes
 app.get('/', (req, res) => {
-    res.redirect('/search/pct/finanskrise.syria');
+    res.redirect('/search/pct/syria.finanskrise');
 });
 
 app.get('/search/:unit/:query', (req, res) => {

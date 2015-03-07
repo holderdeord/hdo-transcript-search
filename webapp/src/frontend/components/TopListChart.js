@@ -5,7 +5,11 @@ class TopListChart extends React.Component {
 
     render() {
         let unit   = this.props.unit;
-        let counts = this.props.counts.sort((a,b) => a[unit] - b[unit]);
+        let counts = this.props.counts;
+
+        if (this.props.sort) {
+            counts = counts.slice(0).sort((a,b) => a[this.props.unit] - b[this.props.unit]);
+        }
 
         let data = {
             labels: counts.map(e => e.key),
@@ -36,7 +40,7 @@ class TopListChart extends React.Component {
                 <BaseChart
                     type="Bar"
                     data={data}
-                    aspectRatio="major-sixth"
+                    aspectRatio="minor-sixth"
                     options={chartOptions}
                 />
 
@@ -55,7 +59,8 @@ class TopListChart extends React.Component {
 }
 
 TopListChart.propTypes = {
-    title: React.PropTypes.string.isRequired,
+    title: React.PropTypes.string,
+    subtitle: React.PropTypes.string,
     counts: React.PropTypes.array.isRequired,
     unit: React.PropTypes.string.isRequired
 };

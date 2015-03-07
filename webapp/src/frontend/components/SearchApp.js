@@ -8,10 +8,11 @@ import Header              from './Header';
 import Footer              from './Footer';
 import SearchForm          from './SearchForm';
 import Timeline            from './Timeline';
-import ResultDetails       from './ResultDetails';
 import SpeechModal         from './SpeechModal';
 import DevPanel            from './DevPanel';
 import SharingLinks        from './SharingLinks';
+import PartyStats          from './PartyStats';
+import PersonStats         from './PersonStats';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -117,11 +118,12 @@ class SearchApp extends React.Component {
                         onUnitChange={this.handleUnitChange.bind(this)}
                     />
 
-                    {this.renderResultDetails()}
+                    <PartyStats unit={this.state.unit} />
+                    <PersonStats unit={this.state.unit} />
 
-                    <Footer>
-                        <SharingLinks facebookAppId={fbId} />
-                    </Footer>
+                    <SharingLinks facebookAppId={fbId} />
+
+                    <Footer/>
 
                     <SpeechModal />
 
@@ -138,18 +140,6 @@ class SearchApp extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    renderResultDetails() {
-        return this.state.showResultDetails ? (
-            <ResultDetails
-                unit={this.state.unit}
-                orientation={this.state.orientation}
-                showHits={this.state.showHits}
-            />
-        ) : <div/>;
-
-
     }
 
     handleOrientationChange(event) {

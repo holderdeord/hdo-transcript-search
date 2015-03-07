@@ -98,17 +98,33 @@ class SearchAPI {
         });
     }
 
+    _buildPersonMap(aggregation) {
+        let map = {};
+
+        aggregation.buckets.forEach(bucket => {
+            map[bucket.key] = bucket.person.hits.hits[0]._source;
+        });
+
+        return map;
+    }
+
     _buildResponse(aggResponse, hitsResponse) {
+        let personMap = this._buildPersonMap(aggResponse.aggregations.filteredPeople.people);
+
         let people = this._calculatePercentages(
             this._parseAggregation(aggResponse.aggregations.filteredPeople.people),
             this._parseAggregation(aggResponse.aggregations.people)
         );
 
+        people.forEach(d => d.meta = personMap[d.key]);
+
         let timeline = this._calculatePercentages(
             this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
             this._parseAggregation(aggResponse.aggregations.timeline),
             {combineKeys: true}
-        ).sort((a,b) => {
+        );
+
+        timeline.sort((a,b) => {
             return moment(a.key).valueOf() - moment(b.key).valueOf();
         });
 
@@ -216,9 +232,17 @@ class SearchAPI {
                 filter: { query: query },
                 aggs: {
                     people: {
-                        terms: {
+                        significant_terms: {
                             field: 'name',
                             size: 0
+                        },
+                        aggs: {
+                            person: {
+                                top_hits: {
+                                    size: 1,
+                                    _source: { include: ["external_id", "party"] }
+                                }
+                            }
                         }
                     }
                 }

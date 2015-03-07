@@ -11,6 +11,10 @@ class TranscriptStore extends BaseStore {
         return this.results;
     }
 
+    getLastResult() {
+        return this.results.slice(-1)[0];
+    }
+
     getQueries() {
         return this.results.map(e => e.query);
     }

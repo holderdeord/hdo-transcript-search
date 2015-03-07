@@ -2,6 +2,7 @@ import React               from 'react';
 import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
 import ActionTypes         from '../constants/ActionTypes';
 import TimeUtils           from '../utils/TimeUtils';
+import ImageUtils          from '../utils/ImageUtils';
 
 class SearchHit extends React.Component {
 
@@ -64,7 +65,7 @@ class SearchHit extends React.Component {
 
     imageFor(hit) {
         if (hit.external_id) {
-            let src = `http://data.stortinget.no/eksport/personbilde?personid=${hit.external_id}&storrelse=middels`;
+            let src = ImageUtils.personImageFor(hit.external_id);
             return <img src={src} alt={hit.name} />;
         } else {
             return '';

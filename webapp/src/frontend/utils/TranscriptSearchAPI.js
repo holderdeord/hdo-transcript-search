@@ -49,7 +49,7 @@ class TranscriptSearchAPI {
     }
 
     _logError(e) {
-        console.error(e.message, e.stack);
+        console.error && console.error(e.message, e.stack);
     }
 }
 
