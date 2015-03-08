@@ -11,7 +11,7 @@ module.exports = {
 
     module: {
         loaders: [
-            { test: /\.js$/,    loader: "babel-loader", exclude: /node_modules/ },
+            { test: /\.jsx?$/,  loader: "babel-loader", exclude: /node_modules/ },
             { test: /\.less$/,  loader: "style-loader!css-loader!less-loader" },
             { test: /\.woff$/,  loader: "url-loader?limit=10000&minetype=application/font-woff" },
             { test: /\.woff2$/, loader: "url-loader?limit=10000&minetype=application/font-woff2" },

@@ -1,7 +1,5 @@
 import React               from 'react';
 import Chartist            from 'chartist';
-import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import ActionTypes         from '../constants/ActionTypes';
 
 class BaseChart extends React.Component {
     constructor(props) {
@@ -20,23 +18,14 @@ class BaseChart extends React.Component {
     componentDidMount() {
         this._drawChart(this.props);
 
-        // TODO: get rid of this dependency
-        this.dispatchToken = SearchAppDispatcher.register(this._handleAppEvent.bind(this));
     }
 
     componentWillUnmount() {
         this._detachChart();
-        SearchAppDispatcher.unregister(this.dispatchToken);
     }
 
     componentWillReceiveProps(newProps) {
         this._drawChart(newProps);
-    }
-
-    _handleAppEvent(payload) {
-        if (payload.action.type === ActionTypes.RESET) {
-            this.groups = this._blankGroups();
-        }
     }
 
     _blankGroups() {
@@ -70,6 +59,8 @@ class BaseChart extends React.Component {
             this.chart.detach();
             this.chart = null;
         }
+
+        this.groups = this._blankGroups();
     }
 
     _setupAnimation() {

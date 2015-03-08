@@ -1,15 +1,14 @@
 import React               from 'react';
 import key                 from 'keymaster';
-import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import TranscriptStore     from '../stores/TranscriptStore';
-import ActionTypes         from '../constants/ActionTypes';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {query: ''};
+
+        this.state       = {query: ''};
+        this.searchStore = this.props.flux.getStore('search');
     }
 
     reset() {
@@ -17,12 +16,12 @@ class SearchForm extends React.Component {
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        this.searchStore.addListener('change', this.handleChange.bind(this));
         key('/', this.handleFocus.bind(this));
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+        this.searchStore.addListener('change', this.handleChange.bind(this));
         key.unbind('/', this.handleFocus.bind(this));
     }
 
@@ -93,44 +92,34 @@ class SearchForm extends React.Component {
     }
 
     executeSingleQuerySearch(query) {
-        if (TranscriptStore.hasQuery(query)) {
+        if (this.searchStore.hasQuery(query)) {
             this.reset();
             return;
         }
 
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.SEARCH_ADD,
-            query: query,
-            interval: this.props.interval
-        });
+        this.props.flux.getActions('search').searchAdd(query, this.props.interval);
     }
 
     executeMultiQuerySearch(query) {
-        if (query === TranscriptStore.getJoinedQuery()) {
+        if (query === this.searchStore.getJoinedQuery()) {
             return;
         }
 
         let queries = query.split(/\s*,\s*/);
 
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.SEARCH_MULTI,
-            queries: queries,
-            interval: this.props.interval
-        });
+        this.props.flux.getActions('search').searchMulti(queries, this.props.interval);
     }
 
     handleChange() {
         if (this.props.queryType === 'single') {
             this.reset();
         } else {
-            this.setState({query: TranscriptStore.getJoinedQuery()});
+            this.setState({query: this.searchStore.getJoinedQuery()});
         }
     }
 
     handleReset() {
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.RESET
-        });
+        this.props.flux.getActions('search').reset();
     }
 
     handleQueryChange(event) {
@@ -152,5 +141,8 @@ class SearchForm extends React.Component {
         React.findDOMNode(this.refs.query).focus();
     }
 }
+
+SearchForm.propTypes = {
+};
 
 module.exports = SearchForm;

@@ -1,14 +1,12 @@
 import React               from 'react';
-import SearchAppDispatcher from '../dispatcher/SearchAppDispatcher';
-import ActionTypes         from '../constants/ActionTypes';
+import FluxComponent       from 'flummox/component';
+
 import Intervals           from '../constants/Intervals';
-import TranscriptStore     from '../stores/TranscriptStore';
 import key                 from 'keymaster';
 import Header              from './Header';
 import Footer              from './Footer';
 import SearchForm          from './SearchForm';
 import Timeline            from './Timeline';
-import SpeechModal         from './SpeechModal';
 import DevPanel            from './DevPanel';
 import SharingLinks        from './SharingLinks';
 import PartyStats          from './PartyStats';
@@ -27,18 +25,21 @@ class SearchApp extends React.Component {
             interval: Intervals.YEAR,
             queryType: 'multi'
         };
+
+        this.searchStore = this.props.flux.getStore('search');
+        this.searchActions = this.props.flux.getActions('search');
     }
 
     componentDidMount() {
         // window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
         window.addEventListener('popstate', this.handleHistoryChange.bind(this));
-        TranscriptStore.addChangeListener(this.updateHistory.bind(this));
+        this.searchStore.addListener('change', this.updateHistory.bind(this));
         this.registerKeyBindings();
         this.updateFromUrl();
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.updateHistory.bind(this));
+        this.searchStore.removeListener('change', this.updateHistory.bind(this));
         this.unregisterKeyBindings();
     }
 
@@ -70,7 +71,7 @@ class SearchApp extends React.Component {
     }
 
     updateHistory() {
-        let queries = TranscriptStore.getQueries();
+        let queries = this.searchStore.getQueries();
         let query   = encodeURIComponent(queries.join('.'));
         let unit    = this.state.unit;
         let path    = query === '' ? '/' : `/search/${unit}/${query}`;
@@ -84,17 +85,11 @@ class SearchApp extends React.Component {
     }
 
     dispatchMultiSearch(queries) {
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.SEARCH_MULTI,
-            queries: queries,
-            interval: this.state.interval
-        });
+        this.searchActions.searchMulti(queries, this.state.interval);
     }
 
     dispatchReset() {
-        SearchAppDispatcher.handleViewAction({
-            type: ActionTypes.RESET
-        });
+        this.searchActions.reset();
     }
 
     render() {
@@ -107,25 +102,34 @@ class SearchApp extends React.Component {
                 <Header title={title} description={desc} />
 
                 <div className="container">
-                    <SearchForm
-                        interval={this.state.interval}
-                        queryType={this.state.queryType}
-                    />
+                    <FluxComponent>
+                        <SearchForm
+                            interval={this.state.interval}
+                            queryType={this.state.queryType}
+                        />
 
-                    <Timeline
-                        unit={this.state.unit}
-                        interval={this.state.interval}
-                        onUnitChange={this.handleUnitChange.bind(this)}
-                    />
+                        <Timeline
+                            unit={this.state.unit}
+                            interval={this.state.interval}
+                            onUnitChange={this.handleUnitChange.bind(this)}
+                        />
 
-                    <PartyStats unit={this.state.unit} />
-                    <PersonStats unit={this.state.unit} />
+                        <PartyStats
+                            unit={this.state.unit}
+                            orientation={this.state.orientation}
+                        />
 
-                    <SharingLinks facebookAppId={fbId} />
+                        <PersonStats
+                            unit={this.state.unit}
+                            orientation={this.state.orientation}
+                        />
+
+                        <SharingLinks
+                            facebookAppId={fbId}
+                        />
+                    </FluxComponent>
 
                     <Footer/>
-
-                    <SpeechModal />
 
                     <DevPanel
                         visible={this.state.showDevPanel}

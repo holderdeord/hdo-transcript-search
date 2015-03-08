@@ -1,8 +1,10 @@
 import React from 'react';
-import TranscriptStore from '../stores/TranscriptStore';
 
+class SharingLinks extends React.Component {
+    constructor(props) {
+        this.searchStore = props.flux.getStore('search');
+    }
 
-class SharingLinks {
     render() {
 
         return (
@@ -39,7 +41,9 @@ class SharingLinks {
     handleTwitterShare(event) {
         event.preventDefault();
 
-        let text = `Se når politikerne snakker om «${TranscriptStore.getJoinedQuery()}»`;
+        let query = this.searchStore.getJoinedQuery();
+
+        let text = `Se når politikerne snakker om «${query}»`;
 
         let shareUrl = `https://twitter.com/intent/tweet
                             ?text=${encodeURIComponent(text)}

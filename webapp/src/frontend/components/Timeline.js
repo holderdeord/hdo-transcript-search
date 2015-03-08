@@ -1,7 +1,6 @@
-import React           from 'react';
-import BaseChart       from './BaseChart';
-import TranscriptStore from '../stores/TranscriptStore';
-import TimeUtils       from '../utils/TimeUtils';
+import React       from 'react';
+import BaseChart   from './BaseChart';
+import TimeUtils   from '../utils/TimeUtils';
 
 const SERIES_CHARS = 'abcdefghijklmno'.split("");
 
@@ -20,16 +19,16 @@ class Timeline extends React.Component {
             }
         };
 
-
+        this.searchStore = this.props.flux.getStore('search');
         this.state = this.fetchStateFromStore();
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        this.searchStore.addListener('change', this.handleChange.bind(this));
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+        this.searchStore.removeListener('change', this.handleChange.bind(this));
     }
 
     handleChange() {
@@ -41,7 +40,7 @@ class Timeline extends React.Component {
         let labels  = [];
         let series  = {pct: [], count: []};
 
-        TranscriptStore.eachResult((query, result) => {
+        this.searchStore.eachResult((query, result) => {
             queries.push(query);
 
             if (!labels.length && result.timeline.length) {
@@ -67,8 +66,6 @@ class Timeline extends React.Component {
                 <div className="timeline">
                     <div className="row" style={{margin: '1rem'}}>
                         <div className="col-md-12">
-                            {this.renderQueries()}
-
                             <div className="btn-group btn-toggle"
                                  onClick={this.props.onUnitChange}>
                                 <input
@@ -94,6 +91,8 @@ class Timeline extends React.Component {
                                 aspectRatio="double-octave"
                                 options={this.chartOptions}
                             />
+
+                            {this.renderQueries()}
                         </div>
                     </div>
                 </div>
@@ -107,19 +106,17 @@ class Timeline extends React.Component {
         // see chartist.scss for colors
 
         var queries = this.state.queries.map((q, i) => {
-            let last = i === this.state.queries.length - 1;
             let className = 'hdo-label-' + SERIES_CHARS[i >= SERIES_CHARS.length ? i - SERIES_CHARS.length : i];
 
             return (
-                <span key={i}>
-                    <span className={className}>{q}</span>
-                    {last ? '' : ', '}
-                </span>
+                <li key={q} className={className}>
+                    {q}
+                </li>
             );
         });
 
         return (
-            <div className="lead pull-right">{queries}</div>
+            <ul className="lead text-center list-inline">{queries}</ul>
         );
     }
 

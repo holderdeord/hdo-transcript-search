@@ -1,5 +1,4 @@
 import React           from 'react';
-import TranscriptStore from '../stores/TranscriptStore';
 import TopListChart    from './TopListChart';
 import Parties         from '../constants/Parties';
 
@@ -7,21 +6,22 @@ class PartyStats extends React.Component {
     constructor(props) {
         super(props);
         this.state = { parties: [] };
+        this.searchStore = this.props.flux.getStore('search');
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        this.searchStore.addListener('change', this.handleChange.bind(this));
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+        this.searchStore.removeListener('change', this.handleChange.bind(this));
     }
 
     handleChange() {
         let parties = [];
         let query   = '';
 
-        let result = TranscriptStore.getLastResult();
+        let result = this.searchStore.getLastResult();
 
         if (result) {
             parties = result.result.parties;
@@ -97,5 +97,8 @@ class PartyStats extends React.Component {
         };
     }
 }
+
+PartyStats.propTypes = {
+};
 
 module.exports = PartyStats;

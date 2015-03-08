@@ -1,5 +1,4 @@
 import React           from 'react';
-import TranscriptStore from '../stores/TranscriptStore';
 import ImageUtils      from '../utils/ImageUtils';
 import TopListChart    from './TopListChart';
 
@@ -8,21 +7,22 @@ class PersonStats extends React.Component {
         super(props);
 
         this.state = { people: [], query: '' };
+        this.searchStore = this.props.flux.getStore('search');
     }
 
     componentDidMount() {
-        TranscriptStore.addChangeListener(this.handleChange.bind(this));
+        this.searchStore.addListener('change', this.handleChange.bind(this));
     }
 
     componentWillUnmount() {
-        TranscriptStore.removeChangeListener(this.handleChange.bind(this));
+        this.searchStore.removeListener('change', this.handleChange.bind(this));
     }
 
     handleChange() {
         let people = [];
         let query  = '';
 
-        let result = TranscriptStore.getLastResult();
+        let result = this.searchStore.getLastResult();
 
         if (result) {
             people = result.result.people;
@@ -90,5 +90,7 @@ class PersonStats extends React.Component {
 
 }
 
+PersonStats.propTypes = {
+};
 
 module.exports = PersonStats;
