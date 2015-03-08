@@ -46,36 +46,36 @@ class ResultStats extends React.Component {
     }
 
     render() {
-        return (
-            <div className="card">
-                {this.renderPartyStats()}
-                <div className="divider" />
-                {this.renderPeopleStats()}
-            </div>
-        );
-    }
-
-    renderPartyStats() {
-        if (this.state.parties.length) {
+        if (this.state.query.length) {
             return (
-                <div className="row stats">
-                    <div className="col-md-6">
-                        <TopListChart
-                            subtitle="Partier"
-                            orientation={this.props.orientation}
-                            unit={this.props.unit}
-                            counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
-                        />
-                    </div>
-
-                    <div className="col-md-6">
-                        {this.renderPartyText()}
-                    </div>
+                <div className="card">
+                    {this.renderPartyStats()}
+                    <div className="divider" />
+                    {this.renderPeopleStats()}
                 </div>
             );
         } else {
             return <div />;
         }
+    }
+
+    renderPartyStats() {
+        return (
+            <div className="row stats">
+                <div className="col-md-6">
+                    <TopListChart
+                        subtitle="Partier"
+                        orientation={this.props.orientation}
+                        unit={this.props.unit}
+                        counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
+                    />
+                </div>
+
+                <div className="col-md-6">
+                    {this.renderPartyText()}
+                </div>
+            </div>
+        );
     }
 
     renderPeopleStats() {
