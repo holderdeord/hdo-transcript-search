@@ -64,35 +64,35 @@ class Timeline extends React.Component {
         if (this.state.queries.length) {
             return (
                 <div className="timeline">
-                    <div className="row" style={{margin: '1rem'}}>
-                        <div className="col-md-12">
-                            <div className="btn-group btn-toggle"
-                                 onClick={this.props.onUnitChange}>
-                                <input
-                                    type="button"
-                                    value="%"
-                                    className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
-                                />
+                    <div className="controls">
+                        <div className="btn-group btn-toggle"
+                             onClick={this.props.onUnitChange}>
+                            <input
+                                type="button"
+                                value="%"
+                                className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
+                            />
 
-                                <input
-                                    type="button"
-                                    value="#"
-                                    className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
-                                />
-                            </div>
+                            <input
+                                type="button"
+                                value="#"
+                                className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
+                            />
                         </div>
                     </div>
 
-                    <div className="row stats card">
-                        <div className="col-md-12">
-                            <BaseChart
-                                type="Line"
-                                data={this.state.data[this.props.unit]}
-                                aspectRatio="double-octave"
-                                options={this.chartOptions}
-                            />
+                    <div className="card">
+                        <div className="row stats">
+                            <div className="col-md-12">
+                                <BaseChart
+                                    type="Line"
+                                    data={this.state.data[this.props.unit]}
+                                    aspectRatio="double-octave"
+                                    options={this.chartOptions}
+                                />
 
-                            {this.renderQueries()}
+                                {this.renderQueries()}
+                            </div>
                         </div>
                     </div>
                 </div>

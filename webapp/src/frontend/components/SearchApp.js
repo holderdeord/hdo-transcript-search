@@ -9,8 +9,7 @@ import SearchForm          from './SearchForm';
 import Timeline            from './Timeline';
 import DevPanel            from './DevPanel';
 import SharingLinks        from './SharingLinks';
-import PartyStats          from './PartyStats';
-import PersonStats         from './PersonStats';
+import ResultStats         from './ResultStats';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -114,12 +113,7 @@ class SearchApp extends React.Component {
                             onUnitChange={this.handleUnitChange.bind(this)}
                         />
 
-                        <PartyStats
-                            unit={this.state.unit}
-                            orientation={this.state.orientation}
-                        />
-
-                        <PersonStats
+                        <ResultStats
                             unit={this.state.unit}
                             orientation={this.state.orientation}
                         />
