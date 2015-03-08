@@ -75,6 +75,7 @@ class PersonStats extends React.Component {
                         <TopListChart
                             subtitle="Topp 10 personer"
                             unit={this.props.unit}
+                            orientation={this.props.orientation}
                             counts={people}
                             sort={true}
                         />

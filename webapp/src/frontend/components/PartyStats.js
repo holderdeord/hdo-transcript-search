@@ -1,7 +1,7 @@
-import React from 'react';
+import React           from 'react';
 import TranscriptStore from '../stores/TranscriptStore';
-import TopListChart from './TopListChart';
-import Parties from '../constants/Parties';
+import TopListChart    from './TopListChart';
+import Parties         from '../constants/Parties';
 
 class PartyStats extends React.Component {
     constructor(props) {
@@ -83,6 +83,7 @@ class PartyStats extends React.Component {
         return (
             <TopListChart
                 subtitle="Partier"
+                orientation={this.props.orientation}
                 unit={this.props.unit}
                 counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
             />

@@ -35,7 +35,7 @@ if (typeof ga !== 'undefined') {
                     ga('send', 'event', payload.source, payload.action.type, payload.action.query);
                     break;
                 case ActionTypes.SEARCH_MULTI:
-                    ga('send', 'event', payload.source, payload.action.type, payload.action.queries.sort().join(','));
+                    ga('send', 'event', payload.source, payload.action.type, payload.action.queries.slice(0).sort().join(','));
                     break;
                 case ActionTypes.SPEECH_CONTEXT:
                     ga(
