@@ -5,6 +5,9 @@ export default class ImageUtils {
         } else {
             return "https://www.holderdeord.no/assets/representatives/unknown.jpg";
         }
+    }
 
+    static partyLogoFor(external_id) {
+        return `https://www.holderdeord.no/api/parties/${external_id.toLowerCase()}/logo?version=medium`;
     }
 }

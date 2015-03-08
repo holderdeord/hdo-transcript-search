@@ -60,22 +60,52 @@ class ResultStats extends React.Component {
     }
 
     renderPartyStats() {
-        return (
-            <div className="row stats">
-                <div className="col-md-6">
-                    <TopListChart
-                        subtitle="Partier"
-                        orientation={this.props.orientation}
-                        unit={this.props.unit}
-                        counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
-                    />
-                </div>
+        let topParty     = this.state.topParties[this.props.unit];
 
-                <div className="col-md-6">
-                    {this.renderPartyText()}
+        if (topParty) {
+            let topPartyName = Parties.names[topParty.key];
+            let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + ' %' : topParty.count;
+            let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+
+            return (
+                <div className="row stats">
+                    <div className="col-md-5">
+                        <div className="text-center">
+                            <img
+                                src={ImageUtils.partyLogoFor(topParty.key)}
+                                alt={`${topPartyName}s logo`}
+                                height="200"
+                            />
+
+                            <h2 className={`hdo-party-${topParty.key.toLowerCase()}`}>
+                                {topPartyName}
+                            </h2>
+
+                            <div className="lead">
+                                <div>
+                                    har nevnt <strong>{this.state.query}</strong> i
+                                </div>
+
+                                <span style={{fontSize: '3.5rem', padding: '10px'}}>
+                                    {num}
+                                </span>
+
+                                {unitText}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-7">
+                        <TopListChart
+                            subtitle="Partier"
+                            orientation={this.props.orientation}
+                            unit={this.props.unit}
+                            counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
+                        />
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 
     renderPeopleStats() {
@@ -128,33 +158,6 @@ class ResultStats extends React.Component {
         } else {
             return <div />;
         }
-    }
-
-
-    renderPartyText() {
-        let topParty  = this.state.topParties[this.props.unit];
-        let num       = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + ' %' : topParty.count;
-        let unitText  = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
-
-        return (
-            <div className="text-center" style={{padding: '10rem 0'}}>
-                <h2 className={`hdo-party-${topParty.key.toLowerCase()}`}>
-                    {Parties.names[topParty.key]}
-                </h2>
-
-                <div className="lead">
-                    <div>
-                        har nevnt <strong>{this.state.query}</strong> i
-                    </div>
-
-                    <span style={{fontSize: '3.5rem', padding: '10px'}}>
-                        {num}
-                    </span>
-
-                    {unitText}
-                </div>
-            </div>
-        );
     }
 
     topParties(parties) {
