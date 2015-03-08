@@ -60,7 +60,7 @@ module Hdo
             analyzer: {
               analyzer_standard: {
                 tokenizer: "standard",
-                filter: ["standard", "lowercase", "filter_stop"]
+                filter: ["standard", "lowercase"]
               },
               analyzer_shingle: {
                 tokenizer: "standard",
