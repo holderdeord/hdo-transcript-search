@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel": "^4.0.1",
+    "babel": "^4.7.4",
     "bluebird": "^2.3.11",
     "d3": "^3.5.3",
     "debug": "^2.1.0",
