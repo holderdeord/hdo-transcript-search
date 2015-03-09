@@ -112,9 +112,11 @@ class ResultStats extends React.Component {
         let people = this.state.people[this.props.unit] || [];
 
         if (people.length) {
-            let topPerson = people[0];
-            let num = this.props.unit === 'pct' ? `${topPerson.pct.toFixed(2)} %` : topPerson.count;
-            let unitText = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+            let topPerson      = people[0];
+            let num            = this.props.unit === 'pct' ? `${topPerson.pct.toFixed(2)} %` : topPerson.count;
+            let unitText       = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+            let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
+            let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
                 <div className="row stats">
@@ -125,8 +127,8 @@ class ResultStats extends React.Component {
                             height="200"
                         />
 
-                        <h2 className={`hdo-party-${topPerson.meta.party.toLowerCase()}`}>
-                            {topPerson.key} ({topPerson.meta.party})
+                        <h2 className={partyClassName}>
+                            {topPerson.key} {partyText}
                         </h2>
 
 
