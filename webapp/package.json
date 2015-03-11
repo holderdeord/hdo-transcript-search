@@ -29,7 +29,7 @@
     "moment": "^2.9.0",
     "morgan": "^1.5.0",
     "nconf": "^0.6.9",
-    "react": "^0.13.0-rc2",
+    "react": "^0.13.0",
     "reqwest": "^1.1.5"
   },
   "devDependencies": {
