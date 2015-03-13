@@ -190,6 +190,7 @@ module Hdo
 
           doc = {
             'presidents'  => data['presidents'],
+            'session'     => data['session'],
             'transcript'  => transcript_id,
             'order'       => idx,
             'external_id' => @slug_cache[section['name']]

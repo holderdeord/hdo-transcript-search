@@ -2,6 +2,7 @@
 require 'time'
 require 'set'
 require 'hashie/mash'
+require 'hdo/storting_importer'
 
 module Hdo
   module Transcript
@@ -30,6 +31,9 @@ module Hdo
         @last_section = {}
         @name_cache   = options[:cache] || {}
         @errors       = Set.new
+
+        session = Hdo::StortingImporter::Util.session_for_date(@time.to_date)
+        @session = [session.begin.year, session.end.year].join('-')
       end
 
       def sections
@@ -46,6 +50,7 @@ module Hdo
       def as_json(opts = nil)
         {
           date: @time.iso8601,
+          session: @session,
           presidents: president_names,
           sections: sections,
           errors: errors
