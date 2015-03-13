@@ -39,8 +39,6 @@ class ResultStats extends React.Component {
             parties = result.result.parties;
         }
 
-        parties = parties.slice(0).sort((a, b) => a[this.props.unit] - b[this.props.unit]);
-
         this.setState({
             query: query,
             parties: parties,
@@ -64,6 +62,7 @@ class ResultStats extends React.Component {
     }
 
     renderPartyStats() {
+        this.state.parties.sort((a, b) => a[this.props.unit] - b[this.props.unit]);
         let topParty = this.state.topParties[this.props.unit];
 
         if (topParty) {
@@ -118,7 +117,7 @@ class ResultStats extends React.Component {
     }
 
     renderPeopleStats() {
-        let people = this.state.people[this.props.unit] || [];
+        let people = (this.state.people[this.props.unit] || []).slice(0, 5);
 
         if (people.length) {
             let topPerson      = people[0];

@@ -13,7 +13,7 @@ class Timeline extends React.Component {
             fullWidth: false,
             axisX: {
                 showGrid: false,
-                labelOffset: { x: -67, y: 10 },
+                labelOffset: { x: -67, y: 8 },
             },
             axisY: {
                 labelOffset: { x: 0, y: 4 },

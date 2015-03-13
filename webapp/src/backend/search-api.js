@@ -146,8 +146,8 @@ class SearchAPI {
             timeline: timeline,
             parties: parties,
             people: {
-                count: people.sort((a,b) => b.count - a.count).slice(0, 5),
-                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 5)
+                count: people.sort((a,b) => b.count - a.count).slice(0, 20),
+                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 20)
             }
         };
     }
