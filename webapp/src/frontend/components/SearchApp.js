@@ -98,7 +98,13 @@ class SearchApp extends React.Component {
 
         return (
             <div>
-                <Header title={title} description={desc} />
+                <Header title={title} description={desc}>
+                    <FluxComponent>
+                        <SharingLinks
+                            facebookAppId={fbId}
+                        />
+                    </FluxComponent>
+                </Header>
 
                 <div className="container">
                     <FluxComponent>

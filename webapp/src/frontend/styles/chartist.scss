@@ -29,10 +29,10 @@ $ct-class-horizontal: ct-horizontal !default;
 $ct-container-ratio: (1/1.618) !default;
 
 // Text styles for labels
-$ct-text-color: rgba(0, 0, 0, 0.4) !default;
-$ct-text-size: 1rem !default;
+$ct-text-color: #999 !default;
+$ct-text-size: 1.3rem !default;
 $ct-text-align: left !default;
-$ct-horizontal-text-align: left !default;
+$ct-horizontal-text-align: center !default;
 $ct-vertical-text-align: right !default;
 
 // Grid styles
@@ -50,7 +50,7 @@ $ct-point-shape: round !default;
 $ct-area-opacity: 0.1 !default;
 
 // Bar chart bar width
-$ct-bar-width: 10px !default;
+$ct-bar-width: 20px !default;
 
 // Donut width (If donut width is to big it can cause issues where the shape gets distorted)
 $ct-donut-width: 60px !default;
@@ -99,3 +99,15 @@ $ct-series-colors: (
     color: nth($ct-series-colors, $i + 1);
   }
 }
+
+.ct-chart .ct-label.ct-horizontal {
+  color: #333;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.ct-chart-bar .ct-grids line:first-of-type {
+  stroke-dasharray: 0;
+  stroke: black;
+}
+

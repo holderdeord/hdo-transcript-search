@@ -10,10 +10,13 @@ class Timeline extends React.Component {
 
         this.chartOptions = {
             low: 0,
+            fullWidth: false,
             axisX: {
-                showGrid: false
+                showGrid: false,
+                labelOffset: { x: -67, y: 10 },
             },
             axisY: {
+                labelOffset: { x: 0, y: 4 },
                 showGrid: true,
                 labelInterpolationFnc: this.formatValue.bind(this)
             }

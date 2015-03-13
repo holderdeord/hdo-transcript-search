@@ -24,18 +24,21 @@ class TopListChart extends React.Component {
             reverseData: !isHorizontal,
             axisX: {
                 showGrid: isHorizontal,
-                labelInterpolationFnc: this.formatValue.bind(this)
+                labelInterpolationFnc: this.formatValue.bind(this),
+                offset: 60
             },
             axisY: {
+                labelOffset: { x: 0, y: 5 },
                 showGrid: !isHorizontal,
-                labelInterpolationFnc: this.formatValue.bind(this)
+                labelInterpolationFnc: this.formatValue.bind(this),
+                offset: 50
             }
         };
 
         return (
             <div className="top-list-chart">
-                <h3>{this.props.title}</h3>
-                <small className="text-muted">{this.props.subtitle}</small>
+                <h3 className="text-center">{this.props.subtitle}</h3>
+
 
                 <BaseChart
                     type="Bar"

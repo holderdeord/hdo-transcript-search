@@ -11,7 +11,6 @@ import Analytics     from './stores/Analytics';
 
 import SearchApp     from './components/SearchApp';
 
-
 class SearchAppFlux extends Flux {
     constructor() {
         super();

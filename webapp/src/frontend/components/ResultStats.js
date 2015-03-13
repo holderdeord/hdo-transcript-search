@@ -14,6 +14,8 @@ class ResultStats extends React.Component {
             people: [],
             query: ''
         };
+
+        this.bigNumberStyle = {fontSize: '4rem', padding: '10px', verticalAlign: '-0.55rem'};
     }
 
     componentDidMount() {
@@ -32,10 +34,12 @@ class ResultStats extends React.Component {
         let result = this.searchStore.getLastResult();
 
         if (result) {
-            people = result.result.people;
+            query   = result.query;
+            people  = result.result.people;
             parties = result.result.parties;
-            query = result.query;
         }
+
+        parties = parties.slice(0).sort((a, b) => a[this.props.unit] - b[this.props.unit]);
 
         this.setState({
             query: query,
@@ -60,33 +64,38 @@ class ResultStats extends React.Component {
     }
 
     renderPartyStats() {
-        let topParty     = this.state.topParties[this.props.unit];
+        let topParty = this.state.topParties[this.props.unit];
 
         if (topParty) {
             let topPartyName = Parties.names[topParty.key];
-            let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + ' %' : topParty.count;
+            let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + '%' : topParty.count;
             let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
 
             return (
                 <div className="row stats">
                     <div className="col-md-5">
                         <div className="text-center">
-                            <img
-                                src={ImageUtils.partyLogoFor(topParty.key)}
-                                alt={`${topPartyName}s logo`}
-                                height="200"
-                            />
+                            <a
+                                href={`https://www.holderdeord.no/parties/${topParty.key.toLowerCase()}`}
+                                style={{textDecoration: 'none'}} >
 
-                            <h2 className={`hdo-party-${topParty.key.toLowerCase()}`}>
-                                {topPartyName}
-                            </h2>
+                                <img
+                                    src={ImageUtils.partyLogoFor(topParty.key)}
+                                    alt={`${topPartyName}s logo`}
+                                    height="200"
+                                />
+
+                                <h2 className={`hdo-party-${topParty.key.toLowerCase()}`}>
+                                    {topPartyName}
+                                </h2>
+                            </a>
 
                             <div className="lead">
                                 <div>
                                     har nevnt <strong>{this.state.query}</strong> i
                                 </div>
 
-                                <span style={{fontSize: '3.5rem', padding: '10px'}}>
+                                <span style={this.bigNumberStyle}>
                                     {num}
                                 </span>
 
@@ -100,7 +109,7 @@ class ResultStats extends React.Component {
                             subtitle="Partier"
                             orientation={this.props.orientation}
                             unit={this.props.unit}
-                            counts={this.state.parties.sort((a, b) => Parties.order(b.key) - Parties.order(a.key))}
+                            counts={this.state.parties}
                         />
                     </div>
                 </div>
@@ -113,7 +122,7 @@ class ResultStats extends React.Component {
 
         if (people.length) {
             let topPerson      = people[0];
-            let num            = this.props.unit === 'pct' ? `${topPerson.pct.toFixed(2)} %` : topPerson.count;
+            let num            = this.props.unit === 'pct' ? `${topPerson.pct.toFixed(2)}%` : topPerson.count;
             let unitText       = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
             let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
             let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
@@ -137,7 +146,7 @@ class ResultStats extends React.Component {
                                 har nevnt <strong>{this.state.query}</strong> i
                             </div>
 
-                            <span style={{fontSize: '4rem', padding: '10px'}}>
+                            <span style={this.bigNumberStyle}>
                                 {num}
                             </span>
 
@@ -148,7 +157,7 @@ class ResultStats extends React.Component {
 
                     <div className="col-md-7">
                         <TopListChart
-                            subtitle="Topp 10 personer"
+                            subtitle={`Topp ${people.length} personer`}
                             unit={this.props.unit}
                             orientation={this.props.orientation}
                             counts={people}
