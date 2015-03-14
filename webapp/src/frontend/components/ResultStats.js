@@ -7,8 +7,6 @@ class ResultStats extends React.Component {
     constructor(props) {
         super(props);
 
-        this.searchStore = this.props.flux.getStore('search');
-
         this.state = {
             parties: [],
             people: [],
@@ -18,20 +16,12 @@ class ResultStats extends React.Component {
         this.bigNumberStyle = {fontSize: '4rem', padding: '10px', verticalAlign: '-0.55rem'};
     }
 
-    componentDidMount() {
-        this.searchStore.addListener('change', this.handleChange.bind(this));
-    }
-
-    componentWillUnmount() {
-        this.searchStore.removeListener('change', this.handleChange.bind(this));
-    }
-
-    handleChange() {
+    componentWillReceiveProps(props) {
         let parties = [];
         let people  = [];
         let query   = '';
 
-        let result = this.searchStore.getLastResult();
+        let result = props.lastResult;
 
         if (result) {
             query   = result.query;

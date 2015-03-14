@@ -7,21 +7,24 @@ class SearchForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state       = {query: ''};
-        this.searchStore = this.props.flux.getStore('search');
+        this.state = {query: this.props.joinedQuery};
     }
 
     reset() {
         this.setState({query: ''});
     }
 
+    componentWillReceiveProps(props) {
+        this.setState({query: props.joinedQuery});
+    }
+
     componentDidMount() {
-        this.searchStore.addListener('change', this.handleChange.bind(this));
+        // this.searchStore.addListener('change', this.handleChange.bind(this));
         key('/', this.handleFocus.bind(this));
     }
 
     componentWillUnmount() {
-        this.searchStore.addListener('change', this.handleChange.bind(this));
+        // this.searchStore.addListener('change', this.handleChange.bind(this));
         key.unbind('/', this.handleFocus.bind(this));
     }
 
@@ -74,8 +77,6 @@ class SearchForm extends React.Component {
         );
     }
 
-
-
     handleSearch() {
         let q = this.state.query.trim().replace(INVALID_QUERY_CHARS, '');
 
@@ -101,21 +102,13 @@ class SearchForm extends React.Component {
     }
 
     executeMultiQuerySearch(query) {
-        if (query === this.searchStore.getJoinedQuery()) {
+        if (query === this.props.joinedQuery) {
             return;
         }
 
         let queries = query.split(/\s*,\s*/);
 
         this.props.flux.getActions('search').searchMulti(queries, this.props.interval);
-    }
-
-    handleChange() {
-        if (this.props.queryType === 'single') {
-            this.reset();
-        } else {
-            this.setState({query: this.searchStore.getJoinedQuery()});
-        }
     }
 
     handleReset() {

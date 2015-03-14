@@ -22,24 +22,27 @@ class SearchApp extends React.Component {
             showHits: false,
             orientation: 'vertical',
             interval: Intervals.YEAR,
-            queryType: 'multi'
+            queryType: 'multi',
+            title: document.body.getAttribute('data-title'),
+            desc: document.body.getAttribute('data-description'),
+            fbId: document.body.getAttribute('data-facebook-app-id')
         };
 
-        this.searchStore = this.props.flux.getStore('search');
         this.searchActions = this.props.flux.getActions('search');
     }
 
     componentDidMount() {
-        // window.History.Adapter.bind(window, 'statechange', this.handleHistoryChange.bind(this));
         window.addEventListener('popstate', this.handleHistoryChange.bind(this));
-        this.searchStore.addListener('change', this.updateHistory.bind(this));
         this.registerKeyBindings();
         this.updateFromUrl();
     }
 
     componentWillUnmount() {
-        this.searchStore.removeListener('change', this.updateHistory.bind(this));
         this.unregisterKeyBindings();
+    }
+
+    componentWillReceiveProps(props) {
+        this.setState({queries: props.queries}, this.updateHistory.bind(this));
     }
 
     handleHistoryChange(event) {
@@ -70,15 +73,14 @@ class SearchApp extends React.Component {
     }
 
     updateHistory() {
-        let queries = this.searchStore.getQueries();
-        let query   = encodeURIComponent(queries.join('.'));
+        let query   = encodeURIComponent(this.state.queries.join('.'));
         let unit    = this.state.unit;
         let path    = query === '' ? '/' : `/search/${unit}/${query}`;
 
         if (window.location.pathname !== path) {
             window.history.pushState({
                 unit: this.state.unit,
-                queries: queries
+                queries: this.state.queries
             }, null, path);
         }
     }
@@ -92,22 +94,18 @@ class SearchApp extends React.Component {
     }
 
     render() {
-        let title = document.body.getAttribute('data-title');
-        let desc  = document.body.getAttribute('data-description');
-        let fbId  = document.body.getAttribute('data-facebook-app-id');
-
         return (
             <div>
-                <Header title={title} description={desc}>
-                    <FluxComponent>
+                <Header title={this.state.title} description={this.state.desc}>
+                    <FluxComponent connectToStores={['search']}>
                         <SharingLinks
-                            facebookAppId={fbId}
+                            facebookAppId={this.state.fbId}
                         />
                     </FluxComponent>
                 </Header>
 
                 <div className="container">
-                    <FluxComponent>
+                    <FluxComponent connectToStores={['search']}>
                         <SearchForm
                             interval={this.state.interval}
                             queryType={this.state.queryType}
@@ -125,7 +123,7 @@ class SearchApp extends React.Component {
                         />
 
                         <SharingLinks
-                            facebookAppId={fbId}
+                            facebookAppId={this.state.fbId}
                         />
                     </FluxComponent>
 

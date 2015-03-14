@@ -9,6 +9,7 @@ class Timeline extends React.Component {
         super(props);
 
         this.chartOptions = {
+            chartPadding: { left: 10 },
             low: 0,
             fullWidth: false,
             axisX: {
@@ -22,28 +23,22 @@ class Timeline extends React.Component {
             }
         };
 
-        this.searchStore = this.props.flux.getStore('search');
-        this.state = this.fetchStateFromStore();
+        this.state = this.fetchStateFrom({results: []});
     }
 
-    componentDidMount() {
-        this.searchStore.addListener('change', this.handleChange.bind(this));
+    componentWillReceiveProps(props) {
+        this.setState(this.fetchStateFrom(props));
     }
 
-    componentWillUnmount() {
-        this.searchStore.removeListener('change', this.handleChange.bind(this));
-    }
-
-    handleChange() {
-        this.setState(this.fetchStateFromStore());
-    }
-
-    fetchStateFromStore() {
+    fetchStateFrom(props) {
         let queries = [];
         let labels  = [];
         let series  = {pct: [], count: []};
 
-        this.searchStore.eachResult((query, result) => {
+        props.results.forEach((r) => {
+            let query = r.query;
+            let result = r.result;
+
             queries.push(query);
 
             if (!labels.length && result.timeline.length) {

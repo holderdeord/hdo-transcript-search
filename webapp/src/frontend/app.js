@@ -25,7 +25,7 @@ class SearchAppFlux extends Flux {
 let flux = new SearchAppFlux();
 
 React.render(
-    <FluxComponent flux={flux}>
+    <FluxComponent flux={flux} connectToStores={['search']}>
         <SearchApp />
     </FluxComponent>,
     document.getElementById('content')

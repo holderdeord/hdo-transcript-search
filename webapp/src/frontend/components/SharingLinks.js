@@ -1,10 +1,6 @@
 import React from 'react';
 
 class SharingLinks extends React.Component {
-    constructor(props) {
-        this.searchStore = props.flux.getStore('search');
-    }
-
     render() {
 
         return (
@@ -41,9 +37,7 @@ class SharingLinks extends React.Component {
     handleTwitterShare(event) {
         event.preventDefault();
 
-        let query = this.searchStore.getJoinedQuery();
-
-        let text = `Se når politikerne snakker om «${query}»`;
+        let text = `Se når politikerne snakker om «${this.props.joinedQuery}»`;
 
         let shareUrl = `https://twitter.com/intent/tweet
                             ?text=${encodeURIComponent(text)}
