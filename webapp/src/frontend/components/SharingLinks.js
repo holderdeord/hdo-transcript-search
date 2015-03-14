@@ -37,7 +37,13 @@ class SharingLinks extends React.Component {
     handleTwitterShare(event) {
         event.preventDefault();
 
-        let text = `Se når politikerne snakker om «${this.props.joinedQuery}»`;
+        let text;
+
+        if (this.props.joinedQuery.length) {
+            text = `Se når politikerne snakker om «${this.props.joinedQuery}»`;
+        } else {
+            text = "Se hva politikerne snakker om på Stortinget";
+        }
 
         let shareUrl = `https://twitter.com/intent/tweet
                             ?text=${encodeURIComponent(text)}
