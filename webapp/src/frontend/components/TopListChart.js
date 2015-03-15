@@ -12,7 +12,7 @@ class TopListChart extends React.Component {
         }
 
         let data = {
-            labels: counts.map(e => e.key),
+            labels: counts.map(e => e.meta && e.meta.party ? `${e.key} (${e.meta.party})` : e.key),
             series: counts.length ? [counts.map(e => e[unit])] : []
         };
 

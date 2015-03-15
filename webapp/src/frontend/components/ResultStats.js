@@ -9,7 +9,7 @@ class ResultStats extends React.Component {
 
         this.state = {
             parties: [],
-            people: [],
+            people: {},
             query: ''
         };
 
@@ -18,7 +18,7 @@ class ResultStats extends React.Component {
 
     componentWillReceiveProps(props) {
         let parties = [];
-        let people  = [];
+        let people  = {};
         let query   = '';
 
         let result = props.lastResult;

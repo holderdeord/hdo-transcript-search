@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "babel": "^4.7.12",
-    "bluebird": "^2.9.14",
+    "bluebird": "^2.8.2",
     "d3": "^3.5.3",
     "debug": "^2.1.0",
     "elasticsearch": "^3.1.3",
