@@ -69,6 +69,15 @@ app.get('/api/search', (req, res) => {
     }
 });
 
+app.get('/api/hits/download', (req, res) => {
+    if (req.query.query) {
+        res.type('tsv');
+        api.getHitStreamAsTsv(req.query).pipe(res);
+    } else {
+        res.status(400).json({error: "missing query param"});
+    }
+});
+
 app.get('/api/speeches/:id', (req, res) => {
     api.getSpeech(req.params.id)
         .then(results => res.json(results))

@@ -1,14 +1,17 @@
-import Promise from 'bluebird';
-import LRU     from 'lru-cache';
-import es      from './es-client';
-import debug   from 'debug';
-import moment  from 'moment';
+import Promise            from 'bluebird';
+import LRU                from 'lru-cache';
+import es                 from './es-client';
+import debug              from 'debug';
+import moment             from 'moment';
+import { ReadableSearch } from 'elasticsearch-streams';
+import csv                from 'csv';
 
 var debugCache = debug('cache');
 
 const INDEX_NAME        = 'hdo-transcripts';
 const INDEX_TYPE        = 'speech';
 const ALLOWED_INTERVALS = ['month', '12w', '24w', 'year'];
+const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'presidents', 'title', 'name', 'party', 'text'];
 
 class SearchAPI {
     constructor() {
@@ -43,6 +46,23 @@ class SearchAPI {
                 .then(this._cacheResponse.bind(this, cacheKey));
         }
 
+    }
+
+    getHitStreamAsTsv(opts) {
+        let rs = new ReadableSearch((start, callback) => {
+            es.search(this._buildHitsQuery(Object.assign({}, opts, {start: start})), callback);
+        });
+
+        return rs
+                .pipe(csv.transform(record => {
+                    record._source.presidents = record._source.presidents.join(',');
+                    return TSV_HEADERS.map(k => record._source[k]);
+                }))
+                .pipe(csv.stringify({
+                    delimiter: "\t",
+                    header: true,
+                    columns: TSV_HEADERS
+                }));
     }
 
     getSpeech(id) {
@@ -172,6 +192,8 @@ class SearchAPI {
     }
 
     _buildHitsQuery(opts) {
+        console.log(opts);
+
         var body = {
             query: this._queryFor(opts.query),
             highlight: {
@@ -179,7 +201,8 @@ class SearchAPI {
                 post_tags: ['</mark>'],
                 fields: { text: {} }
             },
-            size: opts.size || 10,
+            size: +(opts.size || 10),
+            from: +(opts.start || 0),
             sort: '_score'
         };
 
