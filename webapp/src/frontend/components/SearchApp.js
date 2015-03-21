@@ -121,10 +121,6 @@ class SearchApp extends React.Component {
                             unit={this.state.unit}
                             orientation={this.state.orientation}
                         />
-
-                        <SharingLinks
-                            facebookAppId={this.state.fbId}
-                        />
                     </FluxComponent>
 
                     <Footer/>

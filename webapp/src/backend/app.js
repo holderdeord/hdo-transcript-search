@@ -84,10 +84,10 @@ app.get('/api/speeches/:id', (req, res) => {
         .catch(errorHandler.bind(res));
 });
 
-app.get('/api/context/:id/:start/:end', (req, res) => {
-    var {id,start,end} = req.params;
+app.get('/api/context/:transcript/:start/:end', (req, res) => {
+    var {transcript,start,end} = req.params;
 
-    api.getContext(id, +start, +end)
+    api.getContext(transcript, +start, +end)
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
 

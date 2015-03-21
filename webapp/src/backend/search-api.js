@@ -192,8 +192,6 @@ class SearchAPI {
     }
 
     _buildHitsQuery(opts) {
-        console.log(opts);
-
         var body = {
             query: this._queryFor(opts.query),
             highlight: {
@@ -203,7 +201,7 @@ class SearchAPI {
             },
             size: +(opts.size || 10),
             from: +(opts.start || 0),
-            sort: '_score'
+            sort: opts.sort || '_score'
         };
 
         return {
