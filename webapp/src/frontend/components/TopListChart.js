@@ -37,7 +37,11 @@ class TopListChart extends React.Component {
             }
         };
 
-        let texture = textures.lines().size(4).strokeWidth(2);
+        let texture = textures
+            .lines()
+            .size(5)
+            .strokeWidth(2)
+            .stroke('#455068');
 
         return (
             <div className="top-list-chart">

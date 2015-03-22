@@ -14,7 +14,11 @@ class ResultStats extends React.Component {
             query: ''
         };
 
-        this.bigNumberStyle = {fontSize: '4rem', padding: '10px', verticalAlign: '-0.55rem'};
+        this.bigNumberStyle = {
+            fontSize: '4rem',
+            padding: '10px',
+            verticalAlign: '-0.55rem'
+        };
     }
 
     componentWillReceiveProps(props) {
