@@ -2,6 +2,7 @@ import React        from 'react';
 import TopListChart from './TopListChart';
 import Parties      from '../constants/Parties';
 import ImageUtils   from '../utils/ImageUtils';
+// import Colors       from '../utils/Colors';
 
 class ResultStats extends React.Component {
     constructor(props) {
@@ -35,7 +36,8 @@ class ResultStats extends React.Component {
             query: query,
             parties: parties,
             people: people,
-            topParties: this.topParties(parties)
+            topParties: this.topParties(parties),
+            labelClassName: undefined // Colors.colorAt(focusedIndex)
         });
     }
 
@@ -149,6 +151,7 @@ class ResultStats extends React.Component {
 
                     <div className="col-md-7">
                         <TopListChart
+                            className={this.state.labelClassName}
                             subtitle={`Personer`}
                             unit={this.props.unit}
                             orientation={this.props.orientation}

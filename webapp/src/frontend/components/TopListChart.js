@@ -1,5 +1,6 @@
 import React     from 'react';
 import BaseChart from './BaseChart';
+import textures  from 'textures/textures';
 
 class TopListChart extends React.Component {
 
@@ -23,6 +24,7 @@ class TopListChart extends React.Component {
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
             axisX: {
+                labelOffset: { x: -6, y: 0 },
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
                 offset: 60
@@ -35,15 +37,18 @@ class TopListChart extends React.Component {
             }
         };
 
+        let texture = textures.lines().size(4).strokeWidth(2);
+
         return (
             <div className="top-list-chart">
                 <h3 className="text-center">{this.props.subtitle}</h3>
 
-                <div>
+                <div className={this.props.className}>
                     <BaseChart
                         type="Bar"
                         data={data}
                         aspectRatio="minor-sixth"
+                        texture={texture}
                         options={chartOptions}
                     />
                 </div>
