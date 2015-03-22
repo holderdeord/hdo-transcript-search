@@ -97,6 +97,10 @@ $ct-series-colors: (
 @for $i from 0 to length($ct-series-names) {
   .hdo-label-#{nth($ct-series-names, $i + 1)} {
     color: nth($ct-series-colors, $i + 1);
+
+    .ct-bar {
+      stroke: nth($ct-series-colors, $i + 1) !important;
+    }
   }
 }
 

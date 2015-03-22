@@ -29,8 +29,7 @@ export default class SearchStore extends Store {
         return {
             results: results,
             queries: queries,
-            joinedQuery: queries.join(', '),
-            lastResult: results[results.length - 1]
+            joinedQuery: queries.join(', ')
         };
     }
 

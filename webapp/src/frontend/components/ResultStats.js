@@ -1,7 +1,7 @@
-import React           from 'react';
-import TopListChart    from './TopListChart';
-import Parties         from '../constants/Parties';
-import ImageUtils      from '../utils/ImageUtils';
+import React        from 'react';
+import TopListChart from './TopListChart';
+import Parties      from '../constants/Parties';
+import ImageUtils   from '../utils/ImageUtils';
 
 class ResultStats extends React.Component {
     constructor(props) {
@@ -21,7 +21,9 @@ class ResultStats extends React.Component {
         let people  = {};
         let query   = '';
 
-        let result = props.lastResult;
+        var focusedIndex = props.queries.indexOf(this.props.focusedQuery);
+
+        let result = props.results[focusedIndex];
 
         if (result) {
             query   = result.query;
@@ -61,7 +63,7 @@ class ResultStats extends React.Component {
             let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
 
             return (
-                <div className="row stats">
+                <div className="row result-box">
                     <div className="col-md-5">
                         <div className="text-center">
                             <a
@@ -93,8 +95,9 @@ class ResultStats extends React.Component {
                         </div>
                     </div>
 
-                    <div className="col-md-7">
+                    <div className={"col-md-7"}>
                         <TopListChart
+                            className={this.state.labelClassName}
                             subtitle="Partier"
                             orientation={this.props.orientation}
                             unit={this.props.unit}
@@ -107,7 +110,7 @@ class ResultStats extends React.Component {
     }
 
     renderPeopleStats() {
-        let people = (this.state.people[this.props.unit] || []).slice(0, 5);
+        let people = (this.state.people[this.props.unit] || []).slice(0, 8);
 
         if (people.length) {
             let topPerson      = people[0];
@@ -117,7 +120,7 @@ class ResultStats extends React.Component {
             let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
-                <div className="row stats">
+                <div className="row result-box">
                     <div className="col-md-5 text-center">
                         <img
                             src={ImageUtils.personImageFor(topPerson.meta.external_id)}
@@ -146,7 +149,7 @@ class ResultStats extends React.Component {
 
                     <div className="col-md-7">
                         <TopListChart
-                            subtitle={`Topp ${people.length} personer`}
+                            subtitle={`Personer`}
                             unit={this.props.unit}
                             orientation={this.props.orientation}
                             counts={people}

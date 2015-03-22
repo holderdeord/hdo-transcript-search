@@ -13,7 +13,7 @@ class TopListChart extends React.Component {
 
         let data = {
             labels: counts.map(e => e.meta && e.meta.party ? `${e.key} (${e.meta.party})` : e.key),
-            series: counts.length ? [counts.map(e => e[unit])] : []
+            series: counts.length ? [[],counts.map(e => e[unit])] : []
         };
 
         let isHorizontal = this.props.orientation === 'horizontal';
@@ -39,13 +39,14 @@ class TopListChart extends React.Component {
             <div className="top-list-chart">
                 <h3 className="text-center">{this.props.subtitle}</h3>
 
-
-                <BaseChart
-                    type="Bar"
-                    data={data}
-                    aspectRatio="minor-sixth"
-                    options={chartOptions}
-                />
+                <div>
+                    <BaseChart
+                        type="Bar"
+                        data={data}
+                        aspectRatio="minor-sixth"
+                        options={chartOptions}
+                    />
+                </div>
 
             </div>
         );

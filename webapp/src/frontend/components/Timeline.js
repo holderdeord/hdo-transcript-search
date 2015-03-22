@@ -1,8 +1,7 @@
 import React       from 'react';
 import BaseChart   from './BaseChart';
 import TimeUtils   from '../utils/TimeUtils';
-
-const SERIES_CHARS = 'abcdefghijklmno'.split("");
+import Colors      from '../utils/Colors';
 
 class Timeline extends React.Component {
     constructor(props) {
@@ -80,7 +79,7 @@ class Timeline extends React.Component {
                     </div>
 
                     <div className="card">
-                        <div className="row stats">
+                        <div className="row result-box">
                             <div className="col-md-12">
                                 <BaseChart
                                     type="Line"
@@ -102,19 +101,28 @@ class Timeline extends React.Component {
 
     renderQueries() {
         // see chartist.scss for colors
-
         var queries = this.state.queries.map((q, i) => {
-            let className = 'hdo-label-' + SERIES_CHARS[i >= SERIES_CHARS.length ? i - SERIES_CHARS.length : i];
+            let className = Colors.colorAt(i);
+            let query;
+
+
+            if (this.props.focusedQuery === q) {
+                query = <span className={className} style={{textDecoration: 'underline'}}>{q}</span>;
+            } else {
+                query = <a onClick={this.handleFocusQuery.bind(this)}>
+                    <span className={className}>{q}</span>
+                </a>;
+            }
 
             return (
-                <li key={q} className={className}>
-                    {q}
-                </li>
+                <li key={q}>{query}</li>
             );
         });
 
         return (
-            <ul className="lead text-center list-inline">{queries}</ul>
+            <ul className="queries-selector" style={{paddingTop: '1.5rem'}}>
+                {queries}
+            </ul>
         );
     }
 
@@ -125,12 +133,20 @@ class Timeline extends React.Component {
     formatValue(value) {
         return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
     }
+
+    handleFocusQuery(event) {
+        if (this.props.onQueryFocus) {
+            this.props.onQueryFocus(event.target.firstChild.data);
+        }
+    }
 }
 
 Timeline.propTypes = {
-    unit         : React.PropTypes.string.isRequired,
-    interval     : React.PropTypes.string.isRequired,
-    onUnitChange : React.PropTypes.func
+    unit         :  React.PropTypes.string.isRequired,
+    interval     :  React.PropTypes.string.isRequired,
+    focusedQuery :  React.PropTypes.string,
+    onUnitChange :  React.PropTypes.func,
+    onQueryFocused: React.PropTypes.func
 };
 
 module.exports = Timeline;

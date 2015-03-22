@@ -47,10 +47,11 @@ app.get('/', (req, res) => {
     res.redirect('/search/pct/syria.finanskrise');
 });
 
-app.get('/search/:unit/:query', (req, res) => {
+app.get('/search/:unit/:query/:focused?', (req, res) => {
     res.render('index', {
-        title: req.params.query.split('.').join(', '),
-        query: req.params.query
+        title:   req.params.query.split('.').join(', '),
+        query:   req.params.query,
+        focused: req.params.focused
     });
 });
 

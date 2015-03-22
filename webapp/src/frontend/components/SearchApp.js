@@ -16,6 +16,9 @@ class SearchApp extends React.Component {
         super(props);
 
         this.state = {
+            title: document.body.getAttribute('data-title'),
+            desc: document.body.getAttribute('data-description'),
+            fbId: document.body.getAttribute('data-facebook-app-id'),
             unit: 'pct',
             showDevPanel: false,
             showResultDetails: true,
@@ -23,9 +26,7 @@ class SearchApp extends React.Component {
             orientation: 'vertical',
             interval: Intervals.YEAR,
             queryType: 'multi',
-            title: document.body.getAttribute('data-title'),
-            desc: document.body.getAttribute('data-description'),
-            fbId: document.body.getAttribute('data-facebook-app-id')
+            focusedQuery: null
         };
 
         this.searchActions = this.props.flux.getActions('search');
@@ -42,45 +43,77 @@ class SearchApp extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({queries: props.queries}, this.updateHistory.bind(this));
+        this.setState({
+            focusedQuery: props.queries[props.queries.length - 1]
+        }, this.updateHistory.bind(this));
     }
 
     handleHistoryChange(event) {
         // this code currently assumes this is popstate, and that we should load
         // the given state immediately
         if (event.state) {
-            this.setState({unit: event.state.unit});
+            this.setState({
+                unit: event.state.unit,
+                focusedQuery: event.state.focusedQuery
+            });
             this.dispatchMultiSearch(event.state.queries);
+        } else {
+            this.updateFromUrl();
         }
     }
 
     updateFromUrl() {
-        let [,, unit, query] = window.location.pathname.split('/');
+        var parsed = this.parseUrl();
+
+        if (parsed.queries.length) {
+            this.dispatchMultiSearch(parsed.queries);
+        } else {
+            this.dispatchReset();
+        }
+
+        this.setState({
+            unit: parsed.unit,
+            focusedQuery: parsed.focusedQuery
+        });
+    }
+
+    parseUrl() {
+        let parsed = {};
+
+        let [,, unit, query, focused] =
+            window.location.pathname.split('/');
 
         if (unit && unit.length && ['pct', 'count'].indexOf(unit) !== -1) {
-            this.setState({unit: unit});
+            parsed.unit = unit;
+        }
+
+        if (focused && focused.length) {
+            parsed.focusedQuery = decodeURIComponent(focused.trim());
         }
 
         if (query && query.length) {
-            let queries = decodeURIComponent(query).split('.');
-
-            if (queries.length) {
-                this.dispatchMultiSearch(queries);
-            } else {
-                this.dispatchReset();
-            }
+            parsed.queries = decodeURIComponent(query).split('.');
         }
+
+        return parsed;
     }
 
     updateHistory() {
-        let query   = encodeURIComponent(this.state.queries.join('.'));
+        let query   = encodeURIComponent(this.props.queries.join('.'));
+        let focused = encodeURIComponent(this.state.focusedQuery);
+
         let unit    = this.state.unit;
-        let path    = query === '' ? '/' : `/search/${unit}/${query}`;
+        let path    = query.length === 0 ? '/' : `/search/${unit}/${query}`;
+
+        if (focused.length !== 0 && this.state.focusedQuery !== this.props.queries[this.props.queries.length - 1]) {
+            path = `${path}/${focused}`;
+        }
 
         if (window.location.pathname !== path) {
             window.history.pushState({
                 unit: this.state.unit,
-                queries: this.state.queries
+                queries: this.props.queries,
+                focusedQuery: this.state.focusedQuery
             }, null, path);
         }
     }
@@ -114,10 +147,13 @@ class SearchApp extends React.Component {
                         <Timeline
                             unit={this.state.unit}
                             interval={this.state.interval}
+                            focusedQuery={this.state.focusedQuery}
                             onUnitChange={this.handleUnitChange.bind(this)}
+                            onQueryFocus={this.handleQueryFocus.bind(this)}
                         />
 
                         <ResultStats
+                            focusedQuery={this.state.focusedQuery}
                             unit={this.state.unit}
                             orientation={this.state.orientation}
                         />
@@ -138,6 +174,10 @@ class SearchApp extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    handleQueryFocus(query) {
+        this.setState({ focusedQuery: query }, this.updateHistory.bind(this));
     }
 
     handleOrientationChange(event) {
