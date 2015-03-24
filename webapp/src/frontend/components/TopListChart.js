@@ -24,7 +24,7 @@ class TopListChart extends React.Component {
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
             axisX: {
-                labelOffset: { x: -6, y: 0 },
+                labelOffset: { x: -8, y: 0 },
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
                 offset: 60
