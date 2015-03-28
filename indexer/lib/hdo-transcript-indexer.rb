@@ -28,6 +28,7 @@ module Hdo
         @create_index = options.fetch(:create_index)
         @force        = options.fetch(:force)
         @errors       = []
+        @extras       = JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/extras.json", __FILE__)))
 
         @index = Index.new(
           options.fetch(:elasticsearch_url),
@@ -70,11 +71,11 @@ module Hdo
       end
 
       def xml_transcripts
-        files_matching 's*.xml'
+        files_matching '[sS]*.xml'
       end
 
       def json_transcripts
-        files_matching 's*.json'
+        files_matching '[sS]*.json'
       end
 
       def files_matching(glob)
@@ -105,7 +106,7 @@ module Hdo
           end
 
           # manually maintained list of people we can't infer from the transcript data
-          @party_cache.merge!(JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/n2p.extras.json", __FILE__))))
+          @party_cache.merge!(@extras.fetch('parties'))
           @party_cache.save
 
           json_transcripts.each { |t| t.delete }
@@ -116,16 +117,24 @@ module Hdo
 
         @logger.info "building name -> slug cache"
 
-        ['2005-2009', '2009-2013', '2013-2017'].each do |period|
+        periods = JSON.parse(@faraday.get("http://data.stortinget.no/eksport/stortingsperioder?format=json").body).
+          fetch('stortingsperioder_liste').
+          map { |e| e['id'] }
+
+        periods.each do |period|
           res = @faraday.get("http://data.stortinget.no/eksport/representanter?stortingsperiodeid=#{period}&format=json")
+
+          if res.status != 200
+            @logger.warn "unable to fetch representatives for #{period}"
+            next
+          end
+
           data = JSON.parse(res.body)
 
           data['representanter_liste'].each do |rep|
             full_name = rep.values_at('fornavn', 'etternavn').join(' ')
             @slug_cache[full_name] = rep['id']
           end
-
-          res = @raday
         end
 
         res = @faraday.get('http://data.stortinget.no/eksport/dagensrepresentanter?format=json')
@@ -146,10 +155,29 @@ module Hdo
       end
 
       def fetch_session(session)
-        res = @faraday.get "http://data.stortinget.no/eksport/publikasjoner?publikasjontype=referat&sesjonid=#{URI.escape session}&format=json"
-        data = JSON.parse(res.body)
+        if session.split("-").first.to_i < 2008
+          # fetch the older transcripts that we were emailed
+          dest = @data_dir.join('old-data.zip')
 
-        data.fetch('publikasjoner_liste').each { |t| fetch_transcript t }
+          unless dest.exist?
+            @logger.info "fetching older transcripts"
+            ok = system "curl", "-o", dest.to_s, "-L", "http://files.holderdeord.no/data/transcripts/cleaned/1998-2009.zip"
+            ok or raise "could not fetch transcripts"
+
+            Dir.chdir(@data_dir) do
+              ok = system "unzip", "-o", dest.to_s
+              ok or raise "could not unzip"
+            end
+          end
+
+          FileUtils.cp_r Dir.glob(@data_dir.join("#{session}/*.xml").to_s), @data_dir.to_s
+        else
+          # fetch from the API
+          res = @faraday.get "http://data.stortinget.no/eksport/publikasjoner?publikasjontype=referat&sesjonid=#{URI.escape session}&format=json"
+          data = JSON.parse(res.body)
+
+          data.fetch('publikasjoner_liste').each { |t| fetch_transcript t }
+        end
       end
 
       def fetch_transcript(t)
@@ -174,7 +202,7 @@ module Hdo
         else
           @logger.info "converting: #{input_file} => #{dest}"
 
-          converter = Converter.parse(input_file.to_s, cache: @party_cache)
+          converter = Converter.parse(input_file.to_s, cache: @party_cache, names: @extras.fetch('names'))
           json = converter.to_json
 
           dest.open('w') { |io| io << json }
