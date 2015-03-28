@@ -13,7 +13,7 @@ class Timeline extends React.Component {
             fullWidth: false,
             axisX: {
                 showGrid: false,
-                labelOffset: { x: -67, y: 8 },
+                labelOffset: { x: -28, y: 8 },
             },
             axisY: {
                 labelOffset: { x: 0, y: 4 },
@@ -107,7 +107,7 @@ class Timeline extends React.Component {
 
 
             if (this.props.focusedQuery === q) {
-                query = <span className={className} style={{textDecoration: 'underline'}}>{q}</span>;
+                query = <span className={className} style={{fontWeight: '500'}}>{q}</span>;
             } else {
                 query = <a onClick={this.handleFocusQuery.bind(this)}>
                     <span className={className}>{q}</span>

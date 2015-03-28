@@ -1,6 +1,5 @@
 import React    from 'react';
 import Chartist from 'chartist';
-import d3       from 'd3';
 
 class BaseChart extends React.Component {
     constructor(props) {
@@ -50,16 +49,6 @@ class BaseChart extends React.Component {
                 data,
                 options
             );
-
-
-            if (this.props.texture) {
-                this.chart.on('created', e => {
-                    let svg = d3.select(e.svg._node);
-
-                    svg.call(this.props.texture);
-                    svg.selectAll('.ct-bar').style('stroke', this.props.texture.url());
-                });
-            }
 
             this._setupAnimation();
         }
