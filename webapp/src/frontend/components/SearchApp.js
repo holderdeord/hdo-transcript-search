@@ -44,7 +44,7 @@ class SearchApp extends React.Component {
 
     componentWillReceiveProps(props) {
         this.setState({
-            focusedQuery: props.queries[props.queries.length - 1]
+            focusedQuery: this.getDefaultFocusedQuery(props)
         }, this.updateHistory.bind(this));
     }
 
@@ -105,7 +105,7 @@ class SearchApp extends React.Component {
         let unit    = this.state.unit;
         let path    = query.length === 0 ? '/' : `/search/${unit}/${query}`;
 
-        if (focused.length !== 0 && this.state.focusedQuery !== this.props.queries[this.props.queries.length - 1]) {
+        if (focused.length !== 0 && this.state.focusedQuery !== this.getDefaultFocusedQuery()) {
             path = `${path}/${focused}`;
         }
 
@@ -124,6 +124,11 @@ class SearchApp extends React.Component {
 
     dispatchReset() {
         this.searchActions.reset();
+    }
+
+    getDefaultFocusedQuery(props) {
+        let pr = props || this.props;
+        return pr.queries[0];
     }
 
     render() {

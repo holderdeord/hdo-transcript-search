@@ -6,7 +6,12 @@ import config from '../../config';
 import path from 'path';
 
 function errorHandler(err) {
-    return this.status(500).json({error: err.toString(),stack: err.stack.split('\n')});
+    console.log(err);
+
+    return this.status(500).json({
+        error: err.toString(),
+        stack: err.stack.split('\n')
+    });
 }
 
 var app = express();
@@ -44,7 +49,7 @@ app.use((req, res, next) => {
 
 // routes
 app.get('/', (req, res) => {
-    res.redirect('/search/pct/syria.finanskrise');
+    res.redirect('/search/pct/finanskrise.syria');
 });
 
 app.get('/search/:unit/:query/:focused?', (req, res) => {

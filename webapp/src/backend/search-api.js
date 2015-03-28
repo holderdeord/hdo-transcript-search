@@ -5,6 +5,7 @@ import debug              from 'debug';
 import moment             from 'moment';
 import { ReadableSearch } from 'elasticsearch-streams';
 import csv                from 'csv';
+import Parties            from '../shared/Parties';
 
 var debugCache = debug('cache');
 
@@ -148,13 +149,16 @@ class SearchAPI {
             return moment(a.key).valueOf() - moment(b.key).valueOf();
         });
 
-        // we remove the last data point since it is incomplete and may cause odd outliers
-        timeline = timeline.slice(0, -1);
+        // we remove the first and last data point since
+        // they are incomplete and may look very odd
+        timeline = timeline.slice(1, -1);
 
         let parties = this._calculatePercentages(
             this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
             this._parseAggregation(aggResponse.aggregations.parties)
-        );
+        ).filter(e => Parties.isCurrent(e.key));
+
+
 
         return {
             counts: {
@@ -216,6 +220,7 @@ class SearchAPI {
 
         var aggregations = {
             timeline: {
+                // could do a terms aggregation on "session" instead
                 date_histogram: {
                     field: "time",
                     interval: opts.interval,
@@ -253,7 +258,7 @@ class SearchAPI {
                 filter: { query: query },
                 aggs: {
                     people: {
-                        significant_terms: {
+                        terms: {
                             field: 'name',
                             size: 0
                         },

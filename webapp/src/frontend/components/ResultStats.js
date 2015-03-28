@@ -1,8 +1,8 @@
 import React        from 'react';
 import TopListChart from './TopListChart';
-import Parties      from '../constants/Parties';
+import Parties      from '../../shared/Parties';
 import ImageUtils   from '../utils/ImageUtils';
-// import Colors       from '../utils/Colors';
+import Colors       from '../utils/Colors';
 
 class ResultStats extends React.Component {
     constructor(props) {
@@ -41,7 +41,7 @@ class ResultStats extends React.Component {
             parties: parties,
             people: people,
             topParties: this.topParties(parties),
-            labelClassName: undefined // Colors.colorAt(focusedIndex)
+            labelClassName: Colors.colorAt(focusedIndex)
         });
     }
 
