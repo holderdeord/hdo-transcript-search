@@ -158,8 +158,6 @@ class SearchAPI {
             this._parseAggregation(aggResponse.aggregations.parties)
         ).filter(e => Parties.isCurrent(e.key));
 
-
-
         return {
             counts: {
                 total: aggResponse.hits.total,

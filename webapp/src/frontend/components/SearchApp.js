@@ -128,7 +128,7 @@ class SearchApp extends React.Component {
 
     getDefaultFocusedQuery(props) {
         let pr = props || this.props;
-        return pr.queries[0];
+        return pr.queries[pr.queries.length - 1];
     }
 
     render() {
