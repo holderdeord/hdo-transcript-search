@@ -1,18 +1,10 @@
-import express from 'express';
-import logger from 'morgan';
-import hbs from 'express-hbs';
-import api from './search-api';
-import config from '../../config';
-import path from 'path';
-
-function errorHandler(err) {
-    console.log(err);
-
-    return this.status(500).json({
-        error: err.toString(),
-        stack: err.stack.split('\n')
-    });
-}
+import express  from 'express';
+import logger   from 'morgan';
+import hbs      from 'express-hbs';
+import api      from './search-api';
+import config   from '../../config';
+import examples from '../../config/examples';
+import path     from 'path';
 
 var app = express();
 
@@ -28,6 +20,15 @@ app.set('analytics', app.get('env') === 'production');
 app.locals.appTitle       = 'Sagt i salen';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 app.locals.facebookAppId  = 504447209668308;
+
+function errorHandler(err) {
+    console.log(err);
+
+    return this.status(500).json({
+        error: err.toString(),
+        stack: err.stack.split('\n')
+    });
+}
 
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
@@ -49,7 +50,8 @@ app.use((req, res, next) => {
 
 // routes
 app.get('/', (req, res) => {
-    res.redirect('/search/pct/finanskrise.syria');
+    let example = examples[Math.floor(Math.random() * examples.length)];
+    res.redirect(`/search/pct/${encodeURIComponent(example.join('.'))}`);
 });
 
 app.get('/search/:unit/:query/:focused?', (req, res) => {
