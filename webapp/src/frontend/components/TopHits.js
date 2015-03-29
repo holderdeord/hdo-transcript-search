@@ -11,14 +11,17 @@ class TopHits extends React.Component {
             let pct    = result.result.counts.pct.toFixed(2);
             let hits   = result.result.counts.hits;
             let total  = result.result.counts.total;
+            let hitText = `Fant «${q}» i ${pct}% (${hits} / ${total}) av innlegg.`;
 
             return (
                 <div className="card">
                     <div className="row result-box">
                         <h3>Treff</h3>
-                        <em>
-                            Fant «{q}» i {pct}% ({hits} / {total}) av innlegg.
-                        </em>
+
+                        <em>{hitText}</em>
+
+                        <strong>TODO</strong>:
+                        sortering, filtrering på år, person, parti? Last mer-knapp.
                     </div>
 
                     {
