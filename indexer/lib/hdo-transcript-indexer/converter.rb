@@ -24,6 +24,10 @@ module Hdo
         end
       end
 
+      PARTIES   = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "TF", "V", "uav", "uavh"]
+      DATE_EXP  = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
+      PARTY_EXP = /\s*[\( ]\s*(#{PARTIES.join('|')})\s*[\) ]\s*?/
+
       def initialize(doc, time, options = {})
         @time             = time
         @doc              = doc
@@ -77,8 +81,10 @@ module Hdo
       ]
 
       def validate(section)
-        if section[:party].nil? && section[:title].nil?
-          @errors << {error: "both party and title is null", section: section}
+        if section[:party].nil? && section[:title].nil? && section[:name].nil?
+          @errors << {error: "name, party, title is missing", section: section}
+        elsif section[:party].nil? && section[:title].nil?
+          @errors << {error: "party and title is missing, but should be inferred from name #{section[:name]}", section: section}
         elsif section[:party].nil? && section[:name] != "Presidenten"
           @errors << {error: "party missing", name: section[:name], title: section[:title]}
         end
@@ -189,6 +195,10 @@ module Hdo
         case str
         when 'Satsråd', 'Stasråd', 'Stastråd', 'Statsråden', 'Statstråd'
           'Statsråd'
+        when 'Statsministerer'
+          'Statsminister'
+        when 'Representanten'
+          'Representant'
         else
           str
         end
@@ -199,9 +209,6 @@ module Hdo
         @name_corrections[name] || name
       end
 
-      DATE_EXP  = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
-      PARTY_EXP = /\s*[\( ]\s*(SV|KrF|Krf|V|A|Ap|MDG|FrP|Frp|H|Sp|TF|uavh|uav|Kp)\s*[\) ]\s*?/
-
       def parse_name_string(str)
         result = Hashie::Mash.new
         orig = str
@@ -210,7 +217,7 @@ module Hdo
         case str
         when "", ":"
           # ignored
-        when /^(Statsminister|Statsråd|Statsråd|Stastråd|Stasråd|Satsråd|Statstråd|.+minister|.+president)(?:en)? (.+?)(?:#{DATE_EXP})?:?$/
+        when /^(Representanten|Statsminister|Statsministerer|Statsråd|Statsråd|Stastråd|Stasråd|Satsråd|Statstråd|.+minister|.+president)(?:en)? (.+?)(?:#{DATE_EXP})?:?$/
           result.name  = $2.strip
           result.party = nil
           result.time  = create_time($3, $4, $5)
@@ -261,7 +268,7 @@ module Hdo
           end
         end
 
-        if result.name =~ /\(|\)|\[|\]|#{PARTY_EXP}|#{DATE_EXP}/
+        if result.name =~ /\(|\)|\[|\]|#{DATE_EXP}|#{PARTY_EXP}/
           raise ParseError.new("invalid name: #{result.to_hash.inspect}", @current_node)
         end
 
@@ -273,6 +280,8 @@ module Hdo
         end
 
         result
+      rescue ParseError => ex
+        binding.pry
       end
 
       def create_time(hour, minute, second)

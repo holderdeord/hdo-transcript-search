@@ -196,11 +196,21 @@ class SearchAPI {
     _buildHitsQuery(opts) {
         var body = {
             query: this._queryFor(opts.query),
+
+            filter: {
+                not: {
+                    filter: {
+                        term: { name: "Presidenten" }
+                    }
+                }
+            },
+
             highlight: {
                 pre_tags: ['<mark>'],
                 post_tags: ['</mark>'],
                 fields: { text: {} }
             },
+
             size: +(opts.size || 10),
             from: +(opts.start || 0),
             sort: opts.sort || '_score'

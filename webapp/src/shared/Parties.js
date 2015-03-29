@@ -18,6 +18,7 @@ let current = [
 
 module.exports = {
     names: names,
+    nameFor: key => names[key] || '',
     isCurrent: key => current.indexOf(key) !== -1,
     order: key => Object.keys(names).indexOf(key)
 };

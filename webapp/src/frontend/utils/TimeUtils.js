@@ -12,13 +12,7 @@ const DATE_FORMATS = {
 
 export default class TimeUtils {
     static timestampForHit(hit) {
-        let ts = moment(hit.time);
-
-        if (hit.name === 'Presidenten' && ts.format('HH.mm') === '00.00') {
-            return ts.format('LL kl. ??.??');
-        } else {
-            return ts.format('LLL');
-        }
+        return moment(hit.time).format('LL');
     }
 
     static formatHitDate(hit) {

@@ -10,6 +10,7 @@ import Timeline            from './Timeline';
 import DevPanel            from './DevPanel';
 import SharingLinks        from './SharingLinks';
 import ResultStats         from './ResultStats';
+import TopHits             from './TopHits';
 
 class SearchApp extends React.Component {
     constructor(props) {
@@ -161,6 +162,10 @@ class SearchApp extends React.Component {
                             focusedQuery={this.state.focusedQuery}
                             unit={this.state.unit}
                             orientation={this.state.orientation}
+                        />
+
+                        <TopHits
+                            focusedQuery={this.state.focusedQuery}
                         />
                     </FluxComponent>
 
