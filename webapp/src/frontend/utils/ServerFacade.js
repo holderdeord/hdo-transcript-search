@@ -2,14 +2,14 @@ import Promise from 'bluebird';
 import reqwest from 'reqwest';
 
 export default class ServerFacade {
-    search(query, interval) {
-        var path = this.searchPathFor(query, interval);
+    summary(query, interval) {
+        var path = this.summaryPathFor(query, interval);
         return reqwest(path);
     }
 
-    searchMultiple(queries, interval) {
+    summaryMultiple(queries, interval) {
         return Promise.map(queries, q => {
-            return reqwest(this.searchPathFor(q, interval)).then((r) => {
+            return reqwest(this.summaryPathFor(q, interval)).then((r) => {
                 return {query: q, result: r};
             });
         });
@@ -20,8 +20,8 @@ export default class ServerFacade {
         return reqwest(path);
     }
 
-    searchPathFor(query, interval) {
-        return `/api/search?interval=${interval}&query=${query}`;
+    summaryPathFor(query, interval) {
+        return `/api/search/summary?interval=${interval}&query=${query}`;
     }
 
 }

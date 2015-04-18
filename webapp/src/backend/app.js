@@ -67,9 +67,19 @@ app.get('/opensearch', (req, res) => {
     res.render('opensearch');
 });
 
-app.get('/api/search', (req, res) => {
+app.get('/api/search/summary', (req, res) => {
     if (req.query.query) {
-        api.search(req.query)
+        api.summary(req.query)
+            .then(results => res.json(results))
+            .catch(errorHandler.bind(res));
+    } else {
+        res.status(400).json({error: "missing query param"});
+    }
+});
+
+app.get('/api/search/hits', (req, res) => {
+    if (req.query.query) {
+        api.hits(req.query)
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {

@@ -19,34 +19,40 @@ class SearchAPI {
         this.cache = LRU({max: 500});
     }
 
-    search(opts) {
-        try {
-            opts.interval = this._intervalFrom(opts);
-        } catch (e) {
-            return Promise.reject(e);
-        }
+    summary(opts) {
+        opts.interval = this._intervalFrom(opts);
 
-        let cacheKey = JSON.stringify(opts);
+        return this.cached('summary', opts, () => {
+            return es
+                .search(this._buildAggregationsQuery(opts))
+                .then(this._buildResponse.bind(this));
+        });
+    }
+
+    hits(opts) {
+        opts.interval = this._intervalFrom(opts);
+
+        return this.cached('hits', opts, () => {
+            return es.search(this._buildHitsQuery(opts)).then((response) => {
+                return response.hits.hits.map((h) => h._source);
+            });
+        });
+    }
+
+    cached(name, data, fetchFunc) {
+        let cacheKey = name + ':' + JSON.stringify(data);
         let hit      = this.cache.get(cacheKey);
 
         if (hit) {
             debugCache('cache hit');
+
             return Promise.resolve(hit);
         } else {
             debugCache('cache miss');
 
-            var promise = Promise.join(
-                es.search(this._buildAggregationsQuery(opts)),
-                // TODO: replace this second query with top_hits:
-                // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations-metrics-top-hits-aggregation.html
-                es.search(this._buildHitsQuery(opts))
-            );
-
-            return promise
-                .spread(this._buildResponse.bind(this))
+            return fetchFunc()
                 .then(this._cacheResponse.bind(this, cacheKey));
         }
-
     }
 
     getHitStreamAsTsv(opts) {
@@ -129,7 +135,7 @@ class SearchAPI {
         return map;
     }
 
-    _buildResponse(aggResponse, hitsResponse) {
+    _buildResponse(aggResponse) {
         let personMap = this._buildPersonMap(aggResponse.aggregations.filteredPeople.people);
 
         let people = this._calculatePercentages(
@@ -149,8 +155,9 @@ class SearchAPI {
             return moment(a.key).valueOf() - moment(b.key).valueOf();
         });
 
-        // we remove the first and last data point since
-        // they are incomplete and may look very odd
+        // We remove the first and last data point since
+        // they are incomplete and may look very odd.
+        // TODO: look into grouping on parliament session instead of year
         timeline = timeline.slice(1, -1);
 
         let parties = this._calculatePercentages(
@@ -160,13 +167,11 @@ class SearchAPI {
 
         return {
             counts: {
-                total: aggResponse.hits.total,
-                hits: hitsResponse.hits.total,
-                pct: (hitsResponse.hits.total / aggResponse.hits.total) * 100
+                total: aggResponse.hits.total
             },
-            hits: hitsResponse.hits.hits.map(this._buildHit),
             timeline: timeline,
             parties: parties,
+            hits: [],
             people: {
                 count: people.sort((a,b) => b.count - a.count).slice(0, 20),
                 pct: people.sort((a,b) => b.pct - a.pct).slice(0, 20)

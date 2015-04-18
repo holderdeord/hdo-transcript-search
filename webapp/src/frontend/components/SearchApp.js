@@ -22,8 +22,6 @@ class SearchApp extends React.Component {
             fbId: document.body.getAttribute('data-facebook-app-id'),
             unit: 'pct',
             showDevPanel: false,
-            showResultDetails: true,
-            showHits: false,
             orientation: 'vertical',
             interval: Intervals.YEAR,
             queryType: 'multi',
@@ -164,9 +162,7 @@ class SearchApp extends React.Component {
                             orientation={this.state.orientation}
                         />
 
-                        <TopHits
-                            focusedQuery={this.state.focusedQuery}
-                        />
+                        <TopHits focusedQuery={this.state.focusedQuery}/>
                     </FluxComponent>
 
                     <Footer/>
