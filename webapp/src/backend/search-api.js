@@ -36,7 +36,7 @@ class SearchAPI {
             return es.search(this._buildHitsQuery(opts)).then((response) => {
                 return {
                     query: opts.query,
-                    hits: response.hits.hits.map((h) => h._source),
+                    hits: response.hits.hits.map((h) => this._buildHit(h)),
                     counts: {
                         total: response.hits.total
                     }

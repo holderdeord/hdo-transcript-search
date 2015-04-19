@@ -8,17 +8,21 @@ export default class HitsStore extends Store {
 
         this.register(searchActions.reset, this.handleReset);
         this.register(searchActions.hits, this.handleHits);
+        this.register(searchActions.moreHits, this.handleMoreHits);
 
         this.state = {hits: null};
     }
 
     handleHits(response) {
-        console.log('HitsStore', 'handleHits');
         this.setState({ hits: response });
     }
 
+    handleMoreHits(response) {
+        response.hits = this.state.hits.hits.concat(response.hits);
+        this.setState({hits: response});
+    }
+
     handleReset() {
-        console.log('HitsStore', 'handleHits');
         this.setState({hits: null});
     }
 

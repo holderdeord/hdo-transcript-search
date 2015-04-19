@@ -18,7 +18,7 @@ class SearchHit extends React.Component {
         return (
             <div className="row hit">
                 <div className="col-sm-2">
-                    <a className="text-muted" href={href}>{timestamp}</a>
+                    <a className="text-muted" href={href}>{timestamp} {this.props.index}</a>
                 </div>
 
                 <div className="col-sm-3">
@@ -33,7 +33,9 @@ class SearchHit extends React.Component {
                     <blockquote>{this.props.hit.text}</blockquote>
 
                     <small className="pull-right">
-                        <a href="#">Se kontekst</a>
+                        <a onClick={this.handleOpenContext.bind(this)}>
+                            Se innlegget i kontekst
+                        </a>
                     </small>
                 </div>
              </div>
@@ -49,7 +51,10 @@ class SearchHit extends React.Component {
         } else {
             return <div style={{minHeight: height}} />;
         }
+    }
 
+    handleOpenContext() {
+        console.log('todo: open context');
     }
 }
 

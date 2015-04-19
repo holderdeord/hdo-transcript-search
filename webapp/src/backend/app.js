@@ -51,10 +51,13 @@ app.use((req, res, next) => {
 // routes
 app.get('/', (req, res) => {
     let example = examples[Math.floor(Math.random() * examples.length)];
-    res.redirect(`/search/pct/${encodeURIComponent(example.join('.'))}`);
+    let query   = encodeURIComponent(example.join('.'));
+    let focus   = encodeURIComponent(example[example.length - 1]);
+
+    res.redirect(`/search/pct/${query}/${focus}`);
 });
 
-app.get('/search/:unit/:query/:focused?', (req, res) => {
+app.get('/search/:unit/:query/:focused', (req, res) => {
     res.render('index', {
         title:   req.params.query.split('.').join(', '),
         query:   req.params.query,

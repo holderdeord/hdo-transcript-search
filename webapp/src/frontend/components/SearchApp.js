@@ -41,12 +41,15 @@ class SearchApp extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.state.focusedQuery) {
-            this.setState({
-                focusedQuery: this.getDefaultFocusedQuery(nextProps)
-            });
+        if (!(this.state.focusedQuery &&
+                    nextProps.queries &&
+                    nextProps.queries.indexOf(this.state.focusedQuery) !== -1)) {
+            this.setState({focusedQuery: this.getDefaultFocusedQuery(nextProps)});
         }
+    }
 
+    componentDidUpdate() {
+        this.updateHistory();
     }
 
     handleHistoryChange(event) {
@@ -128,7 +131,7 @@ class SearchApp extends React.Component {
     }
 
     dispatchReset() {
-        this.searchActions.reset();
+        this.setState({focusedQuery: null}, this.searchActions.reset);
     }
 
     getDefaultFocusedQuery(props) {
@@ -188,7 +191,6 @@ class SearchApp extends React.Component {
     handleQueryFocus(query) {
         this.setState({ focusedQuery: query }, () => {
             this.searchActions.hits(query);
-            this.updateHistory();
         });
     }
 
@@ -203,7 +205,7 @@ class SearchApp extends React.Component {
     handleUnitChange(event) {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
 
-        this.setState({unit: newUnit}, this.updateHistory.bind(this));
+        this.setState({unit: newUnit});
     }
 
     registerKeyBindings() {

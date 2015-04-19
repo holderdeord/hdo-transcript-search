@@ -15,6 +15,10 @@ export default class SearchActions extends Actions {
         return this.server.hits(query);
     }
 
+    moreHits(query, start) {
+        return this.server.hits(query, start);
+    }
+
     reset() {
         return null;
     }
