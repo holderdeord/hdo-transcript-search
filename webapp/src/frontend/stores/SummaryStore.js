@@ -1,25 +1,19 @@
 import { Store } from 'flummox';
 
-export default class SearchStore extends Store {
+export default class SummaryStore extends Store {
     constructor(flux) {
         super();
 
         let searchActions = flux.getActions('search');
 
-        this.register(searchActions.searchAdd, this.handleSearchAdd);
-        this.register(searchActions.searchMulti, this.handleSearchMulti);
+        this.register(searchActions.summary, this.handleSummary);
         this.register(searchActions.reset, this.handleReset);
 
         this.state = this.stateFrom([]);
     }
 
-    handleSearchAdd(result) {
-        let results = this.state.results.concat([result]);
-        this.setState(this.stateFrom(results));
-    }
-
-    // TODO: "multi" is really a sort of "replace"
-    handleSearchMulti(results) {
+    handleSummary(results) {
+        console.log('SummaryStore', 'handleSummary');
         this.setState(this.stateFrom(results));
     }
 
@@ -34,7 +28,8 @@ export default class SearchStore extends Store {
     }
 
     handleReset() {
-        this.setState(this.stateFrom([]));
+        console.log('SummaryStore', 'handleReset');
+        this.setState({results: [], queries: [], joinedQuery: ''});
     }
 
 }

@@ -5,9 +5,11 @@ import React         from 'react';
 import Flux          from 'flummox';
 import FluxComponent from 'flummox/component';
 
-import SearchActions from './actions/SearchActions';
-import SearchStore   from './stores/SearchStore';
+import SummaryStore  from './stores/SummaryStore';
+import HitsStore     from './stores/HitsStore';
 import Analytics     from './stores/Analytics';
+
+import SearchActions from './actions/SearchActions';
 
 import SearchApp     from './components/SearchApp';
 
@@ -17,7 +19,8 @@ class SearchAppFlux extends Flux {
 
         this.createActions('search', SearchActions);
 
-        this.createStore('search', SearchStore, this);
+        this.createStore('summary', SummaryStore, this);
+        this.createStore('hits', HitsStore, this);
         this.createStore('analytics', Analytics, this);
     }
 }
@@ -25,7 +28,7 @@ class SearchAppFlux extends Flux {
 let flux = new SearchAppFlux();
 
 React.render(
-    <FluxComponent flux={flux} connectToStores={['search']}>
+    <FluxComponent flux={flux} connectToStores={['summary', 'hits']}>
         <SearchApp />
     </FluxComponent>,
     document.getElementById('content')

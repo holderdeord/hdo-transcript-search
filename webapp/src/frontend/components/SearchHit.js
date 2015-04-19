@@ -31,8 +31,12 @@ class SearchHit extends React.Component {
                   className="col-sm-7"
                   xxdangerouslySetInnerHTML={{__html: this.props.hit.highlight}}>
                     <blockquote>{this.props.hit.text}</blockquote>
-                  </div>
-            </div>
+
+                    <small className="pull-right">
+                        <a href="#">Se kontekst</a>
+                    </small>
+                </div>
+             </div>
         );
     }
 

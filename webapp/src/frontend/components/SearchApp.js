@@ -24,7 +24,6 @@ class SearchApp extends React.Component {
             showDevPanel: false,
             orientation: 'vertical',
             interval: Intervals.YEAR,
-            queryType: 'multi',
             focusedQuery: null
         };
 
@@ -41,10 +40,13 @@ class SearchApp extends React.Component {
         this.unregisterKeyBindings();
     }
 
-    componentWillReceiveProps(props) {
-        this.setState({
-            focusedQuery: this.getDefaultFocusedQuery(props)
-        }, this.updateHistory.bind(this));
+    componentWillReceiveProps(nextProps) {
+        if (!this.state.focusedQuery) {
+            this.setState({
+                focusedQuery: this.getDefaultFocusedQuery(nextProps)
+            });
+        }
+
     }
 
     handleHistoryChange(event) {
@@ -55,7 +57,8 @@ class SearchApp extends React.Component {
                 unit: event.state.unit,
                 focusedQuery: event.state.focusedQuery
             });
-            this.dispatchMultiSearch(event.state.queries);
+
+            this.dispatchSummary(event.state.queries);
         } else {
             this.updateFromUrl();
         }
@@ -64,15 +67,16 @@ class SearchApp extends React.Component {
     updateFromUrl() {
         var parsed = this.parseUrl();
 
-        if (parsed.queries.length) {
-            this.dispatchMultiSearch(parsed.queries);
-        } else {
-            this.dispatchReset();
-        }
-
         this.setState({
             unit: parsed.unit,
             focusedQuery: parsed.focusedQuery
+        }, () => {
+            if (parsed.queries.length) {
+                this.dispatchSummary(parsed.queries);
+            } else {
+                this.dispatchReset();
+            }
+
         });
     }
 
@@ -102,11 +106,7 @@ class SearchApp extends React.Component {
         let focused = encodeURIComponent(this.state.focusedQuery);
 
         let unit    = this.state.unit;
-        let path    = query.length === 0 ? '/' : `/search/${unit}/${query}`;
-
-        if (focused.length !== 0 && this.state.focusedQuery !== this.getDefaultFocusedQuery()) {
-            path = `${path}/${focused}`;
-        }
+        let path    = query.length === 0 ? '/' : `/search/${unit}/${query}/${focused}`;
 
         if (window.location.pathname !== path) {
             window.history.pushState({
@@ -117,8 +117,14 @@ class SearchApp extends React.Component {
         }
     }
 
-    dispatchMultiSearch(queries) {
-        this.searchActions.searchMulti(queries, this.state.interval);
+    dispatchSummary(queries) {
+        this.searchActions.summary(queries, this.state.interval);
+
+        var hitsQuery = this.state.focusedQuery || this.getDefaultFocusedQuery({queries: queries});
+
+        if (hitsQuery) {
+            this.searchActions.hits(hitsQuery);
+        }
     }
 
     dispatchReset() {
@@ -134,7 +140,7 @@ class SearchApp extends React.Component {
         return (
             <div>
                 <Header title={this.state.title} description={this.state.desc}>
-                    <FluxComponent connectToStores={['search']}>
+                    <FluxComponent connectToStores={['summary']}>
                         <SharingLinks
                             facebookAppId={this.state.fbId}
                         />
@@ -142,11 +148,8 @@ class SearchApp extends React.Component {
                 </Header>
 
                 <div className="container">
-                    <FluxComponent connectToStores={['search']}>
-                        <SearchForm
-                            interval={this.state.interval}
-                            queryType={this.state.queryType}
-                        />
+                    <FluxComponent connectToStores={['summary']}>
+                        <SearchForm interval={this.state.interval} />
 
                         <Timeline
                             unit={this.state.unit}
@@ -161,7 +164,9 @@ class SearchApp extends React.Component {
                             unit={this.state.unit}
                             orientation={this.state.orientation}
                         />
+                    </FluxComponent>
 
+                    <FluxComponent connectToStores={['hits']}>
                         <TopHits focusedQuery={this.state.focusedQuery}/>
                     </FluxComponent>
 
@@ -171,11 +176,9 @@ class SearchApp extends React.Component {
                         visible={this.state.showDevPanel}
                         orientation={this.state.orientation}
                         interval={this.state.interval}
-                        queryType={this.state.queryType}
 
                         onOrientationChange={this.handleOrientationChange.bind(this)}
                         onIntervalChange={this.handleIntervalChange.bind(this)}
-                        onQueryTypeChange={this.handleQueryTypeChange.bind(this)}
                     />
                 </div>
             </div>
@@ -183,11 +186,14 @@ class SearchApp extends React.Component {
     }
 
     handleQueryFocus(query) {
-        this.setState({ focusedQuery: query }, this.updateHistory.bind(this));
+        this.setState({ focusedQuery: query }, () => {
+            this.searchActions.hits(query);
+            this.updateHistory();
+        });
     }
 
     handleOrientationChange(event) {
-        this.setState({orientation: event.target.value });
+        this.setState({orientation: event.target.value});
     }
 
     handleIntervalChange(event) {
@@ -197,11 +203,7 @@ class SearchApp extends React.Component {
     handleUnitChange(event) {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
 
-        this.setState({ unit: newUnit }, this.updateHistory.bind(this));
-    }
-
-    handleQueryTypeChange(event) {
-        this.setState({queryType: event.target.value});
+        this.setState({unit: newUnit}, this.updateHistory.bind(this));
     }
 
     registerKeyBindings() {

@@ -34,7 +34,13 @@ class SearchAPI {
 
         return this.cached('hits', opts, () => {
             return es.search(this._buildHitsQuery(opts)).then((response) => {
-                return response.hits.hits.map((h) => h._source);
+                return {
+                    query: opts.query,
+                    hits: response.hits.hits.map((h) => h._source),
+                    counts: {
+                        total: response.hits.total
+                    }
+                };
             });
         });
     }
@@ -171,7 +177,6 @@ class SearchAPI {
             },
             timeline: timeline,
             parties: parties,
-            hits: [],
             people: {
                 count: people.sort((a,b) => b.count - a.count).slice(0, 20),
                 pct: people.sort((a,b) => b.pct - a.pct).slice(0, 20)

@@ -8,6 +8,7 @@ class SearchForm extends React.Component {
         super(props);
 
         this.state = {query: this.props.joinedQuery};
+        this.searchActions = props.flux.getActions('search');
     }
 
     reset() {
@@ -19,18 +20,14 @@ class SearchForm extends React.Component {
     }
 
     componentDidMount() {
-        // this.searchStore.addListener('change', this.handleChange.bind(this));
         key('/', this.handleFocus.bind(this));
     }
 
     componentWillUnmount() {
-        // this.searchStore.addListener('change', this.handleChange.bind(this));
         key.unbind('/', this.handleFocus.bind(this));
     }
 
     render() {
-        let buttonName  = this.props.queryType === 'single' ? 'Legg til ord' : 'Søk';
-
         return (
             <div className="row">
                 <div className="col-sm-6 col-sm-offset-3">
@@ -52,14 +49,12 @@ class SearchForm extends React.Component {
                             <input
                                 type="button"
                                 className="btn btn-primary btn-lg"
-                                value={buttonName}
+                                value="Søk"
                                 onClick={this.handleSearch.bind(this)}
                             />
                         </span>
                     </div>
                 </div>
-
-                {this.props.queryType === 'single' && this.renderResetButton()}
             </div>
         );
     }
@@ -78,45 +73,29 @@ class SearchForm extends React.Component {
     }
 
     handleSearch() {
-        let q = this.state.query.trim().replace(INVALID_QUERY_CHARS, '');
+        let query = this.state.query.trim().replace(INVALID_QUERY_CHARS, '');
 
-        if (!q.length) {
+        if (!query.length) {
             this.handleReset();
             return;
         }
 
-        if (this.props.queryType === 'single') {
-            this.executeSingleQuerySearch(q);
-        } else {
-            this.executeMultiQuerySearch(q);
-        }
-    }
-
-    executeSingleQuerySearch(query) {
-        if (this.searchStore.hasQuery(query)) {
-            this.reset();
-            return;
-        }
-
-        this.props.flux.getActions('search').searchAdd(query, this.props.interval);
-    }
-
-    executeMultiQuerySearch(query) {
         if (query === this.props.joinedQuery) {
             return;
         }
 
         let queries = query.split(/\s*,\s*/);
 
-        this.props.flux.getActions('search').searchMulti(queries, this.props.interval);
+        this.searchActions.summary(queries, this.props.interval);
+        this.searchActions.hits(queries[queries.length - 1]); // not ideal
     }
 
     handleReset() {
-        this.props.flux.getActions('search').reset();
+        this.searchActions.reset();
     }
 
     handleQueryChange(event) {
-        if (!event.target.value.length && this.props.queryType === 'multi') {
+        if (!event.target.value.length) {
             this.handleReset();
         } else {
             this.setState({query: event.target.value});

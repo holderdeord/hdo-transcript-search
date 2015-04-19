@@ -4,17 +4,13 @@ import SearchHit from './SearchHit';
 class TopHits extends React.Component {
 
     render() {
-        let q       = this.props.focusedQuery;
-        let result  = this.props.results[this.props.queries.indexOf(q)];
+        let result = this.props.hits;
 
-        if (!result || !result.result.hits.length) {
+        if (!result) {
             return null;
         }
 
-        let pct     = result.result.counts.pct.toFixed(2);
-        let hits    = result.result.counts.hits;
-        let total   = result.result.counts.total;
-        let hitText = `Fant «${q}» i ${pct}% (${hits} / ${total}) av innlegg.`;
+        let hitText = `Viser ${result.hits.length} av totalt ${result.counts.total} treff på «${result.query}»`;
 
         return (
             <div className="card">
@@ -28,7 +24,7 @@ class TopHits extends React.Component {
                 </div>
 
                 {
-                    result.result.hits.map(h => [
+                    result.hits.map(h => [
                         <SearchHit hit={h} key={h.id} />,
                         <div className="divider"/>
                     ])

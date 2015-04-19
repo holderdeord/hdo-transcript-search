@@ -2,17 +2,17 @@ import Promise from 'bluebird';
 import reqwest from 'reqwest';
 
 export default class ServerFacade {
-    summary(query, interval) {
-        var path = this.summaryPathFor(query, interval);
-        return reqwest(path);
-    }
 
-    summaryMultiple(queries, interval) {
+    summary(queries, interval) {
         return Promise.map(queries, q => {
-            return reqwest(this.summaryPathFor(q, interval)).then((r) => {
+            return reqwest(this._summaryPathFor(q, interval)).then((r) => {
                 return {query: q, result: r};
             });
         });
+    }
+
+    hits(query) {
+        return reqwest(`/api/search/hits?query=${query}`);
     }
 
     speechContext(transcriptId, start, end) {
@@ -20,7 +20,7 @@ export default class ServerFacade {
         return reqwest(path);
     }
 
-    summaryPathFor(query, interval) {
+    _summaryPathFor(query, interval) {
         return `/api/search/summary?interval=${interval}&query=${query}`;
     }
 

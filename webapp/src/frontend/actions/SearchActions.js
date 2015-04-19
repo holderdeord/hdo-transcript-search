@@ -7,14 +7,12 @@ export default class SearchActions extends Actions {
         this.server = new ServerFacade();
     }
 
-    searchAdd(query, interval) {
-        return this.server.summary(query, interval).then(result => {
-            return {query: query, result: result};
-        });
+    summary(queries, interval) {
+        return this.server.summary(queries, interval);
     }
 
-    searchMulti(queries, interval) {
-        return this.server.summaryMultiple(queries, interval);
+    hits(query) {
+        return this.server.hits(query);
     }
 
     reset() {
