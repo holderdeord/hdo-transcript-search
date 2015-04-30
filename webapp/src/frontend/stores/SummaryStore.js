@@ -8,13 +8,21 @@ export default class SummaryStore extends Store {
 
         this.register(searchActions.summary, this.handleSummary);
         this.register(searchActions.reset, this.handleReset);
+        this.register(searchActions.hits, this.handleFocus);
 
         this.state = this.stateFrom([]);
     }
 
     handleSummary(results) {
-        console.log('SummaryStore', 'handleSummary');
         this.setState(this.stateFrom(results));
+    }
+
+    handleReset() {
+        this.setState({results: [], queries: [], joinedQuery: '', focusedQuery: ''});
+    }
+
+    handleFocus(hitsResponse) {
+        this.setState({focusedQuery: hitsResponse.query});
     }
 
     stateFrom(results) {
@@ -25,11 +33,6 @@ export default class SummaryStore extends Store {
             queries: queries,
             joinedQuery: queries.join(', ')
         };
-    }
-
-    handleReset() {
-        console.log('SummaryStore', 'handleReset');
-        this.setState({results: [], queries: [], joinedQuery: ''});
     }
 
 }

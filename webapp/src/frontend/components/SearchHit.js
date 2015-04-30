@@ -18,7 +18,7 @@ class SearchHit extends React.Component {
         return (
             <div className="row hit">
                 <div className="col-sm-2">
-                    <a className="text-muted" href={href}>{timestamp} {this.props.index}</a>
+                    <a className="text-muted" href={href}>{timestamp}</a>
                 </div>
 
                 <div className="col-sm-3">
@@ -54,7 +54,7 @@ class SearchHit extends React.Component {
     }
 
     handleOpenContext() {
-        console.log('todo: open context');
+        window.alert('not implemented');
     }
 }
 

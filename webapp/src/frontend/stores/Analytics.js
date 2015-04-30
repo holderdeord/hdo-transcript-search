@@ -16,5 +16,5 @@ export default class Analytics extends Store {
 
         this.register(searchActions.reset, () =>
                 ga('send', 'event', 'reset'));
-      }
+        }
 }

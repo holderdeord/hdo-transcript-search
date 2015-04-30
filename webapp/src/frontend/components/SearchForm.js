@@ -87,7 +87,7 @@ class SearchForm extends React.Component {
         let queries = query.split(/\s*,\s*/);
 
         this.searchActions.summary(queries, this.props.interval);
-        this.searchActions.hits(queries[queries.length - 1]); // not ideal
+        this.searchActions.hits(queries[queries.length - 1]);
     }
 
     handleReset() {

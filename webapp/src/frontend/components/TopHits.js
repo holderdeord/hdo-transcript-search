@@ -20,8 +20,10 @@ class TopHits extends React.Component {
         return (
             <div className="card">
                 <div className="row result-box">
-                    <em>{hitText}</em>
-                    <strong>TODO: filters</strong>:
+                    <div className="col-md-12">
+                        <h2>Treff</h2>
+                        <em>{hitText}</em>
+                    </div>
                 </div>
 
                 {
