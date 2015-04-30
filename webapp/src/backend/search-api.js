@@ -206,14 +206,7 @@ class SearchAPI {
     _buildHitsQuery(opts) {
         var body = {
             query: this._queryFor(opts.query),
-
-            filter: {
-                not: {
-                    filter: {
-                        term: { name: "Presidenten" }
-                    }
-                }
-            },
+            filter: this._filterFor(opts),
 
             highlight: {
                 pre_tags: ['<mark>'],
@@ -313,6 +306,20 @@ class SearchAPI {
                 default_field: 'text'
             }
         };
+    }
+
+    _filterFor(opts) {
+        if (opts.includePresident) {
+            return {};
+        } else {
+            return {
+                not: {
+                    filter: {
+                        term: { name: "Presidenten" }
+                    }
+                }
+            };
+        }
     }
 
     _parseAggregation(aggregation) {
