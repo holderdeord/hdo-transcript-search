@@ -1,8 +1,12 @@
 import React      from 'react';
 import TimeUtils  from '../utils/TimeUtils';
 import ImageUtils from '../utils/ImageUtils';
+import Analytics  from '../stores/Analytics';
 
 class SearchHit extends React.Component {
+    constructor() {
+        this.state = {useFallbackImage: false};
+    }
 
     render() {
         let hit       = this.props.hit;
@@ -46,8 +50,14 @@ class SearchHit extends React.Component {
         let height = 180;
 
         if (hit.external_id) {
-            let src = ImageUtils.personImageFor(hit.external_id);
-            return <img src={src} alt={hit.name} height={height} />;
+            let src = this.state.useFallbackImage ?
+                ImageUtils.fallbackImage() : ImageUtils.personImageFor(hit.external_id);
+
+            return <img
+                src={src}
+                alt={hit.name}
+                height={height}
+                onError={this.handleImageError.bind(this)} />;
         } else {
             return <div style={{minHeight: height}} />;
         }
@@ -55,6 +65,15 @@ class SearchHit extends React.Component {
 
     handleOpenContext() {
         window.alert('not implemented');
+    }
+
+    handleImageError() {
+
+
+        if (!this.state.useFallbackImage) {
+            Analytics.sendEvent('image-error', this.props.hit.external_id);
+            this.setState({useFallbackImage: true});
+        }
     }
 }
 
