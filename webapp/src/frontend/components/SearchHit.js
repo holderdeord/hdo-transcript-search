@@ -48,19 +48,18 @@ class SearchHit extends React.Component {
 
     imageFor(hit) {
         let height = 180;
+        let src = this.state.useFallbackImage ?
+            ImageUtils.fallbackImage() : ImageUtils.personImageFor(hit.external_id);
 
-        if (hit.external_id) {
-            let src = this.state.useFallbackImage ?
-                ImageUtils.fallbackImage() : ImageUtils.personImageFor(hit.external_id);
 
-            return <img
+        return (
+            <img
                 src={src}
                 alt={hit.name}
                 height={height}
-                onError={this.handleImageError.bind(this)} />;
-        } else {
-            return <div style={{minHeight: height}} />;
-        }
+                onError={this.handleImageError.bind(this)} />
+        );
+
     }
 
     handleOpenContext() {
@@ -68,8 +67,6 @@ class SearchHit extends React.Component {
     }
 
     handleImageError() {
-
-
         if (!this.state.useFallbackImage) {
             Analytics.sendEvent('image-error', this.props.hit.external_id);
             this.setState({useFallbackImage: true});
