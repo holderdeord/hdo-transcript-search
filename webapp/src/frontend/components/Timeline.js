@@ -25,7 +25,7 @@ class Timeline extends React.Component {
         this.responsiveOptions = [
             ['screen and (max-width: 599px)', {
                 // showPoint: false,
-                chartPadding: { left: 0 },
+                chartPadding: { left: 5 },
                 fullWidth: true,
                 axisX: {
                     labelOffset: { x: 0, y: 0 },
@@ -71,6 +71,9 @@ class Timeline extends React.Component {
 
     render() {
         if (this.state.queries.length) {
+            let aspectRatio = window.matchMedia('(max-width: 770px)').matches ? 'minor-sixth' : 'double-octave';
+
+
             return (
                 <div className="timeline">
                     <div className="controls">
@@ -95,8 +98,8 @@ class Timeline extends React.Component {
                             <div className="col-md-12">
                                 <BaseChart
                                     type="Line"
+                                    aspectRatio={aspectRatio}
                                     data={this.state.data[this.props.unit]}
-                                    aspectRatio="minor-sixth"
                                     options={this.chartOptions}
                                     responsiveOptions={this.responsiveOptions}
                                 />

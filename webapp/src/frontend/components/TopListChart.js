@@ -19,9 +19,10 @@ class TopListChart extends React.Component {
         let isHorizontal = this.props.orientation === 'horizontal';
 
         let chartOptions = {
-            chartPadding: {left: 5},
+            chartPadding: {left: 10},
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
+            onlyInteger: this.props.unit === 'cnt',
             axisX: {
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
@@ -37,6 +38,7 @@ class TopListChart extends React.Component {
 
         let responsiveOptions = [
             ['screen and (max-width: 599px)', {
+                chartPadding: { left: 5 },
                 [isHorizontal ? 'axisY' : 'axisX']: {
                     offset: 30,
                     labelInterpolationFnc: d => {

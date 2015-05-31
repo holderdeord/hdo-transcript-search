@@ -126,17 +126,17 @@ $ct-series-colors: (
     word-break: break-word;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 300px) {
+    font-size: 1rem;
+  }
+
+  @media screen and (max-width: 599px) {
     .ct-bar {
       stroke-width: $hdo-bar-width-small;
     }
 
     .ct-point {
       stroke-width: $hdo-point-size-small;
-    }
-
-    .ct-label {
-      font-size: 0.8rem;
     }
   }
 

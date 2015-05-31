@@ -46,10 +46,9 @@ class SearchForm extends React.Component {
 
                         <span className="input-group-btn">
                             <input
-                                type="button"
+                                type="submit"
                                 className="btn btn-primary"
                                 value="Søk"
-                                onClick={this.handleSearch.bind(this)}
                             />
                         </span>
                     </div>

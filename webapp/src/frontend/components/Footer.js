@@ -15,16 +15,15 @@ class Footer extends React.Component {
                     <small>
                         <div>Referater fra <a href="http://data.stortinget.no">data.stortinget.no</a> lisensiert under <a href="http://data.norge.no/NLOD">NLOD</a>.</div>
                         <div>Kildekode på <a href="https://github.com/holderdeord/hdo-transcript-search">GitHub</a> lisensiert under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD</a>.</div>
+                        <div>Spørsmål om tjenesten? Skriv til <a href="mailto:&#106;&#97;&#114;&#105;&#0064;&#104;&#111;&#108;&#100;&#101;&#114;&#100;&#101;&#111;&#114;&#100;.&#110;&#111;">&#106;&#97;&#114;&#105;&#0064;&#104;&#111;&#108;&#100;&#101;&#114;&#100;&#101;&#111;&#114;&#100;.&#110;&#111;</a></div>
                     </small>
                 </p>
 
                 <p>
                     <a href="https://www.holderdeord.no/" alt="Holder de ord">holderdeord.no</a>
-                    &nbsp; &middot;&nbsp;
+                    &nbsp;&middot;&nbsp;
                     <a href="https://twitter.com/holderdeord/" alt="Holder de ord på Twitter">@holderdeord</a>
                 </p>
-
-                {this.props.children}
             </footer>
         );
         // jshint ignore:end
