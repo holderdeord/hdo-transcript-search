@@ -74,11 +74,12 @@ $hdo-secondary-color: #fadd00;
 
 $ct-series-colors: (
   $hdo-primary-color,
-  darken($hdo-secondary-color, 5%),
-  #d70206,
+  rgb(179,88,6),
+  rgb(241,163,64),
+  rgb(153,142,195),
   #453d3f,
-  #f05b4f,
-  #f4c63d,
+  rgb(84,39,136),
+  darken($hdo-secondary-color, 5%),
   #d17905,
   #59922b,
   #0544d3,
@@ -101,6 +102,12 @@ $ct-series-colors: (
     .ct-bar {
       stroke: nth($ct-series-colors, $i + 1) !important;
     }
+
+    .ct-chart-bar .ct-grids line:first-of-type {
+      stroke-dasharray: 0;
+      stroke: darken(nth($ct-series-colors, $i + 1), 5%);
+    }
+
   }
 }
 
@@ -108,10 +115,5 @@ $ct-series-colors: (
   color: #333;
   font-weight: 600;
   word-break: break-word;
-}
-
-.ct-chart-bar .ct-grids line:first-of-type {
-  stroke-dasharray: 0;
-  stroke: black;
 }
 

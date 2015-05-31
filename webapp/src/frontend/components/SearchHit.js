@@ -21,18 +21,18 @@ class SearchHit extends React.Component {
 
         return (
             <div className="row hit">
-                <div className="col-sm-2">
+                <div className="col-md-2">
                     <a className="text-muted" href={href}>{timestamp}</a>
                 </div>
 
-                <div className="col-sm-3">
+                <div className="col-md-3">
                     <div><strong>{person}</strong></div>
                     <div>{title}</div>
                     {this.imageFor(hit)}
                 </div>
 
                 <div
-                  className="col-sm-7"
+                  className="col-md-7"
                   xxdangerouslySetInnerHTML={{__html: this.props.hit.highlight}}>
                     <blockquote>{this.props.hit.text}</blockquote>
 
