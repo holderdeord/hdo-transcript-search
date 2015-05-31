@@ -8,12 +8,10 @@ class SearchForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {query: this.props.joinedQuery};
-        this.searchActions = props.flux.getActions('search');
-    }
-
-    reset() {
-        this.setState({query: ''});
+        this.state = {
+            query: this.props.joinedQuery,
+            lastQuery: null
+        };
     }
 
     componentWillReceiveProps(props) {
@@ -58,19 +56,6 @@ class SearchForm extends React.Component {
         );
     }
 
-    renderResetButton() {
-        return (
-            <div className="col-sm-2 text-right">
-                <input
-                    type="button"
-                    className="btn btn-default btn-lg"
-                    value="Nullstill"
-                    onClick={this.handleReset.bind(this)}
-                />
-            </div>
-        );
-    }
-
     handleSearch(event) {
         event.preventDefault();
 
@@ -86,23 +71,23 @@ class SearchForm extends React.Component {
         }
 
         let queries = query.split(/\s*,\s*/);
-
-        this.searchActions.summary(queries, this.props.interval);
-        this.searchActions.hits(queries);
-        this.transitionToQueries(queries);
+        this.setState({lastQuery: query}, () => {
+            this.transitionToQueries(queries);
+        });
     }
 
     handleReset() {
-        this.searchActions.reset();
-        this.transitionToQueries([]);
+        this.setState({query: ''}, () => this.transitionToQueries([]));
     }
 
     handleQueryChange(event) {
-        if (!event.target.value.length) {
-            this.handleReset();
-        } else {
-            this.setState({query: event.target.value});
-        }
+        let val = event.target.value;
+
+        this.setState({query: val}, () => {
+            if (!val.length) {
+                this.handleReset();
+            }
+        });
     }
 
     handleFocus(event) {
@@ -125,6 +110,7 @@ class SearchForm extends React.Component {
             focused: this.props.params.focused || 0
         });
 
+        console.log(name, params);
         this.context.router.transitionTo(name, params);
     }
 }

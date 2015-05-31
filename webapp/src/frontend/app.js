@@ -24,6 +24,7 @@ class SearchAppFlux extends Flux {
 }
 
 let flux = new SearchAppFlux();
+var searchActions = flux.getActions('search');
 
 Router.run(routes, Router.HistoryLocation, function (Handler, state) {
     React.render(
@@ -32,5 +33,14 @@ Router.run(routes, Router.HistoryLocation, function (Handler, state) {
         </FluxComponent>,
         document.getElementById('content')
     );
+
+    if (state.params.queries && state.params.queries.length) {
+        let queries = state.params.queries.split('.');
+
+        searchActions.summary(queries);
+        searchActions.hits(queries);
+    } else {
+        searchActions.reset();
+    }
 });
 

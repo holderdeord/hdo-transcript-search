@@ -160,19 +160,12 @@ class Timeline extends React.Component {
     formatValue(value) {
         return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
     }
-
-    handleFocusQuery(event) {
-        if (this.props.onQueryFocus) {
-            this.props.onQueryFocus(event.target.firstChild.data);
-        }
-    }
 }
 
 Timeline.propTypes = {
     unit         :  React.PropTypes.string.isRequired,
     interval     :  React.PropTypes.string.isRequired,
     onUnitChange :  React.PropTypes.func,
-    onQueryFocused: React.PropTypes.func
 };
 
 module.exports = Timeline;

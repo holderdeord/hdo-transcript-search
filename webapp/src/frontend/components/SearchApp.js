@@ -31,7 +31,6 @@ class SearchApp extends React.Component {
 
     componentDidMount() {
         this.registerKeyBindings();
-        this.syncState();
     }
 
     componentWillUnmount() {
@@ -42,21 +41,6 @@ class SearchApp extends React.Component {
     }
 
     componentWillRecieveProps() {
-    }
-
-    syncState(optionalProps) {
-        var props = optionalProps || this.props;
-
-        if (props.params.queries === null) {
-            this.searchActions.reset();
-        } else {
-            var queries = props.params.queries.split('.');
-
-            if (props.joinedQuery !== queries.join(',')) {
-                this.searchActions.summary(queries, this.state.interval);
-                this.searchActions.hits(queries);
-            }
-        }
     }
 
     render() {
@@ -85,7 +69,6 @@ class SearchApp extends React.Component {
                             interval={this.state.interval}
                             focusedIndex={focusedIndex}
                             onUnitChange={this.handleUnitChange.bind(this)}
-                            onQueryFocus={this.handleQueryFocus.bind(this)}
                         />
 
                         <ResultStats
@@ -112,10 +95,6 @@ class SearchApp extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    handleQueryFocus(query) {
-        this.searchActions.hits(query);
     }
 
     handleOrientationChange(event) {

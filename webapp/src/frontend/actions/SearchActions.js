@@ -7,7 +7,7 @@ export default class SearchActions extends Actions {
         this.server = new ServerFacade();
     }
 
-    summary(queries, interval) {
+    summary(queries, interval = 'year') {
         return this.server.summary(queries, interval);
     }
 
