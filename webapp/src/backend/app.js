@@ -52,9 +52,8 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     let example = examples[Math.floor(Math.random() * examples.length)];
     let query   = encodeURIComponent(example.join('.'));
-    let focus   = encodeURIComponent(example[example.length - 1]);
 
-    res.redirect(`/search/pct/${query}/${focus}`);
+    res.redirect(`/search/pct/${query}/0`);
 });
 
 app.get('/search/:unit/:query/:focused', (req, res) => {

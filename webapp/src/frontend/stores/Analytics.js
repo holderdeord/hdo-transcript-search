@@ -20,7 +20,7 @@ export default class Analytics extends Store {
                 ga('send', 'event', 'summary', r.map(e => e.query).sort().join(',')));
 
         this.register(searchActions.hits, (r) =>
-                ga('send', 'event', 'hits', r.query));
+                ga('send', 'event', 'hits', r.map(e => e.query).sort().join(',')));
 
         this.register(searchActions.reset, () =>
                 ga('send', 'event', 'reset'));

@@ -11,14 +11,17 @@ export default class ServerFacade {
         });
     }
 
-    hits(query, start) {
-        var path = `/api/search/hits?query=${query}`;
+    hits(queries, start) {
+        return Promise.map(queries, function(query) {
+            var path = `/api/search/hits?query=${query}`;
 
-        if (start) {
-            path += `&start=${start}`;
-        }
+            if (start) {
+                path += `&start=${start}`;
+            }
 
-        return reqwest(path);
+            return reqwest(path);
+        });
+
     }
 
     speechContext(transcriptId, start, end) {

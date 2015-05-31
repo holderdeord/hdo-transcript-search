@@ -11,12 +11,12 @@ export default class SearchActions extends Actions {
         return this.server.summary(queries, interval);
     }
 
-    hits(query) {
-        return this.server.hits(query);
+    hits(queries) {
+        return this.server.hits(queries);
     }
 
     moreHits(query, start) {
-        return this.server.hits(query, start);
+        return this.server.hits([query], start);
     }
 
     reset() {

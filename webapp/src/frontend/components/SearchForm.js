@@ -1,5 +1,6 @@
-import React               from 'react';
-import key                 from 'keymaster';
+import React  from 'react';
+import key    from 'keymaster';
+import assign from 'react/lib/Object.assign';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 
@@ -87,11 +88,13 @@ class SearchForm extends React.Component {
         let queries = query.split(/\s*,\s*/);
 
         this.searchActions.summary(queries, this.props.interval);
-        this.searchActions.hits(queries[queries.length - 1]);
+        this.searchActions.hits(queries);
+        this.transitionToQueries(queries);
     }
 
     handleReset() {
         this.searchActions.reset();
+        this.transitionToQueries([]);
     }
 
     handleQueryChange(event) {
@@ -106,9 +109,31 @@ class SearchForm extends React.Component {
         event.preventDefault();
         React.findDOMNode(this.refs.query).focus();
     }
+
+    transitionToQueries(queries) {
+        var name = 'blank';
+        var queryPath = null;
+
+        if (queries.length) {
+            name = 'search';
+            queryPath = queries.join('.');
+        }
+
+        let params = assign({}, this.props.params, {
+            queries: queryPath,
+            unit: this.props.params.unit || 'pct',
+            focused: this.props.params.focused || 0
+        });
+
+        this.context.router.transitionTo(name, params);
+    }
 }
 
 SearchForm.propTypes = {
+};
+
+SearchForm.contextTypes = {
+    router: React.PropTypes.func
 };
 
 module.exports = SearchForm;

@@ -1,4 +1,5 @@
 import React               from 'react';
+import assign              from 'react/lib/Object.assign';
 import FluxComponent       from 'flummox/component';
 
 import Intervals           from '../constants/Intervals';
@@ -20,7 +21,6 @@ class SearchApp extends React.Component {
             title: document.body.getAttribute('data-title'),
             desc: document.body.getAttribute('data-description'),
             fbId: document.body.getAttribute('data-facebook-app-id'),
-            unit: 'pct',
             showDevPanel: false,
             orientation: 'vertical',
             interval: Intervals.YEAR
@@ -30,9 +30,8 @@ class SearchApp extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('popstate', this.handleHistoryChange.bind(this));
         this.registerKeyBindings();
-        this.updateFromUrl();
+        this.syncState();
     }
 
     componentWillUnmount() {
@@ -40,94 +39,30 @@ class SearchApp extends React.Component {
     }
 
     componentDidUpdate() {
-        if ( this.props.focusedQuery === '' ||
-             (this.props.queries.length && this.props.queries.indexOf(this.props.focusedQuery) !== -1)) {
-            this.updateHistory();
-        }
     }
 
-    handleHistoryChange(event) {
-        // this code currently assumes this is popstate, and that we should load
-        // the given state immediately
-        if (event.state) {
-            this.setState({
-                unit: event.state.unit
-            });
+    componentWillRecieveProps() {
+    }
 
-            this.dispatchSummary(event.state.queries);
-            this.searchActions.hits(event.state.focusedQuery);
+    syncState(optionalProps) {
+        var props = optionalProps || this.props;
+
+        if (props.params.queries === null) {
+            this.searchActions.reset();
         } else {
-            this.updateFromUrl();
-        }
-    }
+            var queries = props.params.queries.split('.');
 
-    updateFromUrl() {
-        var parsed = this.parseUrl();
-
-        this.setState({
-            unit: parsed.unit,
-        }, () => {
-            if (parsed.focusedQuery) {
-                this.searchActions.hits(parsed.focusedQuery);
+            if (props.joinedQuery !== queries.join(',')) {
+                this.searchActions.summary(queries, this.state.interval);
+                this.searchActions.hits(queries);
             }
-
-            if (parsed.queries.length) {
-                this.dispatchSummary(parsed.queries);
-            } else {
-                this.dispatchReset();
-            }
-
-        });
-    }
-
-    parseUrl() {
-        let parsed = {};
-
-        let [,, unit, query, focused] =
-            window.location.pathname.split('/');
-
-        if (unit && unit.length && ['pct', 'count'].indexOf(unit) !== -1) {
-            parsed.unit = unit;
         }
-
-        if (focused && focused.length) {
-            parsed.focusedQuery = decodeURIComponent(focused.trim());
-        }
-
-        if (query && query.length) {
-            parsed.queries = decodeURIComponent(query).split('.');
-        }
-
-        return parsed;
-    }
-
-    updateHistory() {
-        let query   = encodeURIComponent(this.props.queries.join('.'));
-        let focused = encodeURIComponent(this.props.focusedQuery);
-
-        let unit    = this.state.unit;
-        let path    = query.length === 0 ? '/' : `/search/${unit}/${query}/${focused}`;
-
-        if (window.location.pathname !== path) {
-            console.log('changing url', {from: window.location.pathname, to: path});
-
-            window.history.pushState({
-                unit: this.state.unit,
-                queries: this.props.queries,
-                focusedQuery: this.props.focusedQuery
-            }, null, path);
-        }
-    }
-
-    dispatchSummary(queries) {
-        this.searchActions.summary(queries, this.state.interval);
-    }
-
-    dispatchReset() {
-        this.searchActions.reset();
     }
 
     render() {
+        let focusedIndex = +this.props.params.focused;
+        let unit = this.props.params.unit || 'pct';
+
         return (
             <div>
                 <Header title={this.state.title} description={this.state.desc}>
@@ -140,23 +75,28 @@ class SearchApp extends React.Component {
 
                 <div className="container">
                     <FluxComponent connectToStores={['summary']}>
-                        <SearchForm interval={this.state.interval} />
+                        <SearchForm
+                            interval={this.state.interval}
+                            params={this.props.params}
+                        />
 
                         <Timeline
-                            unit={this.state.unit}
+                            unit={unit}
                             interval={this.state.interval}
+                            focusedIndex={focusedIndex}
                             onUnitChange={this.handleUnitChange.bind(this)}
                             onQueryFocus={this.handleQueryFocus.bind(this)}
                         />
 
                         <ResultStats
-                            unit={this.state.unit}
+                            unit={unit}
                             orientation={this.state.orientation}
+                            focusedIndex={focusedIndex}
                         />
                     </FluxComponent>
 
                     <FluxComponent connectToStores={['hits']}>
-                        <TopHits/>
+                        <TopHits focusedIndex={focusedIndex}/>
                     </FluxComponent>
 
                     <Footer/>
@@ -188,8 +128,7 @@ class SearchApp extends React.Component {
 
     handleUnitChange(event) {
         let newUnit = event.target.value === '%' ? 'pct' : 'count';
-
-        this.setState({unit: newUnit});
+        this.context.router.transitionTo('search', assign({}, this.props.params, {unit: newUnit}));
     }
 
     registerKeyBindings() {
@@ -214,13 +153,14 @@ class SearchApp extends React.Component {
         // TODO: use keymaster to provide some instructions on '?'
     }
 
-
     unregisterKeyBindings() {
         key.unbind('ctrl+`');
     }
-
-
 }
+
+SearchApp.contextTypes = {
+    router: React.PropTypes.func
+};
 
 module.exports = SearchApp;
 

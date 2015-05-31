@@ -1,14 +1,16 @@
-import React       from 'react';
-import BaseChart   from './BaseChart';
-import TimeUtils   from '../utils/TimeUtils';
-import Colors      from '../utils/Colors';
+import React     from 'react';
+import BaseChart from './BaseChart';
+import TimeUtils from '../utils/TimeUtils';
+import Colors    from '../utils/Colors';
+import {Link}    from 'react-router';
+
 
 class Timeline extends React.Component {
     constructor(props) {
         super(props);
 
         this.chartOptions = {
-            chartPadding: { left: 10 },
+            chartPadding: { left: 10, top: 35 },
             low: 0,
             fullWidth: false,
             axisX: {
@@ -72,7 +74,7 @@ class Timeline extends React.Component {
     render() {
         if (this.state.queries.length) {
             let aspectRatio = window.matchMedia('(max-width: 770px)').matches ? 'minor-sixth' : 'double-octave';
-
+            this.chartOptions.onlyInteger = this.props.unit === 'count';
 
             return (
                 <div className="timeline">
@@ -122,12 +124,21 @@ class Timeline extends React.Component {
             let query;
 
 
-            if (this.props.focusedQuery === q) {
+            if (+this.props.focusedIndex === i) {
                 query = <span className={className} style={{fontWeight: '500'}}>{q}</span>;
             } else {
-                query = <a onClick={this.handleFocusQuery.bind(this)}>
-                    <span className={className}>{q}</span>
-                </a>;
+                let params = {
+                    queries: this.state.queries.join('.'),
+                    unit: this.props.unit,
+                    focused: i
+                };
+
+                query = (
+                    <Link to="search" params={params}>
+                        <span className={className}>{q}</span>
+                    </Link>
+                );
+
             }
 
             return (
@@ -160,7 +171,6 @@ class Timeline extends React.Component {
 Timeline.propTypes = {
     unit         :  React.PropTypes.string.isRequired,
     interval     :  React.PropTypes.string.isRequired,
-    focusedQuery :  React.PropTypes.string,
     onUnitChange :  React.PropTypes.func,
     onQueryFocused: React.PropTypes.func
 };

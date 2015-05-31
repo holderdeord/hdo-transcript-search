@@ -13,13 +13,22 @@ export default class HitsStore extends Store {
         this.state = {hits: null};
     }
 
-    handleHits(response) {
-        this.setState({ hits: response });
+    handleHits(responses) {
+        this.setState({ hits: responses });
     }
 
-    handleMoreHits(response) {
-        response.hits = this.state.hits.hits.concat(response.hits);
-        this.setState({hits: response});
+    handleMoreHits(responses) {
+        let response = responses[0];
+        let hits = this.state.hits;
+
+        hits.forEach(function(hit) {
+            console.log(response);
+            if (hit.query === response.query) {
+                hit.hits = hit.hits.concat(response.hits);
+            }
+        });
+
+        this.setState({hits: hits});
     }
 
     handleReset() {

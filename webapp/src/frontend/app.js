@@ -4,14 +4,12 @@ require('./styles/chartist.scss');
 import React         from 'react';
 import Flux          from 'flummox';
 import FluxComponent from 'flummox/component';
-
+import Router        from 'react-router';
 import SummaryStore  from './stores/SummaryStore';
 import HitsStore     from './stores/HitsStore';
 import Analytics     from './stores/Analytics';
-
 import SearchActions from './actions/SearchActions';
-
-import SearchApp     from './components/SearchApp';
+import routes        from './routes';
 
 class SearchAppFlux extends Flux {
     constructor() {
@@ -27,9 +25,12 @@ class SearchAppFlux extends Flux {
 
 let flux = new SearchAppFlux();
 
-React.render(
-    <FluxComponent flux={flux} connectToStores={['summary', 'hits']}>
-        <SearchApp />
-    </FluxComponent>,
-    document.getElementById('content')
-);
+Router.run(routes, Router.HistoryLocation, function (Handler, state) {
+    React.render(
+        <FluxComponent flux={flux} connectToStores={['summary', 'hits']}>
+            <Handler {...state} />
+        </FluxComponent>,
+        document.getElementById('content')
+    );
+});
+

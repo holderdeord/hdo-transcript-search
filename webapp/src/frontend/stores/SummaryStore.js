@@ -18,11 +18,7 @@ export default class SummaryStore extends Store {
     }
 
     handleReset() {
-        this.setState({results: [], queries: [], joinedQuery: '', focusedQuery: ''});
-    }
-
-    handleFocus(hitsResponse) {
-        this.setState({focusedQuery: hitsResponse.query});
+        this.setState({results: [], queries: [], joinedQuery: ''});
     }
 
     stateFrom(results) {

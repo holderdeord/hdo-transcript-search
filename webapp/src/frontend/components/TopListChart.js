@@ -22,7 +22,7 @@ class TopListChart extends React.Component {
             chartPadding: {left: 10},
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
-            onlyInteger: this.props.unit === 'cnt',
+            onlyInteger: this.props.unit === 'count',
             axisX: {
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),

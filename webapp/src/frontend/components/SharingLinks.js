@@ -5,16 +5,16 @@ class SharingLinks extends React.Component {
     render() {
 
         return (
-            <div className="text-center" style={{padding: '0.5rem', fontSize: '2rem'}}>
+            <div className="sharing-links text-center" style={{padding: '0.5rem'}}>
                 <span style={{padding: '0.8rem'}}>
                     <a href="#" onClick={this.handleFacebookShare.bind(this)}>
-                        <Icon name="facebook" />
+                        <Icon name="facebook" size='lg' />
                     </a>
                 </span>
 
                 <span style={{paddingLeft: '0.8rem'}}>
                     <a href='#' onClick={this.handleTwitterShare.bind(this)}>
-                        <Icon name="twitter" />
+                        <Icon name="twitter" size='lg' />
                     </a>
                 </span>
             </div>
@@ -41,7 +41,7 @@ class SharingLinks extends React.Component {
         if (this.props.joinedQuery.length) {
             text = `Se når politikerne snakker om «${this.props.joinedQuery}»`;
         } else {
-            text = "Se hva politikerne snakker om på Stortinget";
+            text = "Hva snakker politikerne om på Stortinget?";
         }
 
         let shareUrl = `https://twitter.com/intent/tweet

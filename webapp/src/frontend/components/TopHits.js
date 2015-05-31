@@ -1,14 +1,25 @@
 import React     from 'react';
 import SearchHit from './SearchHit';
+import Icon      from 'react-fa';
 
 class TopHits extends React.Component {
     constructor(props) {
         super(props);
         this.searchActions = props.flux.getActions('search');
+        this.state = { loaded: true };
+    }
+
+    componentWillReceiveProps(newProps) {
+        let oldHits = this.getFocusedHitSet(newProps);
+        let newHits = this.getFocusedHitSet(this.props);
+
+        if (oldHits && newHits && newHits.hits.length >= oldHits.hits.length) {
+            this.setState({loaded: true});
+        }
     }
 
     render() {
-        let result = this.props.hits;
+        let result = this.getFocusedHitSet();
 
         if (!result) {
             return null;
@@ -39,23 +50,44 @@ class TopHits extends React.Component {
     }
 
     renderLoadMore() {
-        return (
-            <div className="row text-center">
-                <button
-                    className="btn btn-primary"
-                    onClick={this.handleLoadMore.bind(this)}
-                    style={{margin: '1rem'}}>
-
-                    Last flere
-                </button>
-            </div>
-        );
+        if (this.state.loaded) {
+            return (
+                <div className="row text-center">
+                    <button
+                        className="btn btn-primary"
+                        onClick={this.handleLoadMore.bind(this)}
+                        style={{margin: '1rem'}}>
+                        Last flere
+                    </button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="row text-center">
+                    <Icon spin name="spinner" style={{margin: '1rem', fontSize: '2rem'}}/>
+                </div>
+            );
+        }
     }
 
     handleLoadMore() {
-        this.setState({loaded: false}, () => {
-            this.searchActions.moreHits(this.props.hits.query, this.props.hits.hits.length);
-        });
+        let result = this.getFocusedHitSet();
+
+        if (result) {
+            this.setState({loaded: false}, () => {
+                this.searchActions.moreHits(result.query, result.hits.length);
+            });
+        }
+    }
+
+    getFocusedHitSet(optionalHits) {
+        let hits = optionalHits || this.props.hits;
+
+        if (this.props.hits) {
+            return this.props.hits[this.props.focusedIndex || 0];
+        } else {
+            return null;
+        }
     }
 }
 
