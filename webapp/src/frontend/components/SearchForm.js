@@ -107,7 +107,7 @@ class SearchForm extends React.Component {
         let params = assign({}, this.props.params, {
             queries: queryPath,
             unit: this.props.params.unit || 'pct',
-            focused: this.props.params.focused || 0
+            focused: queries.length - 1
         });
 
         console.log(name, params);
