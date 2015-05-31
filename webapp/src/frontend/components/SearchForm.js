@@ -29,7 +29,7 @@ class SearchForm extends React.Component {
 
     render() {
         return (
-            <div className="row" id="search-form">
+            <form className="row" id="search-form" onSubmit={this.handleSearch.bind(this)}>
                 <div className="col-sm-6 col-sm-offset-3">
                     <div className="input-group">
                         <input
@@ -42,7 +42,6 @@ class SearchForm extends React.Component {
                             tabIndex="0"
                             value={this.state.query}
                             onChange={this.handleQueryChange.bind(this)}
-                            onKeyDown={this.handleKeyDown.bind(this)}
                         />
 
                         <span className="input-group-btn">
@@ -55,7 +54,7 @@ class SearchForm extends React.Component {
                         </span>
                     </div>
                 </div>
-            </div>
+            </form>
         );
     }
 
@@ -72,7 +71,9 @@ class SearchForm extends React.Component {
         );
     }
 
-    handleSearch() {
+    handleSearch(event) {
+        event.preventDefault();
+
         let query = this.state.query.trim().replace(INVALID_QUERY_CHARS, '');
 
         if (!query.length) {
@@ -99,12 +100,6 @@ class SearchForm extends React.Component {
             this.handleReset();
         } else {
             this.setState({query: event.target.value});
-        }
-    }
-
-    handleKeyDown(event) {
-        if (event.keyCode === 13) {
-            this.handleSearch();
         }
     }
 

@@ -1,21 +1,20 @@
 import React from 'react';
+import Icon  from 'react-fa';
 
 class SharingLinks extends React.Component {
     render() {
 
         return (
-            <div className="text-center" style={{padding: '2rem'}}>
+            <div className="text-center" style={{padding: '0.5rem', fontSize: '2rem'}}>
                 <span style={{padding: '0.8rem'}}>
                     <a href="#" onClick={this.handleFacebookShare.bind(this)}>
-                        <small>Facebook</small>
+                        <Icon name="facebook" />
                     </a>
                 </span>
 
-                &middot;
-
                 <span style={{paddingLeft: '0.8rem'}}>
                     <a href='#' onClick={this.handleTwitterShare.bind(this)}>
-                        <small>Twitter</small>
+                        <Icon name="twitter" />
                     </a>
                 </span>
             </div>

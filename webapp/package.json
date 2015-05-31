@@ -13,11 +13,11 @@
     "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public --ignore ./src/frontend server.js",
     "test": "./node_modules/.bin/jsxhint --exclude node_modules *.js src"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "jari@holderdeord.no",
+  "license": "BSD",
   "dependencies": {
-    "babel": "^4.7.12",
-    "bluebird": "^2.8.2",
+    "babel": "^5.4.7",
+    "bluebird": "^2.9.27",
     "csv": "^0.4.1",
     "d3": "^3.5.3",
     "debug": "^2.1.0",
@@ -28,10 +28,10 @@
     "flummox": "^2.13.1",
     "flux": "^2.0.1",
     "lru-cache": "^2.5.0",
-    "moment": "^2.9.0",
+    "moment": "^2.10.0",
     "morgan": "^1.5.0",
     "nconf": "^0.6.9",
-    "react": "^0.13.2",
+    "react": "^0.13.3",
     "reqwest": "^1.1.5"
   },
   "devDependencies": {
@@ -41,19 +41,21 @@
     "chartist": "^0.8.0",
     "css-loader": "^0.9.1",
     "errorhandler": "^1.2.2",
+    "extract-text-webpack-plugin": "^0.8.1",
     "file-loader": "^0.8.1",
     "jshint": "^2.6.0",
-    "jsxhint": "^0.11.1",
+    "jsxhint": "^0.15.1",
     "keymaster": "^1.6.2",
     "keymirror": "^0.1.1",
     "less": "^2.4.0",
     "less-loader": "^2.0.0",
     "nodemon": "^1.2.1",
+    "react-fa": "^3.2.0",
     "sass-loader": "^0.4.0-beta.1",
     "style-loader": "^0.8.3",
     "textures": "^1.0.2",
     "url-loader": "^0.5.5",
-    "webpack": "^1.5.3",
+    "webpack": "^1.9.10",
     "webpack-dev-middleware": "^1.0.11"
   }
 }
