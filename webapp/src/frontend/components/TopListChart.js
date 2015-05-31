@@ -1,6 +1,5 @@
 import React     from 'react';
 import BaseChart from './BaseChart';
-import textures  from 'textures/textures';
 
 class TopListChart extends React.Component {
 
@@ -14,7 +13,7 @@ class TopListChart extends React.Component {
 
         let data = {
             labels: counts.map(e => e.meta && e.meta.party ? `${e.key} (${e.meta.party})` : e.key),
-            series: counts.length ? [[],counts.map(e => e[unit])] : []
+            series: counts.length ? [counts.map(e => e[unit])] : []
         };
 
         let isHorizontal = this.props.orientation === 'horizontal';
@@ -24,24 +23,29 @@ class TopListChart extends React.Component {
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
             axisX: {
-                labelOffset: { x: -8, y: 0 },
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
                 offset: 60
             },
             axisY: {
-                labelOffset: { x: 0, y: 5 },
+                labelOffset: { x: 0, y: 6 },
                 showGrid: !isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
                 offset: 50
             }
         };
 
-        let texture = textures
-            .lines()
-            .size(5)
-            .strokeWidth(2)
-            .stroke('#455068');
+        let responsiveOptions = [
+            ['screen and (max-width: 599px)', {
+                [isHorizontal ? 'axisY' : 'axisX']: {
+                    offset: 30,
+                    labelInterpolationFnc: d => {
+                        let parts = d.split(' ');
+                        return parts.length < 2 ? d : parts.slice(parts.length - 2).join(' ');
+                    }
+                }
+            }]
+        ];
 
         return (
             <div className="top-list-chart">
@@ -52,8 +56,8 @@ class TopListChart extends React.Component {
                         type="Bar"
                         data={data}
                         aspectRatio="minor-sixth"
-                        texture={texture}
                         options={chartOptions}
+                        responsiveOptions={responsiveOptions}
                     />
                 </div>
 

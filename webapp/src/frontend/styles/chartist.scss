@@ -2,8 +2,6 @@
 // http://gionkunz.github.io/chartist-js/getting-started.html#the-configuration-of-your-chart
 //
 
-
-
 // Scales for responsive SVG containers
 $ct-scales: ((1), (15/16), (8/9), (5/6), (4/5), (3/4), (2/3), (5/8), (1/1.618), (3/5), (9/16), (8/15), (1/2), (2/5), (3/8), (1/3), (1/4)) !default;
 $ct-scales-names: (ct-square, ct-minor-second, ct-major-second, ct-minor-third, ct-major-third, ct-perfect-fourth, ct-perfect-fifth, ct-minor-sixth, ct-golden-section, ct-major-sixth, ct-minor-seventh, ct-major-seventh, ct-octave, ct-major-tenth, ct-major-eleventh, ct-major-twelfth, ct-double-octave) !default;
@@ -12,6 +10,7 @@ $ct-scales-names: (ct-square, ct-minor-second, ct-major-second, ct-minor-third, 
 $ct-class-chart: ct-chart !default;
 $ct-class-chart-line: ct-chart-line !default;
 $ct-class-chart-bar: ct-chart-bar !default;
+$ct-class-horizontal-bars: ct-horizontal-bars !default;
 $ct-class-chart-pie: ct-chart-pie !default;
 $ct-class-label: ct-label !default;
 $ct-class-series: ct-series !default;
@@ -24,6 +23,8 @@ $ct-class-donut: ct-donut !default;
 $ct-class-grid: ct-grid !default;
 $ct-class-vertical: ct-vertical !default;
 $ct-class-horizontal: ct-horizontal !default;
+$ct-class-start: ct-start !default;
+$ct-class-end: ct-end !default;
 
 // Container ratio
 $ct-container-ratio: (1/1.618) !default;
@@ -31,9 +32,9 @@ $ct-container-ratio: (1/1.618) !default;
 // Text styles for labels
 $ct-text-color: #999 !default;
 $ct-text-size: 1.3rem !default;
-$ct-text-align: left !default;
-$ct-horizontal-text-align: center !default;
-$ct-vertical-text-align: right !default;
+$ct-text-align: flex-start !default;
+$ct-text-justify: flex-start !default;
+$ct-text-line-height: 1;
 
 // Grid styles
 $ct-grid-color: rgba(0, 0, 0, 0.2) !default;
@@ -43,14 +44,21 @@ $ct-grid-width: 1px !default;
 // Line chart properties
 $ct-line-width: 4px !default;
 $ct-line-dasharray: false !default;
-$ct-point-size: 10px !default;
+
+$hdo-point-size-small: 7px;
+$hdo-point-size-large: 10px;
+
+$ct-point-size: $hdo-point-size-large !default;
 // Line chart point, can be either round or square
 $ct-point-shape: round !default;
 // Area fill transparency between 0 and 1
 $ct-area-opacity: 0.1 !default;
 
 // Bar chart bar width
-$ct-bar-width: 20px !default;
+$hdo-bar-width-small: 10px;
+$hdo-bar-width-large: 20px;
+
+$ct-bar-width: $hdo-bar-width-large !default;
 
 // Donut width (If donut width is to big it can cause issues where the shape gets distorted)
 $ct-donut-width: 60px !default;
@@ -111,9 +119,34 @@ $ct-series-colors: (
   }
 }
 
-.ct-chart .ct-label.ct-horizontal {
-  color: #333;
-  font-weight: 600;
-  word-break: break-word;
-}
+.ct-chart {
+  .ct-label.ct-horizontal {
+    color: #333;
+    font-weight: 600;
+    word-break: break-word;
+  }
 
+  @media screen and (max-width: 600px) {
+    .ct-bar {
+      stroke-width: $hdo-bar-width-small;
+    }
+
+    .ct-point {
+      stroke-width: $hdo-point-size-small;
+    }
+
+    .ct-label {
+      font-size: 0.8rem;
+    }
+  }
+
+  @media screen and (min-width: 600px) {
+    .ct-bar {
+      stroke-width: $hdo-bar-width-large;
+    }
+
+    .ct-point {
+      stroke-width: $hdo-point-size-large;
+    }
+  }
+}

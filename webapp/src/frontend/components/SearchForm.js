@@ -29,12 +29,12 @@ class SearchForm extends React.Component {
 
     render() {
         return (
-            <div className="row">
+            <div className="row" id="search-form">
                 <div className="col-sm-6 col-sm-offset-3">
                     <div className="input-group">
                         <input
                             type="search"
-                            className="form-control input-lg"
+                            className="form-control"
                             name="query"
                             ref="query"
                             autoFocus="true"
@@ -48,7 +48,7 @@ class SearchForm extends React.Component {
                         <span className="input-group-btn">
                             <input
                                 type="button"
-                                className="btn btn-primary btn-lg"
+                                className="btn btn-primary"
                                 value="Søk"
                                 onClick={this.handleSearch.bind(this)}
                             />

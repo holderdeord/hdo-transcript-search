@@ -8,7 +8,7 @@ export default class ImageUtils {
     }
 
     static partyLogoFor(external_id) {
-        return `https://www.holderdeord.no/api/parties/${external_id.toLowerCase()}/logo?version=medium`;
+        return `https://www.holderdeord.no/api/parties/${external_id.toLowerCase()}/logo?version=large`;
     }
 
     static fallbackImage() {

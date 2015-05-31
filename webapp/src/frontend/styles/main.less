@@ -3,14 +3,13 @@
 @import "hdo-bootstrap-variables";
 
 .masthead {
-  padding-top: 9rem;
-  padding-bottom: 2rem;
+  padding: 5rem 6rem 2rem 6rem;
   margin-bottom: 3rem;
   background-position: 35% 25%;
   background-image: url("http://files.holderdeord.no/images/lion01.jpg");
   background-size: cover;
   text-align: center;
-  height: 25rem;
+  height: 20rem;
 
   h1 {
     color: inherit;
@@ -24,8 +23,15 @@
 }
 
 .result-box {
-  padding: 2rem;
-  margin: 2rem;
+  @media screen and (min-width: 600px) {
+    padding: 2rem;
+    margin: 2rem;
+  }
+
+  @media screen and (max-width: 600px) {
+    padding: 0;
+    margin: 2rem 0;
+  }
 
   img {
     border-radius: 2px;
@@ -36,6 +42,11 @@
   .lead;
   .text-center;
   .list-inline;
+}
+
+@media screen and (min-width: 400px) {
+  #search-form input[type=search] { .input-lg; }
+  #search-form input[type=button] { .btn-lg; }
 }
 
 .card {
@@ -87,15 +98,19 @@ footer {
   text-align: center;
   opacity: 0.8;
 
-  @logo-height: 5rem;
-
   .logo {
-    padding-top: @logo-height;
     padding-bottom: 1.25rem;
-    background: 50% 20% no-repeat;
-    background-image: @hdo-logo;
-    background-size: auto @logo-height;
   }
 }
+
+@logo-height: 5rem;
+
+.logo {
+  padding-top: @logo-height;
+  background: 50% 20% no-repeat;
+  background-image: @hdo-logo;
+  background-size: auto @logo-height;
+}
+
 
 

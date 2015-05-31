@@ -7,7 +7,7 @@ class Header extends React.Component {
 
         return (
             <div className="masthead">
-                <h1 className="masthead-title">{this.props.title}</h1>
+                <h1>{this.props.title}</h1>
                 <small>
                     {desc}<a href="https://www.holderdeord.no/">Holder de ord</a>
                 </small>

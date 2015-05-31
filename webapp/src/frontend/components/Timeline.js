@@ -13,14 +13,26 @@ class Timeline extends React.Component {
             fullWidth: false,
             axisX: {
                 showGrid: false,
-                labelOffset: { x: -28, y: 8 },
+                labelOffset: { x: -15, y: 8 },
             },
             axisY: {
-                labelOffset: { x: 0, y: 4 },
+                labelOffset: { x: -5, y: 6 },
                 showGrid: true,
                 labelInterpolationFnc: this.formatValue.bind(this)
-            }
+            },
         };
+
+        this.responsiveOptions = [
+            ['screen and (max-width: 599px)', {
+                // showPoint: false,
+                chartPadding: { left: 0 },
+                fullWidth: true,
+                axisX: {
+                    labelOffset: { x: 0, y: 0 },
+                    labelInterpolationFnc: d => d.slice(2,4)
+                }
+            }]
+        ];
 
         this.state = this.fetchStateFrom({results: []});
     }
@@ -84,8 +96,9 @@ class Timeline extends React.Component {
                                 <BaseChart
                                     type="Line"
                                     data={this.state.data[this.props.unit]}
-                                    aspectRatio="double-octave"
+                                    aspectRatio="minor-sixth"
                                     options={this.chartOptions}
+                                    responsiveOptions={this.responsiveOptions}
                                 />
 
                                 {this.renderQueries()}

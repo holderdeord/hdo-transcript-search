@@ -8,10 +8,10 @@ class BaseChart extends React.Component {
     }
 
     render() {
-        let ratio = this.props.aspectRatio || 'minor-eleventh';
+        let ratio = this.props.aspectRatio ? `ct-${this.props.aspectRatio}` : '';
 
         return (
-            <div ref="chart" className={`ct-chart ct-${ratio}`} />
+            <div ref="chart" className={`ct-chart ${ratio}`} />
         );
     }
 
@@ -38,8 +38,9 @@ class BaseChart extends React.Component {
     }
 
     _drawChart(props) {
-        let {data, options} = props;
+        let {data, options, responsiveOptions} = props;
         options = options || {};
+        responsiveOptions = responsiveOptions || {};
 
         if (this.chart) {
             this.chart.update(data, options, true);
@@ -47,7 +48,8 @@ class BaseChart extends React.Component {
             this.chart = new Chartist[props.type](
                 React.findDOMNode(this.refs.chart),
                 data,
-                options
+                options,
+                responsiveOptions
             );
 
             this._setupAnimation();

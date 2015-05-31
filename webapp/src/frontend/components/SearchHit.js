@@ -25,7 +25,7 @@ class SearchHit extends React.Component {
                     <a className="text-muted" href={href}>{timestamp}</a>
                 </div>
 
-                <div className="col-md-3">
+                <div className="col-md-3 text-center">
                     <div><strong>{person}</strong></div>
                     <div>{title}</div>
                     {this.imageFor(hit)}
