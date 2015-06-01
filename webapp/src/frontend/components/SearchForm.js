@@ -10,12 +10,18 @@ class SearchForm extends React.Component {
 
         this.state = {
             query: this.props.joinedQuery,
-            lastQuery: null
+            lastReceivedQuery: null
         };
     }
 
     componentWillReceiveProps(props) {
-        this.setState({query: props.joinedQuery});
+        if (props.joinedQuery !== this.state.lastReceivedQuery) {
+            this.setState({
+                query: props.joinedQuery,
+                lastReceivedQuery: props.joinedQuery
+            });
+
+        }
     }
 
     componentDidMount() {
@@ -71,9 +77,7 @@ class SearchForm extends React.Component {
         }
 
         let queries = query.split(/\s*,\s*/);
-        this.setState({lastQuery: query}, () => {
-            this.transitionToQueries(queries);
-        });
+        this.transitionToQueries(queries);
     }
 
     handleReset() {
@@ -110,7 +114,6 @@ class SearchForm extends React.Component {
             focused: queries.length - 1
         });
 
-        console.log(name, params);
         this.context.router.transitionTo(name, params);
     }
 }

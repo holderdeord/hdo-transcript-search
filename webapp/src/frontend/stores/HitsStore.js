@@ -22,7 +22,6 @@ export default class HitsStore extends Store {
         let hits = this.state.hits;
 
         hits.forEach(function(hit) {
-            console.log(response);
             if (hit.query === response.query) {
                 hit.hits = hit.hits.concat(response.hits);
             }
