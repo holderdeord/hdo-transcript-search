@@ -81,13 +81,14 @@ $hdo-primary-color: #606b82;
 $hdo-secondary-color: #fadd00;
 
 $ct-series-colors: (
-  $hdo-primary-color,
-  rgb(179,88,6),
-  rgb(241,163,64),
-  rgb(153,142,195),
-  #453d3f,
-  rgb(84,39,136),
-  darken($hdo-secondary-color, 5%),
+
+
+  darken(#607D8B, 5%),
+  darken(#FF9800, 5%),
+  darken(#009688, 5%),
+  darken(#673AB7, 5%),
+  darken(#E91E63, 5%),
+
   #d17905,
   #59922b,
   #0544d3,
@@ -120,6 +121,8 @@ $ct-series-colors: (
 }
 
 .ct-chart {
+  font-family: "Lato", serif;
+
   .ct-label.ct-horizontal {
     color: #333;
     font-weight: 600;

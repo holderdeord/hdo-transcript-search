@@ -11,7 +11,7 @@ import Analytics     from './stores/Analytics';
 import SearchActions from './actions/SearchActions';
 import routes        from './routes';
 
-class SearchAppFlux extends Flux {
+class AppFlux extends Flux {
     constructor() {
         super();
 
@@ -20,11 +20,21 @@ class SearchAppFlux extends Flux {
         this.createStore('summary', SummaryStore, this);
         this.createStore('hits', HitsStore, this);
         this.createStore('analytics', Analytics, this);
+
+        this.searchActions = this.getActions('search');
+    }
+
+    executeSearch(queries) {
+        this.searchActions.summary(queries);
+        this.searchActions.hits(queries);
+    }
+
+    executeReset() {
+        this.searchActions.reset();
     }
 }
 
-let flux = new SearchAppFlux();
-var searchActions = flux.getActions('search');
+let flux = new AppFlux();
 
 Router.run(routes, Router.HistoryLocation, function (Handler, state) {
     React.render(
@@ -35,12 +45,9 @@ Router.run(routes, Router.HistoryLocation, function (Handler, state) {
     );
 
     if (state.params.queries && state.params.queries.length) {
-        let queries = state.params.queries.split('.');
-
-        searchActions.summary(queries);
-        searchActions.hits(queries);
+        flux.executeSearch(state.params.queries.split('.'));
     } else {
-        searchActions.reset();
+        flux.executeReset();
     }
 });
 

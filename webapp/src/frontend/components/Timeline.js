@@ -4,7 +4,6 @@ import TimeUtils from '../utils/TimeUtils';
 import Colors    from '../utils/Colors';
 import {Link}    from 'react-router';
 
-
 class Timeline extends React.Component {
     constructor(props) {
         super(props);

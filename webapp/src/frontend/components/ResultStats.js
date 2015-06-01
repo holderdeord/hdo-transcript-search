@@ -71,20 +71,17 @@ class ResultStats extends React.Component {
                 <div className="row result-box">
                     <div className="col-md-5">
                         <div className="text-center">
-                            <a
-                                href={`https://www.holderdeord.no/parties/${topParty.key.toLowerCase()}`}
-                                style={{textDecoration: 'none'}} >
-
+                            <div>
                                 <img
                                     src={ImageUtils.partyLogoFor(topParty.key)}
                                     alt={`${topPartyName}s logo`}
                                     height="200"
                                 />
 
-                                <h2 className={`hdo-party-${topParty.key.toLowerCase()}`}>
+                                <h2>
                                     {topPartyName}
                                 </h2>
-                            </a>
+                            </div>
 
                             <div className="lead">
                                 <div>
@@ -133,7 +130,7 @@ class ResultStats extends React.Component {
                             height="200"
                         />
 
-                        <h2 className={partyClassName}>
+                        <h2>
                             {topPerson.key} {partyText}
                         </h2>
 

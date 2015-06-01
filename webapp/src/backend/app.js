@@ -56,11 +56,15 @@ app.get('/', (req, res) => {
     res.redirect(`/search/pct/${query}/0`);
 });
 
+app.get('/speeches/:transcript/:order', (req, res) => {
+    res.render('index', {
+        title: 'Innlegg fra Stortinget'
+    });
+});
+
 app.get('/search/:unit/:query/:focused', (req, res) => {
     res.render('index', {
         title:   req.params.query.split('.').join(', '),
-        query:   req.params.query,
-        focused: req.params.focused
     });
 });
 

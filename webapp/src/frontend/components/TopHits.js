@@ -25,15 +25,21 @@ class TopHits extends React.Component {
             return null;
         }
 
-        let hitText = `Viser ${result.hits.length} av totalt ${result.counts.total} treff på «${result.query}»`;
+
         let hasMore = result.hits.length < result.counts.total;
 
         return (
             <div className="card">
                 <div className="row result-box">
                     <div className="col-md-12">
-                        <h2>Treff</h2>
-                        <em>{hitText}</em>
+                        <h2>
+                            Treff
+
+                            <small className="text-muted pull-right">
+                                Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
+                            </small>
+                        </h2>
+
                     </div>
                 </div>
 
@@ -64,7 +70,7 @@ class TopHits extends React.Component {
         } else {
             return (
                 <div className="row text-center">
-                    <Icon spin name="spinner" style={{margin: '1rem', fontSize: '2rem'}}/>
+                    <Icon spin name="cog" style={{margin: '1rem', fontSize: '2rem'}}/>
                 </div>
             );
         }

@@ -16,6 +16,10 @@
     font-weight: 700;
   }
 
+  small {
+    font-family: @font-family-secondary;
+  }
+
   a {
     text-decoration: underline;
     color: inherit;
@@ -40,6 +44,8 @@
   .lead;
   .text-center;
   .list-inline;
+
+  font-family: @font-family-secondary;
 }
 
 @media screen and (min-width: 400px) {
@@ -47,7 +53,10 @@
   #search-form input[type=submit] { .btn-lg; }
 }
 
+#search-form { font-family: @font-family-secondary; }
+
 .card {
+  background-color: white;
   box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
 }
 
@@ -57,10 +66,16 @@
 
 .hit {
   padding: 1rem 2rem;
-  margin: 2rem;
+  margin: 1rem;
 
-  blockquote {
+  .speech-text {
     font-size: 1.5rem;
+    font-family: @font-family-secondary;
+  }
+
+  img {
+    box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+    border-radius: 5px;
   }
 }
 

@@ -4,16 +4,13 @@ import FluxComponent       from 'flummox/component';
 
 import Intervals           from '../constants/Intervals';
 import key                 from 'keymaster';
-import Header              from './Header';
-import Footer              from './Footer';
 import SearchForm          from './SearchForm';
 import Timeline            from './Timeline';
 import DevPanel            from './DevPanel';
-import SharingLinks        from './SharingLinks';
 import ResultStats         from './ResultStats';
 import TopHits             from './TopHits';
 
-class SearchApp extends React.Component {
+class Search extends React.Component {
     constructor(props) {
         super(props);
 
@@ -25,8 +22,6 @@ class SearchApp extends React.Component {
             orientation: 'vertical',
             interval: Intervals.YEAR
         };
-
-        this.searchActions = this.props.flux.getActions('search');
     }
 
     componentDidMount() {
@@ -49,14 +44,6 @@ class SearchApp extends React.Component {
 
         return (
             <div>
-                <Header title={this.state.title} description={this.state.desc}>
-                    <FluxComponent connectToStores={['summary']}>
-                        <SharingLinks
-                            facebookAppId={this.state.fbId}
-                        />
-                    </FluxComponent>
-                </Header>
-
                 <div className="container">
                     <FluxComponent connectToStores={['summary']}>
                         <SearchForm
@@ -81,8 +68,6 @@ class SearchApp extends React.Component {
                     <FluxComponent connectToStores={['hits']}>
                         <TopHits focusedIndex={focusedIndex}/>
                     </FluxComponent>
-
-                    <Footer/>
 
                     <DevPanel
                         visible={this.state.showDevPanel}
@@ -137,9 +122,9 @@ class SearchApp extends React.Component {
     }
 }
 
-SearchApp.contextTypes = {
+Search.contextTypes = {
     router: React.PropTypes.func
 };
 
-module.exports = SearchApp;
+module.exports = Search;
 
