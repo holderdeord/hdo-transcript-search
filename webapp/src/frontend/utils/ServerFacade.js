@@ -13,7 +13,7 @@ export default class ServerFacade {
 
     hits(queries, start) {
         return Promise.map(queries, function(query) {
-            var path = `/api/search/hits?query=${query}`;
+            var path = `/api/search/hits?query=${query}&sort=time.desc`;
 
             if (start) {
                 path += `&start=${start}`;
