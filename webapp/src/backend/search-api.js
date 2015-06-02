@@ -216,7 +216,7 @@ class SearchAPI {
 
             size: +(opts.size || 10),
             from: +(opts.start || 0),
-            sort: opts.sort || '_score'
+            sort: this._parseSortOption(opts.sort)
         };
 
         return {
@@ -224,6 +224,23 @@ class SearchAPI {
             type: INDEX_TYPE,
             body: body
         };
+    }
+
+    _parseSortOption(str) {
+        if (!str) {
+            return '_score';
+        }
+
+        let m = str.match(/^(.+?)\.(asc|desc)$/);
+
+        if (m) {
+            return [
+                {[m[1]]: m[2]},
+                '_score'
+            ];
+        } else {
+            return str;
+        }
     }
 
     _buildAggregationsQuery(opts) {
