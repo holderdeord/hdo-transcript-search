@@ -132,4 +132,11 @@ app.get('/api/analytics/top-searches/:days', (req, res) => {
         .catch(errorHandler.bind(this));
 });
 
+app.get('/api/analytics/image-errors', (req, res) => {
+    analytics
+        .imageErrors()
+        .then((d) => res.json(d) )
+        .catch(errorHandler.bind(this));
+});
+
 module.exports = app;
