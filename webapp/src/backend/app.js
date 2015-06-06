@@ -5,6 +5,7 @@ import api      from './search-api';
 import config   from '../../config';
 import examples from '../../config/examples';
 import path     from 'path';
+import analytics from './analytics';
 
 var app = express();
 
@@ -25,8 +26,10 @@ function errorHandler(err) {
     console.log(err);
 
     return this.status(500).json({
-        error: err.toString(),
-        stack: err.stack.split('\n')
+        error: {
+            message: err.toString(),
+            stack: err.stack.split('\n')
+        }
     });
 }
 
@@ -114,7 +117,19 @@ app.get('/api/context/:transcript/:start/:end', (req, res) => {
     api.getContext(transcript, +start, +end)
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
+});
 
+app.get('/api/analytics/top-searches/:days', (req, res) => {
+    var params = {
+        days: req.params.days || 30,
+        limit: (req.query.limit || 200),
+        examples: req.query.examples !== 'false'
+    };
+
+    analytics
+        .topSearches(params)
+        .then((d) => res.json(d) )
+        .catch(errorHandler.bind(this));
 });
 
 module.exports = app;

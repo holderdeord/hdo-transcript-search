@@ -27,6 +27,7 @@
     "express-hbs": "^0.8.1",
     "flummox": "^2.13.1",
     "flux": "^2.0.1",
+    "googleapis": "^2.0.5",
     "lru-cache": "^2.5.0",
     "moment": "^2.10.0",
     "morgan": "^1.5.0",
