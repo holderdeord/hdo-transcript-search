@@ -188,7 +188,7 @@ class SearchAPI {
         return Object.assign({
             id: hit._id,
             score: hit._score,
-            highlight: hit.highlight ? hit.highlight.text[0] : ''
+            highlight: hit.highlight
         }, hit._source);
     }
 
@@ -211,7 +211,11 @@ class SearchAPI {
             highlight: {
                 pre_tags: ['<mark>'],
                 post_tags: ['</mark>'],
-                fields: { text: {} }
+                fields: {
+                    text: {
+                        number_of_fragments: 0
+                    }
+                }
             },
 
             size: +(opts.size || 10),

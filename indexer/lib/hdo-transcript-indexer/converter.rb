@@ -117,7 +117,7 @@ module Hdo
             parsed.name = @last_section[:name]
             parsed.party = @last_section[:party]
             parsed.title ||= @last_section[:title]
-          elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?): «(.+?)»/m
+          elsif text =~ /^(Fra|Frå) representanten (.+?) til (.+?):\s*«(.+?)»/m
             parsed.name  = $2
             parsed.title = "Representant"
             text         = $4
@@ -149,7 +149,7 @@ module Hdo
 
       def clean_text(str)
         str.
-          gsub(/\n\s*/, ' ').
+          gsub(/\n\s*/, "\n").
           gsub(/\s{2,}/, ' ').
           gsub("­", '').
           strip

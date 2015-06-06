@@ -65,10 +65,8 @@ class SearchHit extends React.Component {
                     {this.imageFor(hit)}
                 </div>
 
-                <div
-                  className="col-md-7"
-                  xxdangerouslySetInnerHTML={{__html: hit.highlight}}>
-                    <div className="speech-text">{hit.text}</div>
+                <div className="col-md-7">
+                    <div className="speech-text">{this.paragraphsFrom(hit.highlight.text[0])}</div>
                 </div>
 
                 <small className="pull-right" style={{paddingTop: '1rem'}}>
@@ -104,6 +102,14 @@ class SearchHit extends React.Component {
             Analytics.sendEvent('image-error', this.props.hit.external_id);
             this.setState({useFallbackImage: true});
         }
+    }
+
+    paragraphsFrom(text) {
+        return text.split("\n").map((fragment, i) => {
+            fragment = fragment.replace(/<\/mark>(\s*)<mark>/, '$1');
+
+            return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}}></p>);
+        });
     }
 }
 
