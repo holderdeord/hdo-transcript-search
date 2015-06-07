@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
     entry: path.join(__dirname, 'src/frontend/app'),
@@ -22,6 +23,7 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /nb$/),
         new ExtractTextPlugin('bundle.[hash].css'),
         function() {
             this.plugin('done', function(stats) {
