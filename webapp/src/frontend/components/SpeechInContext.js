@@ -1,8 +1,10 @@
-import React         from 'react';
-import FluxComponent from 'flummox/component';
-import Speech        from './Speech';
-import { Link }      from 'react-router';
-import Icon          from 'react-fa';
+import React           from 'react';
+import FluxComponent   from 'flummox/component';
+import Speech          from './Speech';
+import { Link }        from 'react-router';
+import Icon            from 'react-fa';
+
+const TransitionGroup = React.addons.CSSTransitionGroup;
 
 class SpeechBrowser extends React.Component {
     render() {
@@ -12,15 +14,15 @@ class SpeechBrowser extends React.Component {
             return null;
         }
 
-        let first = speeches[0];
-        let last  = speeches[speeches.length - 1];
+        let [first,focused,last] = speeches;
 
         let prevLink = null, nextLink = null;
 
         if (first && first.order > 0) {
             prevLink = (
                 <Link to="speech" params={{transcript: first.transcript, order: first.order}}>
-                    <Icon name="step-backward" /> Forrige innlegg
+                    <Icon name="chevron-left" size="2x" />
+                    <span style={{padding: '1rem'}}>Forrige innlegg: {first.name} {first.party ? `(${first.party})` : ''}</span>
                 </Link>
             );
         }
@@ -28,25 +30,24 @@ class SpeechBrowser extends React.Component {
         if (last) {
             nextLink = (
                 <Link to="speech" params={{transcript: last.transcript, order: last.order}}>
-                    <Icon name="step-forward" /> Neste innlegg
+                    <span style={{padding: '1rem'}}>Neste innlegg: {last.name} {last.party ? `(${last.party})` : ''}</span>
+                    <Icon name="chevron-right" size="2x" />
                 </Link>
             );
         }
 
-        let elements = this.props.speeches.map((speech, i) => {
-            return (
-                <div key={i} className={i === 1 ? 'highlight' : null}>
-                    <Speech speech={speech} showContextLink={false} showTime={true} />
-                </div>
-            );
-        });
-
         return (
-            <div>
-                <div className="pull-right">{nextLink}</div>
-                <div>{prevLink}</div>
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-6">{prevLink}</div>
+                    <div className="col-md-6 text-right">{nextLink}</div>
+                </div>
 
-                {elements}
+                <div className="row">
+                    <div className="col-md-12">
+                        <Speech key={speeches[1].id} speech={speeches[1]} showContextLink={false} showTime={true} />
+                    </div>
+                </div>
             </div>
         );
     }
@@ -55,12 +56,9 @@ class SpeechBrowser extends React.Component {
 class SpeechInContext extends React.Component {
     render() {
         return (
-            <div className="container">
-                <FluxComponent connectToStores={['speech']}>
-                    <SpeechBrowser />
-                </FluxComponent>
-
-            </div>
+            <FluxComponent connectToStores={['speech']}>
+                <SpeechBrowser />
+            </FluxComponent>
         );
     }
 }
