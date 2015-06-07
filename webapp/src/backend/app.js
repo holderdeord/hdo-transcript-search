@@ -65,9 +65,15 @@ app.get('/speeches/:transcript/:order', (req, res) => {
     });
 });
 
+app.get('/search', (req, res) => {
+    res.render('index', {
+        title: 'Søk'
+    });
+});
+
 app.get('/search/:unit/:query/:focused', (req, res) => {
     res.render('index', {
-        title:   req.params.query.split('.').join(', '),
+        title: req.params.query.split('.').join(', '),
     });
 });
 

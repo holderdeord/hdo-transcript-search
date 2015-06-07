@@ -106,7 +106,7 @@ class SearchHit extends React.Component {
 
     paragraphsFrom(text) {
         return text.split("\n").map((fragment, i) => {
-            fragment = fragment.replace(/<\/mark>(\s*)<mark>/, '$1');
+            fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');
 
             return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}}></p>);
         });

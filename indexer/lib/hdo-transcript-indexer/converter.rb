@@ -103,9 +103,34 @@ module Hdo
         end
       end
 
+      def text_from(node)
+        text = []
+        # node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, '')
+        unknown = node.elements.map(&:name).uniq - ['a', 'navn', 'merknad', 'blokksitat', 'liste']
+
+        node.elements.each do |element|
+          case element.name
+          when 'a', 'merknad'
+            text << element.text.gsub("\n", ' ').strip
+          when 'navn'
+            # ignored
+          when 'blokksitat'
+            text << text_from(element)
+          when 'liste'
+            text += element.css('pkt').map { |e| e.text.gsub("\n", ' ').strip }
+          when 'table'
+            text += element.css('row').map { |e| e.text.gsub("\n", ' ').strip }
+          else
+            raise "unknown element: #{element}"
+          end
+        end
+
+        text.join("\n")
+      end
+
       def parse_speech(node)
         name_str = node.css('navn').text
-        text     = clean_text(node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, ''))
+        text     = clean_text(text_from(node))
 
         return if IGNORED_NAMES.include?(name_str)
 

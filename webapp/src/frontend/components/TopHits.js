@@ -25,7 +25,6 @@ class TopHits extends React.Component {
             return null;
         }
 
-
         let hasMore = result.hits.length < result.counts.total;
 
         return (
@@ -35,7 +34,7 @@ class TopHits extends React.Component {
                         <h2>
                             Treff
 
-                            <small className="text-muted pull-right">
+                            <small className="text-muted" style={{marginLeft: '1rem'}}>
                                 Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
                             </small>
                         </h2>
