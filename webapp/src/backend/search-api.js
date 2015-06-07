@@ -12,7 +12,7 @@ var debugCache = debug('cache');
 const INDEX_NAME        = 'hdo-transcripts';
 const INDEX_TYPE        = 'speech';
 const ALLOWED_INTERVALS = ['month', '12w', '24w', 'year'];
-const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'presidents', 'title', 'name', 'party', 'text'];
+const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'title', 'name', 'party', 'text'];
 
 class SearchAPI {
     constructor() {
@@ -61,18 +61,19 @@ class SearchAPI {
         }
     }
 
-    getHitStreamAsTsv(opts) {
+    getHitStream(opts) {
+        let delimiter = opts.format === 'csv' ? ',' : '\t';
+
         let rs = new ReadableSearch((start, callback) => {
             es.search(this._buildHitsQuery(Object.assign({}, opts, {start: start})), callback);
         });
 
         return rs
                 .pipe(csv.transform(record => {
-                    record._source.presidents = record._source.presidents.join(',');
                     return TSV_HEADERS.map(k => record._source[k]);
                 }))
                 .pipe(csv.stringify({
-                    delimiter: "\t",
+                    delimiter: delimiter,
                     header: true,
                     columns: TSV_HEADERS
                 }));

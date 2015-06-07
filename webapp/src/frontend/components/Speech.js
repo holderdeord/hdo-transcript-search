@@ -95,7 +95,7 @@ class Speech extends React.Component {
             return (
                 <small className="pull-right" style={{paddingTop: '1rem'}}>
                     <Link to="speech" params={{transcript: this.props.speech.transcript, order: this.props.speech.order}}>
-                        Se innlegget i kontekst <Icon name="arrow-right" />
+                        Se innlegget i kontekst
                     </Link>
                 </small>
             );

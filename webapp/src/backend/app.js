@@ -23,17 +23,6 @@ app.locals.appTitle       = 'Sagt i salen';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 app.locals.facebookAppId  = 504447209668308;
 
-function errorHandler(err) {
-    console.error(err);
-
-    return this.status(500).json({
-        error: {
-            message: err.toString(),
-            stack: err.stack.split('\n')
-        }
-    });
-}
-
 if(app.get('env') === 'development') {
     app.use(require('errorhandler')());
 
@@ -68,7 +57,6 @@ app.use((req, res, next) => {
     return next();
 });
 
-// routes
 app.get('/', (req, res) => {
     let example = examples[Math.floor(Math.random() * examples.length)];
     let query   = encodeURIComponent(example.join('.'));
@@ -100,31 +88,33 @@ app.get('/opensearch', (req, res) => {
 });
 
 app.get('/api/search/summary', (req, res) => {
-    if (req.query.query) {
+    if (validQuery(req.query.query)) {
         api.summary(req.query)
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
-        res.status(400).json({error: "missing query param"});
+        res.status(400).json({error: {message: "missing query param"}});
     }
 });
 
 app.get('/api/search/hits', (req, res) => {
-    if (req.query.query) {
+    if (validQuery(req.query.query)) {
         api.hits(req.query)
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
-        res.status(400).json({error: "missing query param"});
+        res.status(400).json({error: {message: "missing or invalid query param"}});
     }
 });
 
-app.get('/api/hits/download', (req, res) => {
-    if (req.query.query) {
-        res.type('tsv');
-        api.getHitStreamAsTsv(req.query).pipe(res);
+app.get('/api/export', (req, res) => {
+    if (validQuery(req.query.query)) {
+        let format = req.query.format || 'tsv';
+
+        res.type(format);
+        api.getHitStream(req.query).pipe(res);
     } else {
-        res.status(400).json({error: "missing query param"});
+        res.status(400).json({error: {message: "missing or invalid query param"}});
     }
 });
 
@@ -163,3 +153,18 @@ app.get('/api/analytics/image-errors', (req, res) => {
 });
 
 module.exports = app;
+
+function errorHandler(err) {
+    console.error(err);
+
+    return this.status(500).json({
+        error: {
+            message: err.toString(),
+            stack: err.stack.split('\n')
+        }
+    });
+}
+
+function validQuery(qs) {
+    return qs && qs.length && qs.trim() !== '*';
+}

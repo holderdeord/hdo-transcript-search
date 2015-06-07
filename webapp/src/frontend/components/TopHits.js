@@ -38,7 +38,6 @@ class TopHits extends React.Component {
                                 Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
                             </small>
                         </h2>
-
                     </div>
                 </div>
 
@@ -49,7 +48,18 @@ class TopHits extends React.Component {
                     ])
                 }
 
-                {hasMore && this.renderLoadMore()}
+                <div className="row" style={{padding: '1rem'}}>
+                    <small className="export-links">
+                        <a href={`/api/export?query=${encodeURIComponent(result.query)}&format=csv`}>
+                            <span style={{paddingRight: '.5rem'}}><Icon name="download" /></span>
+                            CSV
+                        </a>
+                    </small>
+
+                    <div className="text-center">
+                        {hasMore && this.renderLoadMore()}
+                    </div>
+                </div>
             </div>
         );
     }
@@ -57,20 +67,16 @@ class TopHits extends React.Component {
     renderLoadMore() {
         if (this.state.loaded) {
             return (
-                <div className="row text-center">
-                    <button
-                        className="btn btn-primary"
-                        onClick={this.handleLoadMore.bind(this)}
-                        style={{margin: '1rem'}}>
-                        Last flere
-                    </button>
-                </div>
+                <button
+                    className="btn btn-primary"
+                    onClick={this.handleLoadMore.bind(this)}
+                    >
+                    Last flere
+                </button>
             );
         } else {
             return (
-                <div className="row text-center">
-                    <Icon spin name="cog" style={{margin: '1rem', fontSize: '2rem'}}/>
-                </div>
+                <Icon spin name="refresh" style={{margin: '1rem', fontSize: '2rem'}}/>
             );
         }
     }
