@@ -21,8 +21,8 @@ class SpeechBrowser extends React.Component {
         if (first && first.order > 0) {
             prevLink = (
                 <Link to="speech" params={{transcript: first.transcript, order: first.order}}>
-                    <Icon name="chevron-left" size="2x" />
-                    <span style={{padding: '1rem'}}>Forrige innlegg: {first.name} {first.party ? `(${first.party})` : ''}</span>
+                    <Icon name="chevron-left" size="1x" />
+                    <span style={{padding: '1rem'}}><strong>Forrige innlegg:</strong> {first.name} {first.party ? `(${first.party})` : ''}</span>
                 </Link>
             );
         }
@@ -30,8 +30,8 @@ class SpeechBrowser extends React.Component {
         if (last) {
             nextLink = (
                 <Link to="speech" params={{transcript: last.transcript, order: last.order}}>
-                    <span style={{padding: '1rem'}}>Neste innlegg: {last.name} {last.party ? `(${last.party})` : ''}</span>
-                    <Icon name="chevron-right" size="2x" />
+                    <span style={{padding: '1rem'}}><strong>Neste innlegg:</strong> {last.name} {last.party ? `(${last.party})` : ''}</span>
+                    <Icon name="chevron-right" size="1x" />
                 </Link>
             );
         }
