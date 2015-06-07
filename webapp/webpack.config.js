@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
 
     output: {
         path: path.join(__dirname, '/public/'),
-        filename: 'bundle.js'
+        filename: 'bundle.[hash].js'
     },
 
     module: {
@@ -21,7 +22,12 @@ module.exports = {
     },
 
     plugins: [
-        new ExtractTextPlugin('bundle.css')
+        new ExtractTextPlugin('bundle.[hash].css'),
+        function() {
+            this.plugin('done', function(stats) {
+                fs.writeFile(path.resolve(__dirname, './public/hash'), stats.hash);
+            });
+        }
     ],
 
     devtool: 'source-map'

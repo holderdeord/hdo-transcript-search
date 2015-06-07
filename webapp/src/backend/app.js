@@ -1,13 +1,14 @@
-import express  from 'express';
-import logger   from 'morgan';
-import hbs      from 'express-hbs';
-import api      from './search-api';
-import config   from '../../config';
-import examples from '../../config/examples';
-import path     from 'path';
+import express   from 'express';
+import logger    from 'morgan';
+import hbs       from 'express-hbs';
+import api       from './search-api';
+import config    from '../../config';
+import examples  from '../../config/examples';
+import path      from 'path';
 import analytics from './analytics';
+import fs        from 'fs';
 
-var app = express();
+let app = express();
 
 // config
 app.use(logger('short'));
@@ -41,6 +42,22 @@ if(app.get('env') === 'development') {
     var webpackConf       = require('../../webpack.config');
 
     app.use(webpackMiddleware(webpack(webpackConf)));
+
+    app.get('/bundle.:ext', (req, res) => {
+        fs.readFile('./public/hash', 'utf-8', (err, hash) => {
+            res.redirect(`/bundle.${hash}.${req.params.ext}`);
+        });
+    });
+
+    app.locals.bundleName = 'bundle';
+} else {
+    fs.readFile('./public/hash', 'utf-8', (err, hash) => {
+        if (err) {
+            throw err;
+        }
+
+        app.locals.bundleName = `bundle.${hash}`;
+    })
 }
 
 app.use(express.static(path.resolve(__dirname, '../../public')));
@@ -67,7 +84,7 @@ app.get('/speeches/:transcript/:order', (req, res) => {
 
 app.get('/search', (req, res) => {
     res.render('index', {
-        title: 'Søk'
+        title: 'Søk',
     });
 });
 

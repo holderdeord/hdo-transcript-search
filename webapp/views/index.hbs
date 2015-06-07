@@ -42,7 +42,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch"/>
 
-    <link rel="stylesheet" href="/bundle.css">
+    <link rel="stylesheet" href="/{{bundleName}}.css">
 
     {{#if settings.analytics}}<script type="text/javascript" src="/analytics.js"></script>{{/if}}
   </head>
@@ -64,6 +64,6 @@
     <!-- couldn't find a nice way to load this through npm -->
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/native.history.min.js"></script> -->
 
-    <script type="text/javascript" src="/bundle.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/{{bundleName}}.js" charset="utf-8"></script>
   </body>
 </html>
