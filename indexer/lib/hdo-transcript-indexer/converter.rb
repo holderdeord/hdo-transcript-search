@@ -112,7 +112,7 @@ module Hdo
           case element.name
           when 'a', 'merknad'
             text << element.text.gsub("\n", ' ').strip
-          when 'navn'
+          when 'navn, merknad'
             # ignored
           when 'blokksitat'
             text << text_from(element)

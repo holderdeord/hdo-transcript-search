@@ -32,12 +32,6 @@ class Search extends React.Component {
         this.unregisterKeyBindings();
     }
 
-    componentDidUpdate() {
-    }
-
-    componentWillRecieveProps() {
-    }
-
     render() {
         let focusedIndex = +this.props.params.focused;
         let unit = this.props.params.unit || 'pct';

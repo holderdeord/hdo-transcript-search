@@ -24,7 +24,7 @@ app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra H
 app.locals.facebookAppId  = 504447209668308;
 
 function errorHandler(err) {
-    console.log(err);
+    console.error(err);
 
     return this.status(500).json({
         error: {

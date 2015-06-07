@@ -1,9 +1,9 @@
-import React   from 'react';
-import {Route} from 'react-router';
+import React     from 'react';
+import { Route } from 'react-router';
 
-import App    from './components/App';
-import Search from './components/Search';
-import Speech from './components/Speech';
+import App             from './components/App';
+import Search          from './components/Search';
+import SpeechInContext from './components/SpeechInContext';
 
 export default (
     <Route name="app" path="/" handler={App}>
@@ -16,6 +16,11 @@ export default (
                 />
         </Route>
 
-        <Route name="speech" path="/speeches/:transcript/:order" handler={Speech} />
+        <Route
+            name="speech"
+            path="/speeches/:transcript/:order"
+            handler={SpeechInContext}
+            ignoreScrollBehavior
+            />
     </Route>
 );

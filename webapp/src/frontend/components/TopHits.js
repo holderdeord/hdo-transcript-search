@@ -1,6 +1,6 @@
-import React     from 'react';
-import SearchHit from './SearchHit';
-import Icon      from 'react-fa';
+import React  from 'react';
+import Speech from './Speech';
+import Icon   from 'react-fa';
 
 class TopHits extends React.Component {
     constructor(props) {
@@ -44,7 +44,7 @@ class TopHits extends React.Component {
 
                 {
                     result.hits.map((h, i) => [
-                        <SearchHit hit={h} key={h.id} index={i}/>,
+                        <Speech speech={h} key={h.id} index={i}/>,
                         <div className="divider"/>
                     ])
                 }
