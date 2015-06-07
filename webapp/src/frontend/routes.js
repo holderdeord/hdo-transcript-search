@@ -7,7 +7,7 @@ import Speech from './components/Speech';
 
 export default (
     <Route name="app" path="/" handler={App}>
-        <Route name="blank" path="/search" handler={Search}>
+        <Route name="blank" path="/search/?" handler={Search}>
             <Route
                 name="search"
                 handler={Search}
