@@ -50,7 +50,7 @@ class TopHits extends React.Component {
 
                 <div className="row" style={{padding: '1rem'}}>
                     <small className="export-links">
-                        <a href={`/api/export?query=${encodeURIComponent(result.query)}&format=csv`}>
+                        <a href={this.getExportUrlFor(result.query)}>
                             <span style={{paddingRight: '.5rem'}}><Icon name="download" /></span>
                             CSV
                         </a>
@@ -89,6 +89,10 @@ class TopHits extends React.Component {
                 this.searchActions.moreHits(result.query, result.hits.length);
             });
         }
+    }
+
+    getExportUrlFor(query) {
+        return `/api/export?query=${encodeURIComponent(query)}&format=csv&sort=time.desc`
     }
 
     getFocusedHitSet(optionalHits) {

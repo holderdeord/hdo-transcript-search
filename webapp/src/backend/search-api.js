@@ -65,11 +65,13 @@ class SearchAPI {
         let delimiter = opts.format === 'csv' ? ',' : '\t';
 
         let rs = new ReadableSearch((start, callback) => {
-            es.search(this._buildHitsQuery(Object.assign({}, opts, {start: start})), callback);
+            let q = this._buildHitsQuery(Object.assign({}, opts, {start: start, highlight: false, size: 500}));
+            es.search(q, callback);
         });
 
         return rs
                 .pipe(csv.transform(record => {
+                    record._source.text = record._source.text.replace(/\n/g, ' ');
                     return TSV_HEADERS.map(k => record._source[k]);
                 }))
                 .pipe(csv.stringify({
@@ -209,7 +211,13 @@ class SearchAPI {
             query: this._queryFor(opts.query),
             filter: this._filterFor(opts),
 
-            highlight: {
+            size: +(opts.size || 10),
+            from: +(opts.start || 0),
+            sort: this._parseSortOption(opts.sort)
+        };
+
+        if (opts.highlight !== false) {
+            body.highlight = {
                 pre_tags: ['<mark>'],
                 post_tags: ['</mark>'],
                 fields: {
@@ -217,12 +225,8 @@ class SearchAPI {
                         number_of_fragments: 0
                     }
                 }
-            },
-
-            size: +(opts.size || 10),
-            from: +(opts.start || 0),
-            sort: this._parseSortOption(opts.sort)
-        };
+            }
+        }
 
         return {
             index: INDEX_NAME,
