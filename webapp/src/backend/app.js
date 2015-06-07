@@ -139,7 +139,7 @@ app.get('/api/context/:transcript/:start/:end', (req, res) => {
         .catch(errorHandler.bind(res));
 });
 
-app.get('/api/analytics/top-searches/:days', (req, res) => {
+app.get('/api/analytics/top-searches/:days?', (req, res) => {
     var params = {
         days: req.params.days || 30,
         limit: (req.query.limit || 200),
@@ -149,14 +149,35 @@ app.get('/api/analytics/top-searches/:days', (req, res) => {
     analytics
         .topSearches(params)
         .then((d) => res.json(d) )
-        .catch(errorHandler.bind(this));
+        .catch(errorHandler.bind(res));
 });
 
 app.get('/api/analytics/image-errors', (req, res) => {
     analytics
         .imageErrors()
         .then((d) => res.json(d) )
-        .catch(errorHandler.bind(this));
+        .catch(errorHandler.bind(res));
+});
+
+app.get('/api/analytics/sources/:days?', (req, res) => {
+    analytics
+        .sources({days: req.params.days || 30})
+        .then((d) => res.json(d) )
+        .catch(errorHandler.bind(res));
+});
+
+app.get('/api/analytics/active', (req, res) => {
+    analytics
+        .active()
+        .then((d) => res.json(d) )
+        .catch(errorHandler.bind(res));
+});
+
+app.get('/api/analytics/browsers/:days?', (req, res) => {
+    analytics
+        .browsers({days: req.params.days || 30})
+        .then((d) => res.json(d) )
+        .catch(errorHandler.bind(res));
 });
 
 module.exports = app;

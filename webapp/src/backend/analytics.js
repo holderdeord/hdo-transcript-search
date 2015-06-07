@@ -19,6 +19,7 @@ function getAnalytics() {
         analytics = google.analytics({ version: 'v3', auth: jwt });
 
         Promise.promisifyAll(analytics.data.ga);
+        Promise.promisifyAll(analytics.data.realtime);
     }
 
     return jwt.authorizeAsync().then(() => analytics);
@@ -40,11 +41,10 @@ function topSearches(params) {
             });
         })
         .spread((data) => {
-            let result = (data.rows || [])
-                .map((row) => ({query: row[0], count: +row[1]}));
+            let result = parseResponse(data);
 
             if (!params.examples) {
-                result = result.filter((r) => EXAMPLE_QUERIES.indexOf(r.query) === -1);
+                result = result.filter((r) => EXAMPLE_QUERIES.indexOf(r['ga:eventAction']) === -1);
             }
 
             return {searches: result};
@@ -63,14 +63,75 @@ function imageErrors() {
             sort: '-ga:totalEvents',
             filters: 'ga:eventCategory==image-error'
         }).spread((data) => {
-
-            let result = (data.rows || []).map((row) => {
-                return {id: row[0], count: +row[1]};
-            });
-
-            return {imageErrors: result}
+            return {imageErrors: parseResponse(data)}
         });
     });
+}
+
+function sources(opts) {
+    return getAnalytics().then((analytics) => {
+        return analytics.data.ga.getAsync({
+            ids: GA_ID,
+            'start-date': opts.days + 'daysAgo',
+            'end-date': 'today',
+            'max-results': 500,
+            "dimensions": "ga:fullReferrer,ga:source,ga:socialNetwork",
+            "metrics": "ga:users,ga:sessions,ga:pageviews",
+            sort: '-ga:users',
+        }).spread((data) => {
+            return {sources: parseResponse(data)}
+        });
+    });
+}
+
+function browsers(opts) {
+    return getAnalytics().then((analytics) => {
+        return analytics.data.ga.getAsync({
+            ids: GA_ID,
+            'start-date': opts.days + 'daysAgo',
+            'end-date': 'today',
+            'max-results': 500,
+            "dimensions": "ga:browser,ga:operatingSystem",
+            "metrics": "ga:sessions",
+            sort: '-ga:sessions',
+        }).spread((data) => {
+            return {browsers: parseResponse(data)}
+        });
+    });
+}
+
+function active() {
+    return getAnalytics().then((analytics) => {
+        return analytics.data.realtime.getAsync({
+            ids: GA_ID,
+            "dimensions": "rt:medium,rt:city",
+            "metrics": "rt:activeUsers"
+        }).spread((data) => {
+            return {active: parseResponse(data)}
+        });
+    });
+}
+
+function parseResponse(data) {
+    let headers = (data.columnHeaders || []).map((h) => h.name);
+
+    let result = (data.rows || []).map((row) => {
+        let d = {};
+
+        headers.forEach((h, i) => {
+            let p = row[i];
+
+            if (typeof p === 'string' && p.match(/^[\d.]+$/)) {
+                p = +p;
+            }
+
+            d[h] = p;
+        });
+
+        return d;
+    });
+
+    return result;
 }
 
 function checkEnabled(func, ...rest) {
@@ -81,7 +142,11 @@ function checkEnabled(func, ...rest) {
     }
 }
 
+
 module.exports = {
     topSearches: checkEnabled.bind(null, topSearches),
-    imageErrors: checkEnabled.bind(null, imageErrors)
+    imageErrors: checkEnabled.bind(null, imageErrors),
+    sources: checkEnabled.bind(null, sources),
+    active: checkEnabled.bind(null, active),
+    browsers: checkEnabled.bind(null, browsers),
 };
