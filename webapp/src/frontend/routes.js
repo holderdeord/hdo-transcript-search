@@ -20,7 +20,6 @@ export default (
             name="speech"
             path="/speeches/:transcript/:order"
             handler={SpeechInContext}
-            ignoreScrollBehavior
             />
     </Route>
 );

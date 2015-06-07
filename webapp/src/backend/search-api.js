@@ -222,7 +222,7 @@ class SearchAPI {
                 post_tags: ['</mark>'],
                 fields: {
                     text: {
-                        number_of_fragments: 0
+                        number_of_fragments: +(opts.fragments || 0)
                     }
                 }
             }

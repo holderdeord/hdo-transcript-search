@@ -26,13 +26,13 @@ class Speech extends React.Component {
 
         return (
             <div className="row speech">
-                <div className="col-md-3">
+                <div className="col-xs-6 col-md-3">
                     <div className="row">
-                        <div className="col-md-1">
+                        <div className="col-xs-1">
                             <Icon name="calendar" />
                         </div>
 
-                        <div className="col-md-8">
+                        <div className="col-xs-8">
                             <Link to="speech" params={{transcript: speech.transcript, order: speech.order}}>
                                 <span className="text-muted">{timestamp}</span>
                             </Link>
@@ -40,31 +40,31 @@ class Speech extends React.Component {
                     </div>
 
                     <div className="row" style={{paddingTop: '0.8rem'}}>
-                        <div className="col-md-1">
+                        <div className="col-xs-1">
                             <Icon name="user" />
                         </div>
 
-                        <div className="col-md-8">
+                        <div className="col-xs-8">
                             <strong>{person}</strong>
                         </div>
                     </div>
 
 
                     <div className="row">
-                        <div className="col-md-1">
+                        <div className="col-xs-1">
                         </div>
 
-                        <div className="col-md-8">
+                        <div className="col-xs-8">
                             {title}
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-2">
+                <div className="col-xs-6 col-md-2">
                     {this.imageFor(speech)}
                 </div>
 
-                <div className="col-md-7">
+                <div className="col-xs-12 col-md-7">
                     <div className="speech-text">{this.paragraphsFrom(speech)}</div>
                 </div>
 
@@ -114,7 +114,7 @@ class Speech extends React.Component {
     }
 
     paragraphsFrom(speech) {
-        let text = speech.highlight ? speech.highlight.text[0] : speech.text;
+        let text = speech.highlight ? speech.highlight.text.join('\n') : speech.text;
 
         return text.split("\n").map((fragment, i) => {
             fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');

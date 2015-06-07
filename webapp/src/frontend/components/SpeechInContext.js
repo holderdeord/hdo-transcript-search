@@ -39,11 +39,11 @@ class SpeechBrowser extends React.Component {
         return (
             <div className="container">
                 <div className="row">
-                    <div className="col-md-6">{prevLink}</div>
-                    <div className="col-md-6 text-right">{nextLink}</div>
+                    <div className="col-xs-6 col-md-6">{prevLink}</div>
+                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
 
-                <div className="row">
+                <div className="row card" style={{marginTop: '1rem'}}>
                     <div className="col-md-12">
                         <Speech key={speeches[1].id} speech={speeches[1]} showContextLink={false} showTime={true} />
                     </div>
