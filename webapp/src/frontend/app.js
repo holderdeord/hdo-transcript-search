@@ -20,7 +20,7 @@ class AppFlux extends Flux {
 
         this.createStore('summary', SummaryStore, this);
         this.createStore('hits', HitsStore, this);
-        this.createStore('speech', SpeechStore, this)
+        this.createStore('speech', SpeechStore, this);
         this.createStore('analytics', Analytics, this);
 
         this.searchActions = this.getActions('search');

@@ -45,6 +45,6 @@ class Screenshooter
   end
 
   def labels
-    @w.element(css: '.timeline .lead').text
+    @w.element(css: '.queries-selector').text
   end
 end

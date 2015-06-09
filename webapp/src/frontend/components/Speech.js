@@ -91,10 +91,15 @@ class Speech extends React.Component {
     renderContextLinkIfNecessary() {
         if (this.props.showContextLink === false) {
             return null;
-        } {
+        } else {
+            let linkParams = {
+                transcript: this.props.speech.transcript,
+                order: this.props.speech.order
+            };
+
             return (
                 <small className="pull-right" style={{paddingTop: '1rem'}}>
-                    <Link to="speech" params={{transcript: this.props.speech.transcript, order: this.props.speech.order}}>
+                    <Link to="speech" params={linkParams}>
                         Se innlegget i kontekst
                     </Link>
                 </small>
