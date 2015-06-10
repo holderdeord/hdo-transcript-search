@@ -49,9 +49,14 @@ class TopListChart extends React.Component {
             }]
         ];
 
+        let star = this.props.star ? (<small className="text-muted">&nbsp;*</small>) : null;
+
         return (
             <div className="top-list-chart">
-                <h3 className="text-center hidden-xs">{this.props.subtitle}</h3>
+                <h3 className="text-center hidden-xs">
+                    {this.props.subtitle}
+                    {star}
+                </h3>
 
                 <div className={this.props.className}>
                     <BaseChart

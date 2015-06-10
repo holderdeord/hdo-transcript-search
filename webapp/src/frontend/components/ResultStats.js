@@ -4,6 +4,8 @@ import Parties      from '../../shared/Parties';
 import ImageUtils   from '../utils/ImageUtils';
 import Colors       from '../utils/Colors';
 
+const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
+
 class ResultStats extends React.Component {
     constructor(props) {
         super(props);
@@ -112,47 +114,53 @@ class ResultStats extends React.Component {
     }
 
     renderPeopleStats() {
-        let people = (this.state.people[this.props.unit] || []).slice(0, 8);
+        let people = (this.state.people[this.props.unit] || []);
+        let isPct = this.props.unit === 'pct';
+
+        people = people.slice(0, 8);
 
         if (people.length) {
             let topPerson      = people[0];
-            let num            = this.props.unit === 'pct' ? `${topPerson.pct.toFixed(2)}%` : topPerson.count;
-            let unitText       = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
-            let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
+            let num            = isPct ? `${topPerson.pct.toFixed(2)}%` : topPerson.count;
+            let unitText       = isPct ? 'av sine innlegg' : 'innlegg';
+            // let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
             let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
                 <div className="row result-box">
-                    <div className="col-md-5 text-center">
-                        <img
-                            src={ImageUtils.personImageFor(topPerson.meta.external_id)}
-                            alt={`Bilde av ${topPerson.key}`}
-                            height="200"
-                        />
+                    <div className="col-md-5">
+                        <div className="text-center">
+                            <img
+                                src={ImageUtils.personImageFor(topPerson.meta.external_id)}
+                                alt={`Bilde av ${topPerson.key}`}
+                                height="200"
+                            />
 
-                        <h2>
-                            {topPerson.key} {partyText}
-                        </h2>
+                            <h2>
+                                {topPerson.key} {partyText}
+                            </h2>
 
+                            <div className="lead">
+                                <div>
+                                    har nevnt <strong>{this.state.query}</strong> i
+                                </div>
 
-                        <div className="lead">
-                            <div>
-                                har nevnt <strong>{this.state.query}</strong> i
+                                <span style={this.bigNumberStyle}>
+                                    {num}
+                                </span>
+
+                                {unitText}
                             </div>
-
-                            <span style={this.bigNumberStyle}>
-                                {num}
-                            </span>
-
-                            {unitText}
                         </div>
 
+                        {isPct ? this.renderDiclaimer() : null}
                     </div>
 
                     <div className="col-md-7">
                         <TopListChart
                             className={this.state.labelClassName}
                             subtitle={`Personer`}
+                            star={isPct}
                             unit={this.props.unit}
                             orientation={this.props.orientation}
                             counts={people}
@@ -164,6 +172,14 @@ class ResultStats extends React.Component {
         } else {
             return <div />;
         }
+    }
+
+    renderDiclaimer() {
+        return (<small class="text-muted">
+            * - ekskludert representanter med mindre enn {MIN_SPEECH_COUNT} innlegg totalt.
+            Dette for å unggå at vararepresentanter dominerer resultatene.
+        </small>);
+
     }
 
     topParties(parties) {

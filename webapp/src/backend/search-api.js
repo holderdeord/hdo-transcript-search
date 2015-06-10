@@ -14,6 +14,8 @@ const INDEX_TYPE        = 'speech';
 const ALLOWED_INTERVALS = ['month', '12w', '24w', 'year'];
 const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'title', 'name', 'party', 'text'];
 
+const MIN_SPEECH_COUNT = require('../shared/minSpeechCount');
+
 class SearchAPI {
     constructor() {
         this.cache = LRU({max: 500});
@@ -182,7 +184,7 @@ class SearchAPI {
             parties: parties,
             people: {
                 count: people.sort((a,b) => b.count - a.count).slice(0, 20),
-                pct: people.sort((a,b) => b.pct - a.pct).slice(0, 20)
+                pct: people.filter(d => d.total > MIN_SPEECH_COUNT).sort((a,b) => b.pct - a.pct).slice(0, 20)
             }
         };
     }
