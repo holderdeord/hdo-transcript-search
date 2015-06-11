@@ -127,46 +127,48 @@ class ResultStats extends React.Component {
             let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
-                <div className="row result-box">
-                    <div className="col-md-5">
-                        <div className="text-center">
-                            <img
-                                src={ImageUtils.personImageFor(topPerson.meta.external_id)}
-                                alt={`Bilde av ${topPerson.key}`}
-                                height="200"
-                            />
+                <div>
+                    <div className="row result-box">
+                        <div className="col-md-5">
+                            <div className="text-center">
+                                <img
+                                    src={ImageUtils.personImageFor(topPerson.meta.external_id)}
+                                    alt={`Bilde av ${topPerson.key}`}
+                                    height="200"
+                                />
 
-                            <h2 className="selectable">
-                                {topPerson.key} {partyText}
-                            </h2>
+                                <h2 className="selectable">
+                                    {topPerson.key} {partyText}
+                                </h2>
 
-                            <div className="lead selectable">
-                                <div>
-                                    har nevnt <strong>{this.state.query}</strong> i
+                                <div className="lead selectable">
+                                    <div>
+                                        har nevnt <strong>{this.state.query}</strong> i
+                                    </div>
+
+                                    <span style={this.bigNumberStyle}>
+                                        {num}
+                                    </span>
+
+                                    {unitText}
                                 </div>
-
-                                <span style={this.bigNumberStyle}>
-                                    {num}
-                                </span>
-
-                                {unitText}
                             </div>
                         </div>
 
-                        {isPct ? this.renderDiclaimer() : null}
+                        <div className="col-md-7">
+                            <TopListChart
+                                className={this.state.labelClassName}
+                                subtitle={`Personer`}
+                                star={isPct}
+                                unit={this.props.unit}
+                                orientation={this.props.orientation}
+                                counts={people}
+                                sort={true}
+                            />
+                        </div>
                     </div>
 
-                    <div className="col-md-7">
-                        <TopListChart
-                            className={this.state.labelClassName}
-                            subtitle={`Personer`}
-                            star={isPct}
-                            unit={this.props.unit}
-                            orientation={this.props.orientation}
-                            counts={people}
-                            sort={true}
-                        />
-                    </div>
+                    {isPct ? this.renderDiclaimer() : null}
                 </div>
             );
         } else {
@@ -175,10 +177,19 @@ class ResultStats extends React.Component {
     }
 
     renderDiclaimer() {
-        return (<small className="text-muted hidden-xs hidden-sm">
-            * - ekskludert representanter med mindre enn {MIN_SPEECH_COUNT} innlegg totalt.
-            Dette for å unngå at vararepresentanter dominerer resultatene.
-        </small>);
+        return (
+            <div>
+                <div className="divider" />
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <small className="text-muted hidden-xs hidden-sm" style={{padding: '2rem'}}>
+                            * For å unngå at vararepresentanter dominerer resultatene, er personer med totalt {MIN_SPEECH_COUNT} innlegg eller mindre ekskludert.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        );
 
     }
 
