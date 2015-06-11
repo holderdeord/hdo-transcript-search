@@ -5,13 +5,28 @@ class BaseChart extends React.Component {
     constructor(props) {
         super(props);
         this.groups = this._blankGroups();
+        this.state = {tooltip: null};
     }
 
     render() {
         let ratio = this.props.aspectRatio ? `ct-${this.props.aspectRatio}` : '';
+        let tooltip = null;
+
+        if (this.state.tooltip) {
+            tooltip = <div className="chart-tooltip" style={this.state.tooltip.style} ref="tooltip">{this.state.tooltip.text}</div>;
+        }
 
         return (
-            <div ref="chart" className={`ct-chart ${ratio}`} />
+            <div>
+
+                <div ref="chart"
+                    className={`ct-chart ${ratio}`}
+                    onMouseOver={this._handleMouseOver.bind(this)}
+                    onMouseOut={this._handleMouseOut.bind(this)}
+                />
+
+                {tooltip}
+            </div>
         );
     }
 
@@ -37,6 +52,31 @@ class BaseChart extends React.Component {
         return groups;
     }
 
+    _handleMouseOver(event) {
+        let e   = event.nativeEvent;
+        let val = e.srcElement.getAttribute('ct:value');
+
+        if (val) {
+            val = (+val)
+
+            this.setState({
+                tooltip: {
+                    text: Math.floor(val) == val ? val : val.toFixed(2),
+                    style: {
+                        left: (e.offsetX || e.originalEvent.layerX) - 15,
+                        top: (e.offsetY || e.originalEvent.layerY) - 38
+                    }
+                }
+            });
+        }
+    }
+
+    _handleMouseOut(event) {
+        if (event.nativeEvent.srcElement.getAttribute('ct:value')) {
+            this.setState({tooltip: null});
+        }
+    }
+
     _drawChart(props) {
         let {data, options, responsiveOptions} = props;
         options = options || {};
@@ -46,7 +86,7 @@ class BaseChart extends React.Component {
             this.chart.update(data, options, true);
         } else {
             this.chart = new Chartist[props.type](
-                React.findDOMNode(this.refs.chart),
+                this._getDOMNode(),
                 data,
                 options,
                 responsiveOptions
@@ -63,6 +103,14 @@ class BaseChart extends React.Component {
         }
 
         this.groups = this._blankGroups();
+    }
+
+    _getDOMNode() {
+        return React.findDOMNode(this.refs.chart);
+    }
+
+    _setupTooltips() {
+
     }
 
     _setupAnimation() {
