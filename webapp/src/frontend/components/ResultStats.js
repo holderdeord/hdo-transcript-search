@@ -175,7 +175,7 @@ class ResultStats extends React.Component {
     }
 
     renderDiclaimer() {
-        return (<small class="text-muted">
+        return (<small className="text-muted hidden-xs hidden-sm">
             * - ekskludert representanter med mindre enn {MIN_SPEECH_COUNT} innlegg totalt.
             Dette for å unngå at vararepresentanter dominerer resultatene.
         </small>);
