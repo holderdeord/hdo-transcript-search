@@ -85,10 +85,7 @@ body {
   padding: 1rem 2rem;
 }
 
-.speech {
-  padding: 1rem 2rem;
-  margin: 1rem 0;
-
+.selectable {
   /* Styling selection */
   -webkit-user-select: text;
   -khtml-user-select: text;
@@ -97,8 +94,15 @@ body {
   user-select: text;
 
   ::selection {
-    background-color: #fadd00;
+    background-color: @hdo-yellow-a;
   }
+}
+
+.speech {
+  .selectable;
+
+  padding: 1rem 2rem;
+  margin: 1rem 0;
 
   .speech-text {
     font-size: 1.5rem;

@@ -124,7 +124,7 @@ class Timeline extends React.Component {
 
 
             if (+this.props.focusedIndex === i) {
-                query = <span className={className} style={{fontWeight: '500'}}>{q}</span>;
+                query = <span className={className} style={{fontWeight: '700'}}>{q}</span>;
             } else {
                 let params = {
                     queries: this.state.queries.join('.'),

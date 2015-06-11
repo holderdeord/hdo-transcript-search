@@ -80,12 +80,12 @@ class ResultStats extends React.Component {
                                     height="200"
                                 />
 
-                                <h2>
+                                <h2 className="selectable">
                                     {topPartyName}
                                 </h2>
                             </div>
 
-                            <div className="lead">
+                            <div className="lead selectable">
                                 <div>
                                     har nevnt <strong>{this.state.query}</strong> i
                                 </div>
@@ -136,11 +136,11 @@ class ResultStats extends React.Component {
                                 height="200"
                             />
 
-                            <h2>
+                            <h2 className="selectable">
                                 {topPerson.key} {partyText}
                             </h2>
 
-                            <div className="lead">
+                            <div className="lead selectable">
                                 <div>
                                     har nevnt <strong>{this.state.query}</strong> i
                                 </div>
