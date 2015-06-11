@@ -220,10 +220,14 @@ module Hdo
         case str
         when 'Satsråd', 'Stasråd', 'Stastråd', 'Statsråden', 'Statstråd'
           'Statsråd'
-        when 'Statsministerer'
+        when 'Statsministerer', 'Satsminister'
           'Statsminister'
         when 'Representanten'
           'Representant'
+        when 'Stortingspresident'
+          'President'
+        when 'Stortingets visepresident', 'Første visepresident'
+          'Visepresident'
         else
           str
         end
