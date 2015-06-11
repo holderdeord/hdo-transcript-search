@@ -12,7 +12,7 @@ module Hdo
       end
 
       def recreate!
-        es.indices.delete(index: @name) if es.indices.exists(index: @name)
+        es.indices.delete(index: @name) if exists?
         es.indices.create index: @name, body: { settings: ES_SETTINGS, mappings: ES_MAPPINGS }
       end
 
@@ -27,6 +27,10 @@ module Hdo
 
           bulk_with_retry body
         end
+      end
+
+      def exists?
+        es.indices.exists(index: @name)
       end
 
       private

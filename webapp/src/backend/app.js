@@ -46,7 +46,7 @@ if(app.get('env') === 'development') {
         }
 
         app.locals.bundleName = `bundle.${hash}`;
-    })
+    });
 }
 
 app.use(express.static(path.resolve(__dirname, '../../public')));

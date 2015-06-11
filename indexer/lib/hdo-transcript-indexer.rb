@@ -237,10 +237,10 @@ module Hdo
       end
 
       def create_index
-        return unless @create_index
-
-        @logger.info "recreating index #{@index_name}"
-        @index.recreate!
+        if @create_index || !@index.exists?
+          @logger.info "creating index #{@index_name}"
+          @index.recreate!
+        end
       end
 
     end
