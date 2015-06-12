@@ -31,13 +31,9 @@ class TopHits extends React.Component {
             <div className="card">
                 <div className="row result-box">
                     <div className="col-md-12">
-                        <h2>
-                            Treff
-
-                            <small className="text-muted" style={{marginLeft: '1rem'}}>
-                                Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
-                            </small>
-                        </h2>
+                        <h4 className="text-center">
+                            Innlegg der «{result.query}» er nevnt
+                        </h4>
                     </div>
                 </div>
 
@@ -51,13 +47,26 @@ class TopHits extends React.Component {
                 <div className="row" style={{padding: '1rem'}}>
                     <small className="export-links">
                         <a href={this.getExportUrlFor(result.query)}>
-                            <span style={{paddingRight: '.5rem'}}><Icon name="download" /></span>
-                            CSV
+                            <span style={{paddingRight: '.5rem'}}>
+                                <Icon name="download" />
+                            </span>
+
+
+                            Last ned alle <strong>{result.counts.total}</strong> innlegg som CSV
                         </a>
                     </small>
 
                     <div className="text-center">
                         {hasMore && this.renderLoadMore()}
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="text-center">
+                        <small className="text-muted" style={{marginLeft: '1rem'}}>
+                            Viser {result.hits.length} av totalt {result.counts.total}
+                            treff på <strong>{result.query}</strong>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -71,7 +80,7 @@ class TopHits extends React.Component {
                     className="btn btn-primary"
                     onClick={this.handleLoadMore.bind(this)}
                     >
-                    Last flere
+                    Vis flere innlegg
                 </button>
             );
         } else {

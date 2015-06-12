@@ -12,7 +12,6 @@ class Speech extends React.Component {
 
     render() {
         let speech    = this.props.speech;
-        let person    = speech.name;
         let timestamp = TimeUtils.timestampForHit(speech);
         let title     = speech.title;
 
@@ -23,6 +22,14 @@ class Speech extends React.Component {
         if (this.props.showTime) {
             timestamp = `${timestamp} ${TimeUtils.formatHitTime(speech)}`;
         }
+
+        if (speech.name === 'Presidenten' && speech.presidents.length === 1) {
+            var president      = speech.presidents[0];
+
+            speech.name        = president.name;
+            speech.external_id = president.external_id;
+        }
+
 
         return (
             <div className="row speech">
@@ -45,7 +52,7 @@ class Speech extends React.Component {
                         </div>
 
                         <div className="col-xs-8">
-                            <strong>{person}</strong>
+                            <strong>{speech.name}</strong>
                         </div>
                     </div>
 
@@ -75,6 +82,7 @@ class Speech extends React.Component {
 
     imageFor(speech) {
         let height = 180;
+
         let src = this.state.useFallbackImage ?
             ImageUtils.fallbackImage() : ImageUtils.personImageFor(speech.external_id);
 

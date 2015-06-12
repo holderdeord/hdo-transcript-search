@@ -16,7 +16,7 @@ export default class SearchActions extends Actions {
     }
 
     moreHits(query, start) {
-        return this.server.hits([query], start);
+        return this.server.hits([query], start, 10);
     }
 
     speechContext(transcript, order) {

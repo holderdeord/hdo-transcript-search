@@ -11,9 +11,9 @@ export default class ServerFacade {
         });
     }
 
-    hits(queries, start) {
+    hits(queries, start = 0, size = 5) {
         return Promise.map(queries, function(query) {
-            var path = `/api/search/hits?query=${query}&sort=time.desc&size=5`;
+            var path = `/api/search/hits?query=${query}&sort=time.desc&size=${size}`;
 
             if (start) {
                 path += `&start=${start}`;

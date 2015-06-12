@@ -57,8 +57,17 @@ body {
 }
 
 @media screen and (min-width: 400px) {
-  #search-form input[type=search] { .input-lg; }
-  #search-form input[type=submit] { .btn-lg; }
+  #search-form input[type=search] {
+    .input-lg;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0
+  }
+
+  #search-form input[type=submit] {
+    .btn-lg;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 #search-form { font-family: @font-family-secondary; }
@@ -80,9 +89,10 @@ body {
 
 .export-links {
   .hidden-xs;
+  .hidden-sm;
 
   position: absolute;
-  padding: 1rem 2rem;
+  padding: 1rem 4rem;
 }
 
 .selectable {

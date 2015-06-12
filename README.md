@@ -23,6 +23,7 @@ This project consists of two parts:
 Download and index transcripts (requires a local elasticsearch):
 
     $ cd indexer/
+    $ gem install bundler
     $ bundle install
     $ bundle exec ruby -Ilib bin/hdo-transcript-indexer
 
@@ -36,7 +37,7 @@ Convert a single XML transcript to indexable JSON:
 
 ## webapp
 
-Start the webapp in dev mode (with elasticsearch):
+Start the webapp in dev mode:
 
     $ cd webapp
     $ npm install

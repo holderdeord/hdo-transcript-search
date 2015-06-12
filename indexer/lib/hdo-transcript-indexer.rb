@@ -212,12 +212,13 @@ module Hdo
       def index_file(file)
         transcript_id = file.basename.to_s.sub(file.extname, '')
         data          = JSON.parse(file.read)
+        presidents     = data['presidents'].map { |e| {name: e, external_id: @slug_cache[e]} }
 
         docs = data['sections'].map.with_index do |section, idx|
           id = "#{transcript_id}-#{idx}"
 
           doc = {
-            'presidents'  => data['presidents'],
+            'presidents'  => presidents,
             'session'     => data['session'],
             'transcript'  => transcript_id,
             'order'       => idx,

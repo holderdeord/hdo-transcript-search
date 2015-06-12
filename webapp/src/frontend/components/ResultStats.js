@@ -50,6 +50,12 @@ class ResultStats extends React.Component {
         if (this.state.query.length) {
             return (
                 <div className="card">
+                    <div className="row result-box">
+                        <div className="col-md-12">
+                            <h4 className="text-center">Hvem nevner «{this.state.query}» oftest?</h4>
+                        </div>
+                    </div>
+
                     {this.renderPartyStats()}
                     <div className="divider" />
                     {this.renderPeopleStats()}

@@ -104,7 +104,12 @@ module Hdo
             },
             name:        { type: 'string',  index: 'not_analyzed' },
             party:       { type: 'string',  index: 'not_analyzed' },
-            presidents:  { type: 'string',  index: 'not_analyzed' },
+            presidents:  {
+              properties: {
+                name: { type: 'string', index: 'not_analyzed' },
+                external_id: { type: 'string', index: 'not_analyzed' }
+              }
+            },
             title:       { type: 'string',  index: 'not_analyzed' },
             external_id: { type: 'string',  index: 'not_analyzed' },
             transcript:  { type: 'string',  index: 'not_analyzed' },
