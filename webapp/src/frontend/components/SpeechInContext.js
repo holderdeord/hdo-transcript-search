@@ -46,6 +46,11 @@ class SpeechBrowser extends React.Component {
                         <Speech key={focused.id} speech={focused} showContextLink={false} showTime={true} />
                     </div>
                 </div>
+
+                <div className="row">
+                    <div className="col-xs-6 col-md-6">{prevLink}</div>
+                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
+                </div>
             </div>
         );
     }
