@@ -43,7 +43,7 @@ class SearchForm extends React.Component {
                             name="query"
                             ref="query"
                             autoFocus="true"
-                            placeholder="Søkeord"
+                            placeholder="Søk etter noe politikere har sagt"
                             tabIndex="0"
                             value={this.state.query}
                             onChange={this.handleQueryChange.bind(this)}
