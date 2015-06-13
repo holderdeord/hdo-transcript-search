@@ -28,7 +28,7 @@ class ResultStats extends React.Component {
         let people  = {};
         let query   = '';
 
-        let focusedIndex = this.props.focusedIndex || 0;
+        let focusedIndex = props.focusedIndex || 0;
         let result = props.results[focusedIndex];
 
         if (result) {

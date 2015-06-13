@@ -11,7 +11,7 @@ class TopHits extends React.Component {
 
     componentWillReceiveProps(newProps) {
         let oldHits = this.getFocusedHitSet();
-        let newHits = this.getFocusedHitSet(newProps.hits);
+        let newHits = this.getFocusedHitSet(newProps);
 
         if (oldHits && newHits && newHits.hits.length >= oldHits.hits.length) {
             this.setState({loaded: true});
@@ -24,7 +24,6 @@ class TopHits extends React.Component {
         if (!result) {
             return null;
         }
-
         let hasMore = result.hits.length < result.counts.total;
 
         return (
@@ -100,14 +99,15 @@ class TopHits extends React.Component {
     }
 
     getExportUrlFor(query) {
-        return `/api/export?query=${encodeURIComponent(query)}&format=csv&sort=time.desc`
+        return `/api/export?query=${encodeURIComponent(query)}&format=csv&sort=time.desc`;
     }
 
-    getFocusedHitSet(optionalHits) {
-        let hits = optionalHits || this.props.hits;
+    getFocusedHitSet(props) {
+        props = props || this.props;
+        let hits = props.hits;
 
         if (hits) {
-            return hits[this.props.focusedIndex || 0];
+            return hits[props.focusedIndex || 0];
         } else {
             return null;
         }
