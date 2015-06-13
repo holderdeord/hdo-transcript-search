@@ -52,7 +52,7 @@ class TopHits extends React.Component {
                             </span>
 
 
-                            Last ned alle <strong>{result.counts.total}</strong> innlegg som CSV
+                            Last ned <strong>{result.counts.total}</strong> innlegg som CSV
                         </a>
                     </small>
 
@@ -64,8 +64,7 @@ class TopHits extends React.Component {
                 <div className="row">
                     <div className="text-center">
                         <small className="text-muted" style={{marginLeft: '1rem'}}>
-                            Viser {result.hits.length} av totalt {result.counts.total}
-                            treff på <strong>{result.query}</strong>
+                            Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
                         </small>
                     </div>
                 </div>
