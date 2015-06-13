@@ -85,7 +85,7 @@ class Search extends React.Component {
     }
 
     handleUnitChange(event) {
-        let newUnit = event.target.value === '%' ? 'pct' : 'count';
+        let newUnit = event.target.value === 'Prosent' ? 'pct' : 'count';
         this.context.router.transitionTo('search', assign({}, this.props.params, {unit: newUnit}));
     }
 

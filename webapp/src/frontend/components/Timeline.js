@@ -82,13 +82,13 @@ class Timeline extends React.Component {
                              onClick={this.props.onUnitChange}>
                             <input
                                 type="button"
-                                value="%"
+                                value="Prosent"
                                 className={`btn ${this.props.unit === 'pct' ? 'btn-primary' : 'btn-default'}`}
                             />
 
                             <input
                                 type="button"
-                                value="#"
+                                value="Absolutt"
                                 className={`btn ${this.props.unit === 'count' ? 'btn-primary' : 'btn-default'}`}
                             />
                         </div>
