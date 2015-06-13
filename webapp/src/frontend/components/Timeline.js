@@ -36,7 +36,7 @@ class Timeline extends React.Component {
         ];
 
         this.aspectRatios = [
-            ['screen and (max-width: 770px)', 'minor-sixth'],
+            ['screen and (max-width: 992px)', 'minor-sixth'],
             ['screen', 'double-octave']
         ];
 

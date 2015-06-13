@@ -14,32 +14,49 @@ body {
   padding: 5rem 6rem 2rem 6rem;
   margin-bottom: 3rem;
   background-position: 37% 25%;
+  height: 20rem;
   background-image: url("http://files.holderdeord.no/images/lion01.jpg");
   background-size: cover;
   text-align: center;
-  height: 20rem;
 
   h1 {
     color: inherit;
     font-weight: 700;
   }
 
-  small {
+  .description {
     font-family: @font-family-secondary;
+    margin: 0 auto;
   }
 
   a {
     text-decoration: underline;
     color: inherit;
   }
+
+  @media screen and (max-width: 768px) {
+    padding-top: .5rem;
+    height: 10rem;
+    background-position: 0 25%;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .description {
+      max-width: 50%;
+      font-size: 0.8rem;
+    }
+  }
+
 }
 
 .result-box {
-  @media screen and (min-width: 600px) {
-    margin: 2rem;
+  margin: 2rem;
+  @media screen and (min-width: 768px) {
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     margin: 2rem 0;
   }
 
@@ -56,17 +73,23 @@ body {
   font-family: @font-family-secondary;
 }
 
-@media screen and (min-width: 400px) {
+#search-form input[type=search] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0
+}
+
+#search-form input[type=submit] {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+@media screen and (min-width: 768px) {
   #search-form input[type=search] {
     .input-lg;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0
   }
 
   #search-form input[type=submit] {
     .btn-lg;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
   }
 }
 

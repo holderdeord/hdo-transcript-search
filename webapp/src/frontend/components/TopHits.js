@@ -10,8 +10,8 @@ class TopHits extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        let oldHits = this.getFocusedHitSet(newProps);
-        let newHits = this.getFocusedHitSet(this.props);
+        let oldHits = this.getFocusedHitSet();
+        let newHits = this.getFocusedHitSet(newProps.hits);
 
         if (oldHits && newHits && newHits.hits.length >= oldHits.hits.length) {
             this.setState({loaded: true});
@@ -106,8 +106,8 @@ class TopHits extends React.Component {
     getFocusedHitSet(optionalHits) {
         let hits = optionalHits || this.props.hits;
 
-        if (this.props.hits) {
-            return this.props.hits[this.props.focusedIndex || 0];
+        if (hits) {
+            return hits[this.props.focusedIndex || 0];
         } else {
             return null;
         }

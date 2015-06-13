@@ -35,7 +35,7 @@ class SearchForm extends React.Component {
     render() {
         return (
             <form className="row" id="search-form" onSubmit={this.handleSearch.bind(this)}>
-                <div className="col-sm-6 col-sm-offset-3">
+                <div className="col-md-6 col-md-offset-3">
                     <div className="input-group">
                         <input
                             type="search"

@@ -16,7 +16,7 @@ class BaseChart extends React.Component {
 
         if (this.state.tooltip) {
             tooltip = (
-                <div className="chart-tooltip" style={this.state.tooltip.style} ref="tooltip">
+                <div className="chart-tooltip" style={this.state.tooltip.style}>
                     {this.state.tooltip.text}
                 </div>
             );

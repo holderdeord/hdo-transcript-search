@@ -24,11 +24,16 @@ class AppFlux extends Flux {
         this.createStore('analytics', Analytics, this);
 
         this.searchActions = this.getActions('search');
+        this.summaryStore = this.getStore('summary');
     }
 
     executeSearch(queries) {
-        this.searchActions.summary(queries);
-        this.searchActions.hits(queries);
+        let lastQuery = this.summaryStore.state.joinedQuery;
+
+        if (!lastQuery.length || lastQuery !== queries.join(', ')) {
+            this.searchActions.summary(queries);
+            this.searchActions.hits(queries);
+        }
     }
 
     executeReset() {
