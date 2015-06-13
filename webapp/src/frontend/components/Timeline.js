@@ -148,7 +148,6 @@ class Timeline extends React.Component {
                         <span className={className}>{q}</span>
                     </Link>
                 );
-
             }
 
             return (

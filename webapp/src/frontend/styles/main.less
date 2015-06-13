@@ -119,8 +119,15 @@ body {
   .hidden-xs;
   .hidden-sm;
 
-  position: absolute;
-  padding: 1rem 4rem;
+  position: relative;
+  font-size: 80%;
+
+  a {
+    position: absolute;
+    right: 0;
+    padding: 0 3rem;
+  }
+
 }
 
 .selectable {
@@ -179,6 +186,18 @@ body {
     .speech-text {
       padding-top: 1rem;
     }
+  }
+}
+
+.context-link {
+  position: relative;
+  font-size: 80%;
+
+  a {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 1rem 4rem;
   }
 }
 

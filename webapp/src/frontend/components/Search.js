@@ -1,14 +1,14 @@
-import React               from 'react';
-import assign              from 'react/lib/Object.assign';
-import FluxComponent       from 'flummox/component';
+import React         from 'react';
+import assign        from 'react/lib/Object.assign';
+import FluxComponent from 'flummox/component';
 
-import Intervals           from '../constants/Intervals';
-import key                 from 'keymaster';
-import SearchForm          from './SearchForm';
-import Timeline            from './Timeline';
-import DevPanel            from './DevPanel';
-import ResultStats         from './ResultStats';
-import TopHits             from './TopHits';
+import Intervals     from '../constants/Intervals';
+import key           from 'keymaster';
+import SearchForm    from './SearchForm';
+import Timeline      from './Timeline';
+import DevPanel      from './DevPanel';
+import ResultStats   from './ResultStats';
+import SearchResults from './SearchResults';
 
 class Search extends React.Component {
     constructor(props) {
@@ -60,7 +60,7 @@ class Search extends React.Component {
                     </FluxComponent>
 
                     <FluxComponent connectToStores={['hits']}>
-                        <TopHits focusedIndex={focusedIndex}/>
+                        <SearchResults focusedIndex={focusedIndex}/>
                     </FluxComponent>
 
                     <DevPanel

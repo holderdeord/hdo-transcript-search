@@ -31,50 +31,54 @@ class Speech extends React.Component {
         }
 
         return (
-            <div className="row speech">
-                <div className="col-xs-6 col-md-3">
-                    <div className="row">
-                        <div className="col-xs-1">
-                            <Icon name="calendar" />
+            <div>
+                <div className="row speech">
+                    <div className="col-xs-6 col-md-3">
+                        <div className="row">
+                            <div className="col-xs-1">
+                                <Icon name="calendar" />
+                            </div>
+
+                            <div className="col-xs-8">
+                                <Link to="speech" params={{transcript: speech.transcript, order: speech.order}}>
+                                    <span className="text-muted">{timestamp}</span>
+                                </Link>
+                            </div>
                         </div>
 
-                        <div className="col-xs-8">
-                            <Link to="speech" params={{transcript: speech.transcript, order: speech.order}}>
-                                <span className="text-muted">{timestamp}</span>
-                            </Link>
+                        <div className="row" style={{paddingTop: '0.8rem'}}>
+                            <div className="col-xs-1">
+                                <Icon name="user" />
+                            </div>
+
+                            <div className="col-xs-8">
+                                <strong>{speech.name}</strong>
+                            </div>
+                        </div>
+
+
+                        <div className="row">
+                            <div className="col-xs-1">
+                            </div>
+
+                            <div className="col-xs-8">
+                                {title}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="row" style={{paddingTop: '0.8rem'}}>
-                        <div className="col-xs-1">
-                            <Icon name="user" />
-                        </div>
-
-                        <div className="col-xs-8">
-                            <strong>{speech.name}</strong>
-                        </div>
+                    <div className="col-xs-6 col-md-2">
+                        {this.imageFor(speech)}
                     </div>
 
-
-                    <div className="row">
-                        <div className="col-xs-1">
-                        </div>
-
-                        <div className="col-xs-8">
-                            {title}
-                        </div>
+                    <div className="col-xs-12 col-md-7">
+                        <div className="speech-text">{this.paragraphsFrom(speech)}</div>
                     </div>
                 </div>
 
-                <div className="col-xs-6 col-md-2">
-                    {this.imageFor(speech)}
+                <div className="row">
+                    {this.renderContextLinkIfNecessary()}
                 </div>
-
-                <div className="col-xs-12 col-md-7">
-                    <div className="speech-text">{this.paragraphsFrom(speech)}</div>
-                </div>
-
-                {this.renderContextLinkIfNecessary()}
             </div>
         );
     }
@@ -106,11 +110,15 @@ class Speech extends React.Component {
             };
 
             return (
-                <small className="pull-right" style={{padding: '1rem'}}>
+                <div className="context-link">
                     <Link to="speech" params={linkParams}>
                         Se innlegget i kontekst
+
+                        <span style={{paddingLeft: '.5rem'}}>
+                            <Icon name="comments" size="lg" />
+                        </span>
                     </Link>
-                </small>
+                </div>
             );
         }
     }

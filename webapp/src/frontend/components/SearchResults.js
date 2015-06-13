@@ -2,7 +2,7 @@ import React  from 'react';
 import Speech from './Speech';
 import Icon   from 'react-fa';
 
-class TopHits extends React.Component {
+class SearchResults extends React.Component {
     constructor(props) {
         super(props);
         this.searchActions = props.flux.getActions('search');
@@ -43,24 +43,18 @@ class TopHits extends React.Component {
                     ])
                 }
 
+                {hasMore && this.renderLoadMore()}
+
                 <div className="row" style={{padding: '1rem'}}>
-                    <small className="export-links">
+                    <div className="export-links">
                         <a href={this.getExportUrlFor(result.query)}>
-                            <span style={{paddingRight: '.5rem'}}>
+                            Last ned <strong>{result.counts.total}</strong> innlegg som CSV
+                            <span style={{paddingLeft: '.5rem'}}>
                                 <Icon name="download" />
                             </span>
-
-
-                            Last ned <strong>{result.counts.total}</strong> innlegg som CSV
                         </a>
-                    </small>
-
-                    <div className="text-center">
-                        {hasMore && this.renderLoadMore()}
                     </div>
-                </div>
 
-                <div className="row">
                     <div className="text-center">
                         <small className="text-muted" style={{marginLeft: '1rem'}}>
                             Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
@@ -72,8 +66,10 @@ class TopHits extends React.Component {
     }
 
     renderLoadMore() {
+        let el = null;
+
         if (this.state.loaded) {
-            return (
+            el = (
                 <button
                     className="btn btn-primary"
                     onClick={this.handleLoadMore.bind(this)}
@@ -82,10 +78,18 @@ class TopHits extends React.Component {
                 </button>
             );
         } else {
-            return (
+            el = (
                 <Icon spin name="refresh" style={{margin: '1rem', fontSize: '2rem'}}/>
             );
         }
+
+        return (
+            <div className="row" style={{paddingTop: '1rem'}}>
+                <div className="text-center">
+                    {el}
+                </div>
+            </div>
+        );
     }
 
     handleLoadMore() {
@@ -114,7 +118,7 @@ class TopHits extends React.Component {
     }
 }
 
-TopHits.propTypes = {
+SearchResults.propTypes = {
 };
 
-module.exports = TopHits;
+module.exports = SearchResults;
