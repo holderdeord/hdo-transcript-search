@@ -35,6 +35,11 @@ class Timeline extends React.Component {
             }]
         ];
 
+        this.aspectRatios = [
+            ['screen and (max-width: 770px)', 'minor-sixth'],
+            ['screen', 'double-octave']
+        ];
+
         this.state = this.fetchStateFrom({results: []});
     }
 
@@ -63,6 +68,7 @@ class Timeline extends React.Component {
 
         return {
             queries: queries,
+
             data: {
                 pct: { labels: labels, series: series.pct },
                 count: { labels: labels, series: series.count }
@@ -72,7 +78,6 @@ class Timeline extends React.Component {
 
     render() {
         if (this.state.queries.length) {
-            let aspectRatio = window.matchMedia('(max-width: 770px)').matches ? 'minor-sixth' : 'double-octave';
             this.chartOptions.onlyInteger = this.props.unit === 'count';
 
             return (
@@ -105,7 +110,7 @@ class Timeline extends React.Component {
                             <div className="col-md-12">
                                 <BaseChart
                                     type="Line"
-                                    aspectRatio={aspectRatio}
+                                    aspectRatios={this.aspectRatios}
                                     data={this.state.data[this.props.unit]}
                                     options={this.chartOptions}
                                     responsiveOptions={this.responsiveOptions}

@@ -49,6 +49,10 @@ class TopListChart extends React.Component {
             }]
         ];
 
+        let aspectRatios = [
+            ['screen', 'minor-sixth']
+        ];
+
         let star = this.props.star ? (<small className="text-muted">&nbsp;*</small>) : null;
 
         return (
@@ -62,7 +66,7 @@ class TopListChart extends React.Component {
                     <BaseChart
                         type="Bar"
                         data={data}
-                        aspectRatio="minor-sixth"
+                        aspectRatios={aspectRatios}
                         options={chartOptions}
                         responsiveOptions={responsiveOptions}
                     />

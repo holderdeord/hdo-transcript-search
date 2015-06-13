@@ -5,22 +5,27 @@ class BaseChart extends React.Component {
     constructor(props) {
         super(props);
         this.groups = this._blankGroups();
-        this.state = {tooltip: null};
+        this.state = {
+            tooltip: null,
+            aspectRatio: ''
+        };
     }
 
     render() {
-        let ratio = this.props.aspectRatio ? `ct-${this.props.aspectRatio}` : '';
         let tooltip = null;
 
         if (this.state.tooltip) {
-            tooltip = <div className="chart-tooltip" style={this.state.tooltip.style} ref="tooltip">{this.state.tooltip.text}</div>;
+            tooltip = (
+                <div className="chart-tooltip" style={this.state.tooltip.style} ref="tooltip">
+                    {this.state.tooltip.text}
+                </div>
+            );
         }
 
         return (
             <div>
-
                 <div ref="chart"
-                    className={`ct-chart ${ratio}`}
+                    className={`ct-chart ct-${this.state.aspectRatio}`}
                     onMouseOver={this._handleMouseOver.bind(this)}
                     onMouseOut={this._handleMouseOut.bind(this)}
                 />
@@ -30,17 +35,40 @@ class BaseChart extends React.Component {
         );
     }
 
+    componentWillMount() {
+        this._updateAspectRatio();
+    }
+
     componentDidMount() {
         this._drawChart(this.props);
-
+        window.addEventListener('resize', this._handleResize.bind(this));
     }
 
     componentWillUnmount() {
         this._detachChart();
+        window.removeEventListener('resize', this._handleResize.bind(this));
     }
 
     componentWillReceiveProps(newProps) {
+        this._updateAspectRatio();
         this._drawChart(newProps);
+    }
+
+    _handleResize() {
+        this._updateAspectRatio();
+    }
+
+    _updateAspectRatio() {
+        let mapping = this.props.aspectRatios || [];
+
+        for (let i = 0; i < mapping.length; i++) {
+            let [query, ratio] = mapping[i];
+
+            if (window.matchMedia(query).matches) {
+                this.setState({aspectRatio: ratio});
+                break;
+            }
+        }
     }
 
     _blankGroups() {
@@ -61,7 +89,7 @@ class BaseChart extends React.Component {
 
             this.setState({
                 tooltip: {
-                    text: Math.floor(val) == val ? val : val.toFixed(2),
+                    text: Math.floor(val) === val ? val : val.toFixed(2),
                     style: {
                         left: (e.offsetX || e.originalEvent.layerX) - 15,
                         top: (e.offsetY || e.originalEvent.layerY) - 38
@@ -195,7 +223,8 @@ class BaseChart extends React.Component {
 BaseChart.propTypes = {
     type: React.PropTypes.string.isRequired,
     data: React.PropTypes.object.isRequired,
-    options: React.PropTypes.object
+    options: React.PropTypes.object,
+    aspectRatios: React.PropTypes.array
 };
 
 module.exports = BaseChart;
