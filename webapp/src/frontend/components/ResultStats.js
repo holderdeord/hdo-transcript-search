@@ -52,7 +52,9 @@ class ResultStats extends React.Component {
                 <div className="card">
                     <div className="row result-box">
                         <div className="col-md-12">
-                            <h4 className="text-center">Hvem nevner «{this.state.query}» oftest?</h4>
+                            <h4 className="text-center">
+                                Hvem nevner «{this.state.query}» oftest?
+                            </h4>
                         </div>
                     </div>
 
@@ -185,13 +187,11 @@ class ResultStats extends React.Component {
     renderDiclaimer() {
         return (
             <div>
-                <div className="divider" />
-
                 <div className="row">
                     <div className="col-md-12">
-                        <small className="text-muted hidden-xs hidden-sm" style={{padding: '2rem'}}>
-                            * For å unngå at vararepresentanter dominerer resultatene, er personer med totalt {MIN_SPEECH_COUNT} innlegg eller mindre ekskludert.
-                        </small>
+                        <div className="text-muted pull-right hidden-xs hidden-sm" style={{padding: '1rem 2rem'}}>
+                            <small>* Ekskludert stortingspresidenter og personer med færre enn {MIN_SPEECH_COUNT} innlegg totalt.</small>
+                        </div>
                     </div>
                 </div>
             </div>

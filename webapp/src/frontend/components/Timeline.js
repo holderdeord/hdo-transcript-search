@@ -102,7 +102,9 @@ class Timeline extends React.Component {
                     <div className="card">
                         <div className="row result-box">
                             <div className="col-md-12">
-                                <h4 className="text-center">Forekomsten av «{this.state.queries.join(', ')}» over tid</h4>
+                                <h4 className="text-center">
+                                    Forekomsten av «{this.state.queries.join(', ')}» over tid
+                                </h4>
                             </div>
                         </div>
 

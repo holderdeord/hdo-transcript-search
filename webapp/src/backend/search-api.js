@@ -105,7 +105,13 @@ class SearchAPI {
 
         return es
             .search({index: INDEX_NAME, type: INDEX_TYPE, body: body})
-            .then(response => response.hits.hits ? response.hits.hits.map(h => Object.assign(h._source, {id: h._id})) : []);
+            .then(response => {
+                if (response.hits.hits) {
+                    return response.hits.hits.map(h => Object.assign(h._source, {id: h._id}));
+                } else {
+                    return [];
+                }
+            });
     }
 
     _cacheResponse(key, value) {
