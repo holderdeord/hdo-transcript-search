@@ -131,6 +131,23 @@ body {
   }
 }
 
+.navigation-links {
+  white-space: nowrap;
+
+  strong {
+    .hidden-xs;
+    padding: .2rem;
+  }
+
+  .fa {
+    padding: 0 .2rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
 .speech {
   .selectable;
 
@@ -149,6 +166,14 @@ body {
 
   .highlight {
     border: 1px solid darken(@hdo-yellow-a, 10%);
+  }
+
+  @media (max-width: 992px) {
+    padding: 0;
+
+    .speech-text {
+      padding-top: 1rem;
+    }
   }
 }
 

@@ -30,7 +30,6 @@ class Speech extends React.Component {
             speech.external_id = president.external_id;
         }
 
-
         return (
             <div className="row speech">
                 <div className="col-xs-6 col-md-3">
@@ -88,6 +87,7 @@ class Speech extends React.Component {
 
         return (
             <img
+                className="img-responsive"
                 src={src}
                 alt={speech.name}
                 height={height}
@@ -106,7 +106,7 @@ class Speech extends React.Component {
             };
 
             return (
-                <small className="pull-right" style={{paddingTop: '1rem'}}>
+                <small className="pull-right" style={{padding: '1rem'}}>
                     <Link to="speech" params={linkParams}>
                         Se innlegget i kontekst
                     </Link>

@@ -20,7 +20,12 @@ class SpeechBrowser extends React.Component {
             prevLink = (
                 <Link to="speech" params={{transcript: first.transcript, order: first.order}}>
                     <Icon name="chevron-left"/>
-                    <span style={{padding: '1rem'}}><strong>Forrige innlegg:</strong> {first.name} {first.party ? `(${first.party})` : ''}</span>
+
+                    <strong>Forrige innlegg:</strong>
+
+                    <span>
+                        {first.name} {first.party ? `(${first.party})` : ''}
+                    </span>
                 </Link>
             );
         }
@@ -28,7 +33,12 @@ class SpeechBrowser extends React.Component {
         if (last) {
             nextLink = (
                 <Link to="speech" params={{transcript: last.transcript, order: last.order}}>
-                    <span style={{padding: '1rem'}}><strong>Neste innlegg:</strong> {last.name} {last.party ? `(${last.party})` : ''}</span>
+                    <strong>Neste innlegg:</strong>
+
+                    <span>
+                        {last.name} {last.party ? `(${last.party})` : ''}
+                    </span>
+
                     <Icon name="chevron-right"/>
                 </Link>
             );
@@ -36,18 +46,18 @@ class SpeechBrowser extends React.Component {
 
         return (
             <div className="container">
-                <div className="row">
+                <div className="row navigation-links">
                     <div className="col-xs-6 col-md-6">{prevLink}</div>
                     <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
 
-                <div className="row card" style={{marginTop: '1rem'}}>
+                <div className="row card" style={{margin: '1rem 0'}}>
                     <div className="col-md-12">
                         <Speech key={focused.id} speech={focused} showContextLink={false} showTime={true} />
                     </div>
                 </div>
 
-                <div className="row">
+                <div className="row navigation-links">
                     <div className="col-xs-6 col-md-6">{prevLink}</div>
                     <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
