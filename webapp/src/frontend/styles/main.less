@@ -45,7 +45,7 @@ body {
 
     .description {
       max-width: 50%;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
     }
   }
 
@@ -81,15 +81,20 @@ body {
 #search-form input[type=submit] {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  z-index: 2;
 }
 
 @media screen and (min-width: 768px) {
   #search-form input[type=search] {
     .input-lg;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   #search-form input[type=submit] {
     .btn-lg;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
@@ -229,19 +234,23 @@ footer {
 
 
 .sharing-links {
-  span.fa {
+  .fa {
     padding: 0.9rem;
-
     opacity: .8;
     transform: scale(.8);
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
   }
 
-  span.fa:hover {
+  .fa:hover {
     opacity: 1;
     transform: scale(1);
   }
+
+  @media screen and (max-width: 768px) {
+    font-size: 1rem;
+  }
+
 }
 
 .chart-tooltip {
