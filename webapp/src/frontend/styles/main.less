@@ -18,6 +18,7 @@ body {
   background-image: url("http://files.holderdeord.no/images/lion01.jpg");
   background-size: cover;
   text-align: center;
+  box-shadow: 0 -1px fade(black, 10%) inset;
 
   h1 {
     color: inherit;
@@ -51,7 +52,23 @@ body {
 
 }
 
+
+
 .result-box {
+
+  &.result-box-header {
+    background: #fcfcfc;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 4rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 1px fade(black, 12%);
+    h4 {
+      font-weight: 700;
+    }
+  }
+
   margin: 2rem;
   @media screen and (min-width: 768px) {
   }

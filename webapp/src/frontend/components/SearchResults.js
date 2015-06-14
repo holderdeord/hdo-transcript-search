@@ -28,7 +28,7 @@ class SearchResults extends React.Component {
 
         return (
             <div className="card">
-                <div className="row result-box">
+                <div className="row result-box result-box-header">
                     <div className="col-md-12">
                         <h4 className="text-center">
                             Innlegg der «{result.query}» er nevnt
