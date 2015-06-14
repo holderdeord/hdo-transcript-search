@@ -10,7 +10,8 @@ class SearchForm extends React.Component {
 
         this.state = {
             query: this.props.joinedQuery,
-            lastReceivedQuery: null
+            lastReceivedQuery: null,
+            focused: true
         };
     }
 
@@ -37,15 +38,14 @@ class SearchForm extends React.Component {
         return (
             <form className="row" id="search-form" onSubmit={this.handleSearch.bind(this)}>
                 <div className="col-md-6 col-md-offset-3">
-                    <div className="input-group focused" ref="searchBox">
+                    <div className={`input-group ${this.state.focused ? 'focused' : ''}`}>
                         <input
                             type="search"
                             className="form-control"
                             name="query"
-                            ref="query"
                             autoFocus="true"
-                            onFocus={this.setSearchBoxFocus.bind(this)}
-                            onBlur={this.setSearchBoxFocus.bind(this)}
+                            onFocus={this.handleFocus.bind(this)}
+                            onBlur={this.handleBlur.bind(this)}
                             placeholder="Søk etter noe politikere har sagt"
                             tabIndex="0"
                             value={this.state.query}
@@ -66,13 +66,12 @@ class SearchForm extends React.Component {
     }
 
 
-    setSearchBoxFocus(event) {
-        var searchbox = this.refs.searchBox.getDOMNode();
-        if (event.type === "focus") {
-            searchbox.classList.add("focused");
-        } else if (event.type === "blur") {
-            searchbox.classList.remove("focused");
-        }
+    handleFocus() {
+        this.setState({focused: true});
+    }
+
+    handleBlur() {
+        this.setState({focused: false});
     }
 
     handleSearch(event) {
@@ -105,11 +104,6 @@ class SearchForm extends React.Component {
                 this.handleReset();
             }
         });
-    }
-
-    handleFocus(event) {
-        event.preventDefault();
-        React.findDOMNode(this.refs.query).focus();
     }
 
     transitionToQueries(queries) {
