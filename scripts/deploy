@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# basic deploy script
+
+ssh hdo@tale.holderdeord.no "cd /webapps/hdo-transcript-search && git pull origin master && sudo restart hdo-transcript-search"
