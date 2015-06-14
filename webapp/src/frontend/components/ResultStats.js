@@ -85,7 +85,7 @@ class ResultStats extends React.Component {
                                 <img
                                     src={ImageUtils.partyLogoFor(topParty.key)}
                                     alt={`${topPartyName}s logo`}
-                                    height="200"
+                                    className="party-logo"
                                 />
 
                                 <h2 className="selectable">

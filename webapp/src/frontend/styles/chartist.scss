@@ -129,11 +129,11 @@ $ct-series-colors: (
     word-break: break-word;
   }
 
-  @media screen and (max-width: 300px) {
-    font-size: 1rem;
-  }
-
   @media screen and (max-width: 599px) {
+    .ct-label {
+      font-size: .8rem;
+    }
+
     .ct-bar {
       stroke-width: $hdo-bar-width-small;
     }

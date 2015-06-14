@@ -25,7 +25,6 @@ class Timeline extends React.Component {
 
         this.responsiveOptions = [
             ['screen and (max-width: 599px)', {
-                // showPoint: false,
                 chartPadding: { left: 5 },
                 fullWidth: true,
                 axisX: {
@@ -109,7 +108,7 @@ class Timeline extends React.Component {
                         </div>
 
                         <div className="row result-box">
-                            <div className="col-md-12">
+                            <div className="col-md-12 col-xs-12">
                                 <BaseChart
                                     type="Line"
                                     aspectRatios={this.aspectRatios}
