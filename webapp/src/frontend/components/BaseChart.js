@@ -85,7 +85,7 @@ class BaseChart extends React.Component {
         let val = e.srcElement.getAttribute('ct:value');
 
         if (val) {
-            val = (+val)
+            val = (+val);
 
             this.setState({
                 tooltip: {

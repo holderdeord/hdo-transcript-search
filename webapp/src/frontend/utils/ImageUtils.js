@@ -8,10 +8,10 @@ export default class ImageUtils {
     }
 
     static partyLogoFor(external_id) {
-        return `https://www.holderdeord.no/api/parties/${external_id.toLowerCase()}/logo?version=large`;
+        return `/images/${external_id.toLowerCase()}.png`;
     }
 
     static fallbackImage() {
-        return 'https://www.holderdeord.no/assets/representatives/unknown.jpg';
+        return '/images/unknown.jpg';
     }
 }
