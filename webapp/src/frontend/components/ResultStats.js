@@ -176,7 +176,7 @@ class ResultStats extends React.Component {
                         </div>
                     </div>
 
-                    {isPct ? this.renderDiclaimer() : null}
+                    {isPct ? this.renderDisclaimer() : null}
                 </div>
             );
         } else {
@@ -184,12 +184,12 @@ class ResultStats extends React.Component {
         }
     }
 
-    renderDiclaimer() {
+    renderDisclaimer() {
         return (
             <div>
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="text-muted pull-right hidden-xs hidden-sm" style={{padding: '1rem 2rem'}}>
+                        <div className="text-muted text-center pull-right" style={{padding: '1rem 2rem'}}>
                             <small>* Ekskludert stortingspresidenter og personer med færre enn {MIN_SPEECH_COUNT} innlegg totalt.</small>
                         </div>
                     </div>
