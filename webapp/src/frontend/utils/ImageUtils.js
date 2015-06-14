@@ -1,7 +1,7 @@
 export default class ImageUtils {
     static personImageFor(external_id) {
         if (external_id) {
-            return `http://data.stortinget.no/eksport/personbilde?personid=${external_id}&storrelse=middels`;
+            return `/images/${external_id}.jpg`;
         } else {
             return this.fallbackImage();
         }
