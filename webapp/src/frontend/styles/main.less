@@ -94,32 +94,39 @@ body {
   font-family: @font-family-secondary;
 }
 
-#search-form input[type=search] {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0
-}
+#search-form {
+  font-family: @font-family-secondary;
 
-#search-form input[type=submit] {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  z-index: 2;
-}
+  input[type=search] {
+    @media screen and (min-width: 768px) {
+      .input-lg;
+    }
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 
-@media screen and (min-width: 768px) {
-  #search-form input[type=search] {
-    .input-lg;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    &:focus {
+      box-shadow: none;
+    }
   }
 
-  #search-form input[type=submit] {
-    .btn-lg;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  input[type=submit] {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    z-index: 2;
+    @media screen and (min-width: 768px) {
+      .btn-lg;
+    }
+  }
+  .input-group {
+    border-radius: 3px;
+    box-shadow: 0 1px 3px fade(black, 10%), 0 0 0 3px fade(@hdo-steel-gray-a, 0%);
+
+    &.focused {
+      box-shadow: 0 1px 3px fade(black, 10%), 0 0 0 3px fade(@hdo-steel-gray-a, 20%);
+    }
   }
 }
 
-#search-form { font-family: @font-family-secondary; }
 
 .card {
   background-color: white;

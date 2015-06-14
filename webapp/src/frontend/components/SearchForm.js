@@ -32,17 +32,20 @@ class SearchForm extends React.Component {
         key.unbind('/', this.handleFocus.bind(this));
     }
 
+
     render() {
         return (
             <form className="row" id="search-form" onSubmit={this.handleSearch.bind(this)}>
                 <div className="col-md-6 col-md-offset-3">
-                    <div className="input-group">
+                    <div className="input-group focused" ref="searchBox">
                         <input
                             type="search"
                             className="form-control"
                             name="query"
                             ref="query"
                             autoFocus="true"
+                            onFocus={this.setSearchBoxFocus.bind(this)}
+                            onBlur={this.setSearchBoxFocus.bind(this)}
                             placeholder="Søk etter noe politikere har sagt"
                             tabIndex="0"
                             value={this.state.query}
@@ -60,6 +63,16 @@ class SearchForm extends React.Component {
                 </div>
             </form>
         );
+    }
+
+
+    setSearchBoxFocus(event) {
+        var searchbox = this.refs.searchBox.getDOMNode();
+        if (event.type === "focus") {
+            searchbox.classList.add("focused");
+        } else if (event.type === "blur") {
+            searchbox.classList.remove("focused");
+        }
     }
 
     handleSearch(event) {
