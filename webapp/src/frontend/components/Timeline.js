@@ -3,6 +3,7 @@ import BaseChart from './BaseChart';
 import TimeUtils from '../utils/TimeUtils';
 import Colors    from '../utils/Colors';
 import {Link}    from 'react-router';
+import key       from 'keymaster';
 
 class Timeline extends React.Component {
     constructor(props) {
@@ -45,6 +46,25 @@ class Timeline extends React.Component {
     componentWillReceiveProps(props) {
         this.setState(this.fetchStateFrom(props));
     }
+
+    componentDidMount() {
+        key('ctrl+1', this.setPercent.bind(this));
+        key('ctrl+2', this.setAbsolute.bind(this));
+    }
+
+    componentWillUnmount() {
+        key.unbind('ctrl+1');
+        key.unbind('ctrl+2');
+    }
+
+    setPercent() {
+        this.props.onUnitChange({target: {value: 'Prosent'}});
+    }
+
+    setAbsolute() {
+        this.props.onUnitChange({target: {value: 'Absolutt'}});
+    }
+
 
     fetchStateFrom(props) {
         let queries = [];

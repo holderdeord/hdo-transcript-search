@@ -26,13 +26,12 @@ class SearchForm extends React.Component {
     }
 
     componentDidMount() {
-        key('/', this.handleFocus.bind(this));
+        key('/', this.handleFocusKey.bind(this));
     }
 
     componentWillUnmount() {
-        key.unbind('/', this.handleFocus.bind(this));
+        key.unbind('/', this.handleFocusKey.bind(this));
     }
-
 
     render() {
         return (
@@ -43,6 +42,7 @@ class SearchForm extends React.Component {
                             type="search"
                             className="form-control"
                             name="query"
+                            ref="query"
                             autoFocus="true"
                             onFocus={this.handleFocus.bind(this)}
                             onBlur={this.handleBlur.bind(this)}
@@ -72,6 +72,13 @@ class SearchForm extends React.Component {
 
     handleBlur() {
         this.setState({focused: false});
+    }
+
+    handleFocusKey(e) {
+        if (!this.state.focused) {
+            e.preventDefault();
+            React.findDOMNode(this.refs.query).focus();
+        }
     }
 
     handleSearch(event) {
