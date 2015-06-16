@@ -7,6 +7,11 @@ import Colors       from '../utils/Colors';
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
 class ResultStats extends React.Component {
+
+    componentDidMount() {
+        console.log('ResultStats.componentDidMount');
+    }
+
     constructor(props) {
         super(props);
 

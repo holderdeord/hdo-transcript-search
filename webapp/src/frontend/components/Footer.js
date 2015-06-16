@@ -1,6 +1,11 @@
 import React from 'react';
 
 class Footer extends React.Component {
+
+    componentDidMount() {
+        console.log('Footer.componentDidMount');
+    }
+
     render() {
         // jshint ignore:start
         return (

@@ -25,6 +25,7 @@ class Search extends React.Component {
     }
 
     componentDidMount() {
+        console.log('Search.componentDidMount');
         this.registerKeyBindings();
     }
 

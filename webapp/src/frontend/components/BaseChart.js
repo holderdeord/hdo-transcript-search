@@ -40,6 +40,7 @@ class BaseChart extends React.Component {
     }
 
     componentDidMount() {
+        console.log('BaseChart.componentDidMount');
         this._drawChart(this.props);
         window.addEventListener('resize', this._handleResize.bind(this));
     }

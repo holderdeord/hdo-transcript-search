@@ -2,6 +2,10 @@ import React     from 'react';
 import BaseChart from './BaseChart';
 
 class TopListChart extends React.Component {
+    componentDidMount() {
+        console.log('TopListChar.componentDidMount');
+    }
+
 
     render() {
         let unit   = this.props.unit;
