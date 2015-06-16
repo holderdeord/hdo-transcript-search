@@ -190,7 +190,7 @@ class ResultStats extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="text-muted text-center pull-right" style={{padding: '1rem 2rem'}}>
-                            <small>* Ekskludert stortingspresidenter og personer med færre enn {MIN_SPEECH_COUNT} innlegg totalt.</small>
+                            <small>* Ekskludert personer med færre enn {MIN_SPEECH_COUNT} innlegg totalt.</small>
                         </div>
                     </div>
                 </div>
