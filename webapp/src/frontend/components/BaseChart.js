@@ -137,10 +137,6 @@ class BaseChart extends React.Component {
         return React.findDOMNode(this.refs.chart);
     }
 
-    _setupTooltips() {
-
-    }
-
     _setupAnimation() {
         //
         // http://gionkunz.github.io/chartist-js/examples.html#advanced-smil-animations

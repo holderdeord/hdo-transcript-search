@@ -33,6 +33,9 @@ class AppFlux extends Flux {
         if (!lastQuery.length || lastQuery !== queries.join(', ')) {
             this.searchActions.summary(queries);
             this.searchActions.hits(queries);
+        } else {
+            // this is apparently needed to redraw the charts
+            this.summaryStore.forceUpdate();
         }
     }
 
