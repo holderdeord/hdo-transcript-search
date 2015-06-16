@@ -48,8 +48,6 @@ class Timeline extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Timeline.componentDidMount');
-
         key('ctrl+1', this.setPercent.bind(this));
         key('ctrl+2', this.setAbsolute.bind(this));
     }

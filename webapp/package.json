@@ -32,7 +32,7 @@
     "moment": "^2.10.0",
     "morgan": "^1.5.0",
     "nconf": "^0.6.9",
-    "react": "git://github.com/facebook/react#master",
+    "react": "^0.13.3",
     "react-router": "^0.13.3",
     "reqwest": "^1.1.5"
   },

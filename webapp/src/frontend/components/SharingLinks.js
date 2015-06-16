@@ -2,12 +2,7 @@ import React from 'react';
 import Icon  from 'react-fa';
 
 class SharingLinks extends React.Component {
-        componentDidMount() {
-            console.log('SharingLinks.componentDidMount');
-        }
     render() {
-
-
 
         return (
             <div className="sharing-links text-center hidden-xs">

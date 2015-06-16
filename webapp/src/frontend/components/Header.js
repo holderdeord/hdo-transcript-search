@@ -1,9 +1,6 @@
 import React from 'react';
 
 class Header extends React.Component {
-    componentDidMount() {
-        console.log('Header.componentDidMount');
-    }
 
 
     render() {

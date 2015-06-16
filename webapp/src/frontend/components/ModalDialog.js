@@ -4,11 +4,6 @@ import key   from 'keymaster';
 class ModalDialog extends React.Component {
 
     componentDidMount() {
-        console.log('ModalDialog.componentDidMount');
-    }
-
-
-    componentDidMount() {
         key('esc', this.props.onClose);
     }
 

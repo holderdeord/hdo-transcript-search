@@ -26,10 +26,6 @@ class SearchForm extends React.Component {
     }
 
     componentDidMount() {
-
-            console.log('SarchForm.componentDidMount');
-
-
         key('/', this.handleFocusKey.bind(this));
     }
 

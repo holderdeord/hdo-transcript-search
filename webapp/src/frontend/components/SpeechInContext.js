@@ -5,11 +5,6 @@ import { Link }        from 'react-router';
 import Icon            from 'react-fa';
 
 class SpeechBrowser extends React.Component {
-
-    componentDidMount() {
-        console.log('SpeechInContext.componentDidMount');
-    }
-
     render() {
         let speeches = this.props.speeches;
 

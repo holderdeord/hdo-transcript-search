@@ -10,11 +10,6 @@ class Speech extends React.Component {
         this.state = {useFallbackImage: false};
     }
 
-    componentDidMount() {
-        console.log('Speech.componentDidMount');
-    }
-
-
     render() {
         let speech    = this.props.speech;
         let timestamp = TimeUtils.timestampForHit(speech);

@@ -18,11 +18,6 @@ class SearchResults extends React.Component {
         }
     }
 
-    componentDidMount() {
-        console.log('SearchResults.componentDidMount');
-    }
-
-
     render() {
         let result = this.getFocusedHitSet();
 
