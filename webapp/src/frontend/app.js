@@ -11,6 +11,8 @@ import SpeechStore   from './stores/SpeechStore';
 import Analytics     from './stores/Analytics';
 import SearchActions from './actions/SearchActions';
 import routes        from './routes';
+import titleSuffix   from './constants/titleSuffix';
+
 
 class AppFlux extends Flux {
     constructor() {
@@ -37,14 +39,18 @@ class AppFlux extends Flux {
             // this is apparently needed to redraw the charts
             this.summaryStore.forceUpdate();
         }
+
+        document.title = `«${queries.join(', ')}» · ${titleSuffix}`;
     }
 
     executeReset() {
         this.searchActions.reset();
     }
 
-    executeSpeechContext(...args) {
-        this.searchActions.speechContext(...args);
+    executeSpeechContext(transcript, order) {
+        this.searchActions.speechContext(transcript, order).then(() => {
+            document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
+        });
     }
 }
 

@@ -1,5 +1,6 @@
 import { Actions }  from 'flummox';
 import ServerFacade from '../utils/ServerFacade';
+import titleSuffix  from '../constants/titleSuffix';
 
 export default class SearchActions extends Actions {
     constructor() {
@@ -24,6 +25,7 @@ export default class SearchActions extends Actions {
     }
 
     reset() {
+        document.title = titleSuffix;
         return null;
     }
 }

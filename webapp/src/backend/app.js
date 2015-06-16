@@ -73,13 +73,13 @@ app.get('/', (req, res) => {
 
 app.get('/speeches/:transcript/:order', (req, res) => {
     res.render('index', {
-        title: 'Innlegg fra Stortinget'
+        title: `Innlegg ${req.params.transcript} / ${req.params.order}`
     });
 });
 
 app.get('/search', (req, res) => {
     res.render('index', {
-        title: 'Søk',
+        title: 'Stortingssøk',
     });
 });
 
