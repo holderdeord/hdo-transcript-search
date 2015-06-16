@@ -67,6 +67,7 @@ class TopListChart extends React.Component {
                         type="Bar"
                         data={data}
                         aspectRatios={aspectRatios}
+                        tooltipSuffix={this.props.unit === 'pct' ? '%' : null}
                         options={chartOptions}
                         responsiveOptions={responsiveOptions}
                     />

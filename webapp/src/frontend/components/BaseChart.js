@@ -87,9 +87,14 @@ class BaseChart extends React.Component {
         if (val) {
             val = (+val);
 
+            let text = (Math.floor(val) === val ? val : val.toFixed(2)).toString();
+            if (this.props.tooltipSuffix) {
+                text = text + this.props.tooltipSuffix;
+            }
+
             this.setState({
                 tooltip: {
-                    text: Math.floor(val) === val ? val : val.toFixed(2),
+                    text: text,
                     style: {
                         left: (e.offsetX || e.originalEvent.layerX) - 15,
                         top: (e.offsetY || e.originalEvent.layerY) - 38

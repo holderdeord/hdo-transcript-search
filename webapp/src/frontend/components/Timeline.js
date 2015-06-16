@@ -132,6 +132,7 @@ class Timeline extends React.Component {
                                 <BaseChart
                                     type="Line"
                                     aspectRatios={this.aspectRatios}
+                                    tooltipSuffix={this.props.unit === 'pct' ? '%' : null}
                                     data={this.state.data[this.props.unit]}
                                     options={this.chartOptions}
                                     responsiveOptions={this.responsiveOptions}
