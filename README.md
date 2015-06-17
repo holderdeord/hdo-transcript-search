@@ -5,7 +5,7 @@
 
 Visualize language usage in the Norwegian parliament.
 
-![image](https://cloud.githubusercontent.com/assets/572/6088832/f9052628-ae5a-11e4-9a26-d78e36b23a9d.png)
+![image](https://cloud.githubusercontent.com/assets/572/8212260/fc7aab26-151a-11e5-87ca-63636abe06ee.png)
 
 This project consists of two parts:
 
