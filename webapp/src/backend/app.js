@@ -59,6 +59,8 @@ app.use((req, res, next) => {
         res.setHeader('Cache-Control', 'public, max-age=5');
     } else if (req.path.indexOf('/api') === 0) {
         res.setHeader('Cache-Control', 'public, max-age=600');
+    } else {
+        res.setHeader('Cache-Control', 'public, max-age=5');
     }
 
     return next();
