@@ -1,21 +1,23 @@
 require 'elasticsearch'
 require 'pry'
 require 'pp'
+require 'json'
 
 class SignificantTerms
   ALGORITHMS = [:jlh, :mutual_information, :chi_square, :gnd]
+  # ALGORITHMS = [:jlh]
 
   # get top 10 terms for all algorithms for all years
   def get(size = 10)
-    result = []
+    result = {}
 
     ALGORITHMS.each do |alg|
       significant_terms_timeline('*', alg, size).each do |time, words|
-        result.concat words
+        result[time] = words
       end
     end
 
-    result.sort.uniq
+    result
   end
 
   def timeline_for(word)
@@ -32,9 +34,14 @@ class SignificantTerms
         },
         aggregations: {
           timeline: {
-            date_histogram: {
-              interval: "year" ,
-              field: "time"
+            range: {
+              field: "time",
+              ranges: [
+                { from: 1001887200000, to: 1128117599000 },
+                { from: 1128117600000, to: 1254347999000 },
+                { from: 1254348000000, to: 1380578399000 },
+                { from: 1380578400000, to: 1506808799000 }
+              ]
             }
           }
         }
@@ -44,7 +51,8 @@ class SignificantTerms
     result = {}
 
     response['aggregations']['timeline']['buckets'].each do |bucket|
-      t = Time.at(bucket['key'] / 1000)
+      # t = Time.at(bucket['key'] / 1000)
+      t = bucket['key']
       count = bucket['doc_count']
 
       result[t] = count
@@ -113,9 +121,14 @@ class SignificantTerms
         },
         aggregations: {
           interesting_words: {
-            date_histogram: {
+            date_range: {
               field: "time",
-              interval: "year"
+              ranges: [
+                { from: 1001887200000, to: 1128117599000 },
+                { from: 1128117600000, to: 1254347999000 },
+                { from: 1254348000000, to: 1380578399000 },
+                { from: 1380578400000, to: 1506808799000 }
+              ]
             },
             aggregations: {
               words: {
@@ -133,7 +146,7 @@ class SignificantTerms
     result = Hash.new { |hash, time| hash[time] = [] }
 
     response['aggregations']['interesting_words']['buckets'].each do |bucket|
-      time = Time.parse(bucket['key_as_string'])
+      time = bucket['key']
       words = bucket['words']['buckets'].map { |wbucket| wbucket['key'] }
 
       result[time] = words
@@ -155,5 +168,9 @@ end
 
 if __FILE__ == $0
   st = SignificantTerms.new
-  st.show_algorithms_for(ARGV.first)
+  st.get(200).each do |time, words|
+    puts "# #{time}\n\n"
+    puts words.join(', ')
+    puts
+  end
 end
