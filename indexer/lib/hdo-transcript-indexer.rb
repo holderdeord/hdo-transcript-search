@@ -41,6 +41,8 @@ module Hdo
 
         @slug_cache = Cache.new(cache_path('name-to-slug'))
         @slug_cache.load_if_exists
+
+        @stats = Hash.new { |hash, session| hash[session] = Hash.new(0) }
       end
 
       def execute
@@ -48,6 +50,8 @@ module Hdo
         convert
         create_index
         index_docs
+
+        @stats
       end
 
       private
@@ -212,9 +216,14 @@ module Hdo
       def index_file(file)
         transcript_id = file.basename.to_s.sub(file.extname, '')
         data          = JSON.parse(file.read)
-        presidents     = data['presidents'].map { |e| {name: e, external_id: @slug_cache[e]} }
+        presidents    = data['presidents'].map { |e| {name: e, external_id: @slug_cache[e]} }
+        session       = data['session']
+
+        @stats[session][:transcripts] += 1
 
         docs = data['sections'].map.with_index do |section, idx|
+          @stats[session][:speeches] += 1
+
           id = "#{transcript_id}-#{idx}"
 
           doc = {
