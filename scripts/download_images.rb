@@ -5,8 +5,12 @@ require 'hashie/mash'
 require 'pp'
 require 'fileutils'
 require 'json'
+require 'faraday_middleware'
 
-FD = Faraday.new
+FD = Faraday.new { |b|
+  b.use FaradayMiddleware::FollowRedirects
+  b.adapter :net_http
+}
 
 out_dir = File.expand_path('../../webapp/public/images', __FILE__)
 FileUtils.mkdir_p out_dir
