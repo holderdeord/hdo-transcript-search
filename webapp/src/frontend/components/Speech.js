@@ -1,9 +1,9 @@
-import React      from 'react';
-import TimeUtils  from '../utils/TimeUtils';
-import ImageUtils from '../utils/ImageUtils';
-import Analytics  from '../stores/Analytics';
-import { Link }   from 'react-router';
-import Icon       from 'react-fa';
+import React             from 'react';
+import TimeUtils         from '../utils/TimeUtils';
+import ImageUtils        from '../utils/ImageUtils';
+import { Link }          from 'react-router';
+import Icon              from 'react-fa';
+import ImageWithFallback from './ImageWithFallback';
 
 class Speech extends React.Component {
     constructor() {
@@ -68,7 +68,13 @@ class Speech extends React.Component {
                     </div>
 
                     <div className="col-xs-6 col-md-2">
-                        {this.imageFor(speech)}
+                        <ImageWithFallback
+                            className="img-responsive"
+                            src={ImageUtils.personImageFor(speech.external_id)}
+                            alt={speech.name}
+                            height={180}
+                            fallbackSrc={ImageUtils.fallbackImage()}
+                        />
                     </div>
 
                     <div className="col-xs-12 col-md-7">
@@ -81,23 +87,6 @@ class Speech extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    imageFor(speech) {
-        let height = 180;
-
-        let src = this.state.useFallbackImage ?
-            ImageUtils.fallbackImage() : ImageUtils.personImageFor(speech.external_id);
-
-        return (
-            <img
-                className="img-responsive"
-                src={src}
-                alt={speech.name}
-                height={height}
-                onError={this.handleImageError.bind(this)} />
-        );
-
     }
 
     renderContextLinkIfNecessary() {
@@ -125,13 +114,6 @@ class Speech extends React.Component {
 
     handleOpenContext() {
         window.alert('not implemented');
-    }
-
-    handleImageError() {
-        if (!this.state.useFallbackImage) {
-            Analytics.sendEvent('image-error', this.props.speech.external_id);
-            this.setState({useFallbackImage: true});
-        }
     }
 
     paragraphsFrom(speech) {

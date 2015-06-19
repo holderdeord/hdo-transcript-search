@@ -1,8 +1,9 @@
-import React        from 'react';
-import TopListChart from './TopListChart';
-import Parties      from '../../shared/Parties';
-import ImageUtils   from '../utils/ImageUtils';
-import Colors       from '../utils/Colors';
+import React             from 'react';
+import TopListChart      from './TopListChart';
+import Parties           from '../../shared/Parties';
+import ImageUtils        from '../utils/ImageUtils';
+import Colors            from '../utils/Colors';
+import ImageWithFallback from './ImageWithFallback';
 
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
@@ -139,10 +140,11 @@ class ResultStats extends React.Component {
                     <div className="row result-box">
                         <div className="col-md-5">
                             <div className="text-center">
-                                <img
+                                <ImageWithFallback
                                     src={ImageUtils.personImageFor(topPerson.meta.external_id)}
                                     alt={`Bilde av ${topPerson.key}`}
-                                    height="200"
+                                    height={200}
+                                    fallbackSrc={ImageUtils.fallbackImage()}
                                 />
 
                                 <h2 className="selectable">
