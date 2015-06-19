@@ -6,14 +6,20 @@ require 'pp'
 require 'fileutils'
 require 'json'
 
+FD = Faraday.new
+
 out_dir = File.expand_path('../../webapp/public/images', __FILE__)
 FileUtils.mkdir_p out_dir
 
 def save(url, dest, opts = {})
+  res = FD.get(url)
 
-
-  ok = system "curl #{'--fail' if opts[:fail]} -Ls '#{url}' -o #{dest}"
-  ok or raise "failed to download #{url} to #{dest}"
+  if res.status == 200
+    File.open(dest, 'wb') { |io| io << res.body }
+  else
+    msg = "failed to download #{url}, #{res.status}"
+    opts[:fail] ? raise(msg) : puts(msg)
+  end
 end
 
 client ||= Elasticsearch::Client.new(
@@ -47,13 +53,13 @@ ids.each do |id|
   p id
 end
 
-faraday = Faraday.new
 
-parties = JSON.parse(faraday.get('https://www.holderdeord.no/api/parties').body)
+
+parties = JSON.parse(FD.get('https://www.holderdeord.no/api/parties').body)
 parties['_embedded']['parties'].each do |party|
   url = party['_links']['logo']['href'].sub('{?version}', '?version=large')
 
-  save url, "#{out_dir}/#{party['slug']}.png"
+  save url, "#{out_dir}/#{party['slug']}.png", fail: true
   p party['slug']
 end
 
