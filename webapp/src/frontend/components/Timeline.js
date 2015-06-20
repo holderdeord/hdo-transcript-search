@@ -97,7 +97,7 @@ class Timeline extends React.Component {
 
     render() {
         if (this.state.queries.length) {
-            this.chartOptions.onlyInteger = this.props.unit === 'count';
+            this.chartOptions.axisY.onlyInteger = this.props.unit === 'count';
 
             return (
                 <div className="timeline">

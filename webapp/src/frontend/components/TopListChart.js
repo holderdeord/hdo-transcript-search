@@ -22,7 +22,6 @@ class TopListChart extends React.Component {
             chartPadding: {left: 10},
             horizontalBars: isHorizontal,
             reverseData: !isHorizontal,
-            onlyInteger: this.props.unit === 'count',
             axisX: {
                 showGrid: isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
@@ -32,7 +31,8 @@ class TopListChart extends React.Component {
                 labelOffset: { x: 0, y: 6 },
                 showGrid: !isHorizontal,
                 labelInterpolationFnc: this.formatValue.bind(this),
-                offset: 50
+                offset: 50,
+                onlyInteger: this.props.unit === 'count'
             }
         };
 
