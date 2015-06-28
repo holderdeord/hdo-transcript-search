@@ -75,7 +75,12 @@ class SpeechBrowser extends React.Component {
                 </div>
 
                 <div className="col-md-8 main">
-                    <div className="text">{TextUtils.paragraphsFrom(focused)}</div>
+                    <div className="row">
+                        <div className="col-md-12 text">
+                            {TextUtils.paragraphsFrom(focused)}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         )
@@ -87,11 +92,7 @@ class SpeechBrowser extends React.Component {
                 <div className={`preview-row ${speech.focused ? 'focused' : ''}`}>
                     <div className="row">
                         <div className="col-md-3">
-                            <ImageWithFallback
-                                className="img-responsive"
-                                src={ImageUtils.personImageFor(speech.external_id)}
-                                alt={speech.name}
-                                fallbackSrc={ImageUtils.fallbackImage()} />
+                            {this.renderImage(speech)}
                         </div>
 
                         <div className="col-md-9">
@@ -110,6 +111,16 @@ class SpeechBrowser extends React.Component {
 
                 </div>
             </Link>
+        );
+    }
+
+    renderImage(speech) {
+        return (
+            <ImageWithFallback
+                className="img-responsive"
+                src={ImageUtils.personImageFor(speech.external_id)}
+                alt={speech.name}
+                fallbackSrc={ImageUtils.fallbackImage()} />
         );
     }
 }
