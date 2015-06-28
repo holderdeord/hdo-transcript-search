@@ -145,7 +145,8 @@ app.get('/api/analytics/top-searches/:days?', (req, res) => {
     var params = {
         days: req.params.days || 30,
         limit: (req.query.limit || 200),
-        examples: req.query.examples !== 'false'
+        examples: req.query.examples !== 'false',
+        summary: req.query.summary
     };
 
     analytics

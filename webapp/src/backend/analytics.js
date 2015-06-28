@@ -37,14 +37,29 @@ function topSearches(params) {
                 metrics: 'ga:totalEvents',
                 dimensions: 'ga:eventAction',
                 sort: '-ga:totalEvents',
-                filters: 'ga:eventCategory==summary'
+                filters: 'ga:eventCategory==hits'
             });
         })
         .spread((data) => {
             let result = parseResponse(data);
 
             if (!params.examples) {
-                result = result.filter((r) => EXAMPLE_QUERIES.indexOf(r['ga:eventAction']) === -1);
+                result = result.filter(r => EXAMPLE_QUERIES.indexOf(r['ga:eventAction']) === -1);
+            }
+
+            if (params.summary) {
+                let summary = {total: 0, words: {}};
+
+                result.forEach(r => {
+                    let term = r['ga:eventAction'].toLowerCase();
+                    let count = r['ga:totalEvents'];
+
+                    summary.words[term]  = summary.words[term] || 0;
+                    summary.words[term] += count;
+                    summary.total += count;
+                });
+
+                return {summary: summary};
             }
 
             return {searches: result};
