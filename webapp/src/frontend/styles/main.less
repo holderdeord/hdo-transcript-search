@@ -213,6 +213,49 @@ body {
   }
 }
 
+.speech-browser {
+  .selectable;
+
+  .text {
+    font-size: 1.5rem;
+    font-family: @font-family-secondary;
+  }
+
+  .main {
+    .card;
+    padding: 2rem;
+  }
+
+  .context {
+    a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .preview-row {
+      .card;
+
+      height: 120px;
+      padding: 2rem;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.focused {
+        background-color: #eee;
+      }
+
+      .text {
+        font-size: 1.3rem;
+        .text-muted;
+      }
+
+
+    }
+  }
+
+}
+
 .context-link {
   position: relative;
   font-size: 80%;

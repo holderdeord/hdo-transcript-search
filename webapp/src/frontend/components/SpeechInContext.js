@@ -1,8 +1,11 @@
-import React           from 'react';
-import FluxComponent   from 'flummox/component';
-import Speech          from './Speech';
-import { Link }        from 'react-router';
-import Icon            from 'react-fa';
+import React             from 'react';
+import FluxComponent     from 'flummox/component';
+import { Link }          from 'react-router';
+import Icon              from 'react-fa';
+import TimeUtils         from '../utils/TimeUtils';
+import ImageUtils        from '../utils/ImageUtils';
+import ImageWithFallback from './ImageWithFallback';
+import TextUtils         from '../utils/TextUtils';
 
 class SpeechBrowser extends React.Component {
     render() {
@@ -13,6 +16,7 @@ class SpeechBrowser extends React.Component {
         }
 
         let [first,focused,last] = speeches;
+        focused.focused = true;
 
         let prevLink = null, nextLink = null;
 
@@ -44,24 +48,68 @@ class SpeechBrowser extends React.Component {
             );
         }
 
+        // return (
+        //     <div className="container">
+        //         <div className="row navigation-links">
+        //             <div className="col-xs-6 col-md-6">{prevLink}</div>
+        //             <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
+        //         </div>
+
+        //         <div className="row card" style={{margin: '1rem 0'}}>
+        //             <div className="col-md-12">
+        //                 <Speech key={focused.id} speech={focused} showContextLink={false} showTime={true} />
+        //             </div>
+        //         </div>
+
+        //         <div className="row navigation-links">
+        //             <div className="col-xs-6 col-md-6">{prevLink}</div>
+        //             <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
+        //         </div>
+        //     </div>
+        // );
+
         return (
-            <div className="container">
-                <div className="row navigation-links">
-                    <div className="col-xs-6 col-md-6">{prevLink}</div>
-                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
+            <div className="container speech-browser">
+                <div className="col-md-4 context">
+                    {speeches.map(this.renderPreview.bind(this))}
                 </div>
 
-                <div className="row card" style={{margin: '1rem 0'}}>
-                    <div className="col-md-12">
-                        <Speech key={focused.id} speech={focused} showContextLink={false} showTime={true} />
-                    </div>
-                </div>
-
-                <div className="row navigation-links">
-                    <div className="col-xs-6 col-md-6">{prevLink}</div>
-                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
+                <div className="col-md-8 main">
+                    <div className="text">{TextUtils.paragraphsFrom(focused)}</div>
                 </div>
             </div>
+        )
+    }
+
+    renderPreview(speech) {
+        return (
+            <Link key={speech.id} to="speech" params={{transcript: speech.transcript, order: speech.order}}>
+                <div className={`preview-row ${speech.focused ? 'focused' : ''}`}>
+                    <div className="row">
+                        <div className="col-md-3">
+                            <ImageWithFallback
+                                className="img-responsive"
+                                src={ImageUtils.personImageFor(speech.external_id)}
+                                alt={speech.name}
+                                fallbackSrc={ImageUtils.fallbackImage()} />
+                        </div>
+
+                        <div className="col-md-9">
+                            <div className="row">
+                                <div className="col-md-9"><strong>{speech.name}</strong></div>
+                                <div className="col-md-3 text-right">{TimeUtils.formatHitTime(speech)}</div>
+                            </div>
+
+                            <div className="row text">
+                                <div className="col-md-12">
+                                    – {TextUtils.teaser(speech).slice(0, 100) + '…'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </Link>
         );
     }
 }

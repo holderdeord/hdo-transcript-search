@@ -1,6 +1,7 @@
 import React             from 'react';
 import TimeUtils         from '../utils/TimeUtils';
 import ImageUtils        from '../utils/ImageUtils';
+import TextUtils         from '../utils/TextUtils';
 import { Link }          from 'react-router';
 import Icon              from 'react-fa';
 import ImageWithFallback from './ImageWithFallback';
@@ -78,7 +79,7 @@ class Speech extends React.Component {
                     </div>
 
                     <div className="col-xs-12 col-md-7">
-                        <div className="speech-text">{this.paragraphsFrom(speech)}</div>
+                        <div className="speech-text">{TextUtils.paragraphsFrom(speech)}</div>
                     </div>
                 </div>
 
@@ -114,16 +115,6 @@ class Speech extends React.Component {
 
     handleOpenContext() {
         window.alert('not implemented');
-    }
-
-    paragraphsFrom(speech) {
-        let text = speech.highlight ? speech.highlight.text.join('\n') : speech.text;
-
-        return text.split("\n").map((fragment, i) => {
-            fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');
-
-            return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}}></p>);
-        });
     }
 }
 
