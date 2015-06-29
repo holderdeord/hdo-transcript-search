@@ -20,4 +20,4 @@ module.exports = [
     ['facebook', 'twitter'],
     ['søndagsåpne butikker'],
     ['nasjonale prøver', 'karakterer'],
-]
+];
