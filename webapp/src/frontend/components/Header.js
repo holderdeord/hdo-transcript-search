@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 class Header extends React.Component {
-
 
     render() {
         let title = this.props.title;
@@ -25,8 +24,9 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-    title: React.PropTypes.string.isRequired,
-    description: React.PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
 
 module.exports = Header;

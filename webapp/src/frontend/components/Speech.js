@@ -27,7 +27,7 @@ class Speech extends React.Component {
             var president      = speech.presidents[0];
 
             speech.name        = president.name;
-            speech.external_id = president.external_id;
+            speech.external_id = president.external_id; // eslint-disable-line
         }
 
         return (
@@ -55,7 +55,6 @@ class Speech extends React.Component {
                                 <strong>{speech.name}</strong>
                             </div>
                         </div>
-
 
                         <div className="row">
                             <div className="col-xs-1">
@@ -112,23 +111,21 @@ class Speech extends React.Component {
         }
     }
 
-    handleOpenContext() {
-        window.alert('not implemented');
-    }
-
     paragraphsFrom(speech) {
         let text = speech.highlight ? speech.highlight.text.join('\n') : speech.text;
 
-        return text.split("\n").map((fragment, i) => {
+        return text.split('\n').map((fragment, i) => {
             fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');
 
-            return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}}></p>);
+            return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}} />);
         });
     }
 }
 
 Speech.propTypes = {
-    speech: React.PropTypes.object.isRequired
+    speech: React.PropTypes.object.isRequired,
+    showTime: React.PropTypes.bool,
+    showContextLink: React.PropTypes.bool
 };
 
 module.exports = Speech;

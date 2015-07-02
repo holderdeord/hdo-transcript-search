@@ -1,8 +1,10 @@
-import React           from 'react';
-import FluxComponent   from 'flummox/component';
-import Speech          from './Speech';
-import { Link }        from 'react-router';
-import Icon            from 'react-fa';
+/*eslint-disable react/no-multi-comp */
+
+import React, { PropTypes } from 'react';
+import FluxComponent        from 'flummox/component';
+import Speech               from './Speech';
+import { Link }             from 'react-router';
+import Icon                 from 'react-fa';
 
 class SpeechBrowser extends React.Component {
     render() {
@@ -12,7 +14,7 @@ class SpeechBrowser extends React.Component {
             return null;
         }
 
-        let [first,focused,last] = speeches;
+        let [first, focused, last] = speeches;
 
         let prevLink = null, nextLink = null;
 
@@ -65,6 +67,8 @@ class SpeechBrowser extends React.Component {
         );
     }
 }
+
+SpeechBrowser.propTypes = { speeches: PropTypes.array };
 
 class SpeechInContext extends React.Component {
     render() {

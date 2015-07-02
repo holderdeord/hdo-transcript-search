@@ -25,7 +25,7 @@ app.locals.appTitle       = 'Sagt i salen';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 app.locals.facebookAppId  = 504447209668308;
 
-if(app.get('env') === 'development') {
+if (app.get('env') === 'development') {
     app.use(require('errorhandler')());
 
     var webpack           = require('webpack');
@@ -36,6 +36,10 @@ if(app.get('env') === 'development') {
 
     app.get('/bundle.:ext', (req, res) => {
         fs.readFile('./public/hash', 'utf-8', (err, hash) => {
+            if (err) {
+                throw err;
+            }
+
             res.redirect(`/bundle.${hash}.${req.params.ext}`);
         });
     });
@@ -83,13 +87,13 @@ app.get('/speeches/:transcript/:order', (req, res) => {
 
 app.get('/search', (req, res) => {
     res.render('index', {
-        title: 'Stortingssøk',
+        title: 'Stortingssøk'
     });
 });
 
 app.get('/search/:unit/:query/:focused', (req, res) => {
     res.render('index', {
-        title: req.params.query.split('.').join(', '),
+        title: req.params.query.split('.').join(', ')
     });
 });
 
@@ -104,7 +108,7 @@ app.get('/api/search/summary', (req, res) => {
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
-        res.status(400).json({error: {message: "missing query param"}});
+        res.status(400).json({error: {message: 'missing query param'}});
     }
 });
 
@@ -114,7 +118,7 @@ app.get('/api/search/hits', (req, res) => {
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
-        res.status(400).json({error: {message: "missing or invalid query param"}});
+        res.status(400).json({error: {message: 'missing or invalid query param'}});
     }
 });
 
@@ -125,7 +129,7 @@ app.get('/api/export', (req, res) => {
         res.type(format);
         api.getHitStream(req.query).pipe(res);
     } else {
-        res.status(400).json({error: {message: "missing or invalid query param"}});
+        res.status(400).json({error: {message: 'missing or invalid query param'}});
     }
 });
 
@@ -136,7 +140,7 @@ app.get('/api/speeches/:id', (req, res) => {
 });
 
 app.get('/api/context/:transcript/:start/:end', (req, res) => {
-    var {transcript,start,end} = req.params;
+    var {transcript, start, end} = req.params;
 
     api.getContext(transcript, +start, +end)
         .then(d => res.json(d))
@@ -153,42 +157,42 @@ app.get('/api/analytics/top-searches/:days?', (req, res) => {
 
     analytics
         .topSearches(params)
-        .then((d) => res.json(d) )
+        .then((d) => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 app.get('/api/analytics/image-errors', (req, res) => {
     analytics
         .imageErrors()
-        .then((d) => res.json(d) )
+        .then((d) => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 app.get('/api/analytics/sources/:days?', (req, res) => {
     analytics
         .sources({days: req.params.days || 30})
-        .then((d) => res.json(d) )
+        .then((d) => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 app.get('/api/analytics/active', (req, res) => {
     analytics
         .active()
-        .then((d) => res.json(d) )
+        .then((d) => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 app.get('/api/analytics/browsers/:days?', (req, res) => {
     analytics
         .browsers({days: req.params.days || 30})
-        .then((d) => res.json(d) )
+        .then((d) => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 module.exports = app;
 
 function errorHandler(err) {
-    console.error(err);
+    console.error(err); // eslint-disable-line
 
     return this.status(500).json({
         error: {

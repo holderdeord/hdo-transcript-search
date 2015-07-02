@@ -21,7 +21,6 @@ class SearchForm extends React.Component {
                 query: props.joinedQuery,
                 lastReceivedQuery: props.joinedQuery
             });
-
         }
     }
 
@@ -64,7 +63,6 @@ class SearchForm extends React.Component {
             </form>
         );
     }
-
 
     handleFocus() {
         this.setState({focused: true});
@@ -133,6 +131,10 @@ class SearchForm extends React.Component {
 }
 
 SearchForm.propTypes = {
+    joinedQuery: React.PropTypes.string,
+    params: React.PropTypes.shape({
+        unit: React.PropTypes.string
+    })
 };
 
 SearchForm.contextTypes = {

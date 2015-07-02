@@ -1,4 +1,4 @@
-const SERIES_CHARS = 'abcdefghijklmno'.split("");
+const SERIES_CHARS = 'abcdefghijklmno'.split('');
 
 module.exports = {
     colorAt: i => {

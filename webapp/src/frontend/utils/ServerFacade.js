@@ -2,7 +2,6 @@ import Promise from 'bluebird';
 import reqwest from 'reqwest';
 
 export default class ServerFacade {
-
     summary(queries, interval) {
         return Promise.map(queries, q => {
             return reqwest(this._summaryPathFor(q, interval)).then((r) => {
@@ -21,7 +20,6 @@ export default class ServerFacade {
 
             return reqwest(path);
         });
-
     }
 
     speechContext(transcriptId, start, end) {
@@ -32,5 +30,4 @@ export default class ServerFacade {
     _summaryPathFor(query, interval) {
         return `/api/search/summary?interval=${interval}&query=${query}`;
     }
-
 }

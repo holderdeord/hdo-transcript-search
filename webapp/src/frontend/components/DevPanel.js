@@ -1,4 +1,4 @@
-import React     from 'react';
+import React, { PropTypes } from 'react';
 import Intervals from '../constants/Intervals';
 
 class DevPanel extends React.Component {
@@ -8,7 +8,7 @@ class DevPanel extends React.Component {
         }
 
         return (
-            <div className='dev-panel row'>
+            <div className="dev-panel row">
                 <div className="col-md-4 text-right">
                     <div>
                         <span style={{paddingRight: '1rem'}}>TopListChart orientation:</span>
@@ -16,8 +16,8 @@ class DevPanel extends React.Component {
                         <select
                             onChange={this.props.onOrientationChange}
                             value={this.props.orientation}>
-                                <option value='horizontal'>horizontal</option>
-                                <option value='vertical'>vertical</option>
+                                <option value="horizontal">horizontal</option>
+                                <option value="vertical">vertical</option>
                         </select>
                     </div>
 
@@ -25,7 +25,7 @@ class DevPanel extends React.Component {
                         <span style={{paddingRight: '1rem'}}>Timeline interval:</span>
 
                         <select
-                            name='interval'
+                            name="interval"
                             value={this.props.interval}
                             onChange={this.props.onIntervalChange}>
                                 <option value={Intervals.MONTH}>month</option>
@@ -42,8 +42,11 @@ class DevPanel extends React.Component {
 }
 
 DevPanel.propTypes = {
-    visible: React.PropTypes.bool.isRequired,
-    interval: React.PropTypes.string.isRequired
+    visible: PropTypes.bool.isRequired,
+    interval: PropTypes.string.isRequired,
+    onOrientationChange: PropTypes.func.isRequired,
+    onIntervalChange: PropTypes.func.isRequired,
+    orientation: PropTypes.string.isRequired
 };
 
 module.exports = DevPanel;

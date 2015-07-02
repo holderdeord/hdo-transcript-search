@@ -8,10 +8,11 @@
   },
   "main": "server.js",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint -c .eslintrc config src",
     "start": "NODE_ENV=production node server.js",
     "build": "npm install && ./node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe",
-    "dev": "./node_modules/.bin/nodemon --ignore ./node_modules/ --ignore ./public --ignore ./src/frontend server.js",
-    "test": "./node_modules/.bin/jsxhint --exclude node_modules *.js src"
+    "dev": "./node_modules/.bin/nodemon --watch src --watch public --watch views --watch config server.js",
+    "test": "npm run lint"
   },
   "author": "jari@holderdeord.no",
   "license": "BSD",
@@ -44,10 +45,10 @@
     "chartist": "^0.8.0",
     "css-loader": "^0.9.1",
     "errorhandler": "^1.2.2",
+    "eslint": "^0.24.0",
+    "eslint-plugin-react": "^2.6.4",
     "extract-text-webpack-plugin": "^0.8.1",
     "file-loader": "^0.8.1",
-    "jshint": "^2.6.0",
-    "jsxhint": "^0.15.1",
     "keymaster": "^1.6.2",
     "keymirror": "^0.1.1",
     "less": "^2.4.0",

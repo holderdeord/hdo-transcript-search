@@ -4,7 +4,7 @@ import google   from 'googleapis';
 import examples from '../../config/examples';
 import Promise  from 'bluebird';
 
-const GA_ID           = 'ga:98310771'
+const GA_ID           = 'ga:98310771';
 const EXAMPLE_QUERIES = examples.map((q) => q.sort().join(','));
 const AUTH_PATH       = path.resolve(__dirname, '../../config/google.json');
 const ENABLED         = fs.existsSync(AUTH_PATH);
@@ -25,11 +25,10 @@ function getAnalytics() {
     return jwt.authorizeAsync().then(() => analytics);
 }
 
-
 function topSearches(params) {
     return getAnalytics()
-        .then((analytics) => {
-            return analytics.data.ga.getAsync({
+        .then((an) => {
+            return an.data.ga.getAsync({
                 ids: GA_ID,
                 'start-date': params.days + 'daysAgo',
                 'end-date': 'today',
@@ -67,8 +66,8 @@ function topSearches(params) {
 }
 
 function imageErrors() {
-    return getAnalytics().then((analytics) => {
-        return analytics.data.ga.getAsync({
+    return getAnalytics().then((an) => {
+        return an.data.ga.getAsync({
             ids: GA_ID,
             'start-date': '30daysAgo',
             'end-date': 'today',
@@ -78,51 +77,51 @@ function imageErrors() {
             sort: '-ga:totalEvents',
             filters: 'ga:eventCategory==image-error'
         }).spread((data) => {
-            return {imageErrors: parseResponse(data)}
+            return {imageErrors: parseResponse(data)};
         });
     });
 }
 
 function sources(opts) {
-    return getAnalytics().then((analytics) => {
-        return analytics.data.ga.getAsync({
+    return getAnalytics().then((an) => {
+        return an.data.ga.getAsync({
             ids: GA_ID,
             'start-date': opts.days + 'daysAgo',
             'end-date': 'today',
             'max-results': 500,
-            "dimensions": "ga:fullReferrer,ga:source,ga:socialNetwork",
-            "metrics": "ga:users,ga:sessions,ga:pageviews",
-            sort: '-ga:users',
+            dimensions: 'ga:fullReferrer,ga:source,ga:socialNetwork',
+            metrics: 'ga:users,ga:sessions,ga:pageviews',
+            sort: '-ga:users'
         }).spread((data) => {
-            return {sources: parseResponse(data)}
+            return {sources: parseResponse(data)};
         });
     });
 }
 
 function browsers(opts) {
-    return getAnalytics().then((analytics) => {
-        return analytics.data.ga.getAsync({
+    return getAnalytics().then((an) => {
+        return an.data.ga.getAsync({
             ids: GA_ID,
             'start-date': opts.days + 'daysAgo',
             'end-date': 'today',
             'max-results': 500,
-            "dimensions": "ga:browser,ga:operatingSystem",
-            "metrics": "ga:sessions",
-            sort: '-ga:sessions',
+            dimensions: 'ga:browser,ga:operatingSystem',
+            metrics: 'ga:sessions',
+            sort: '-ga:sessions'
         }).spread((data) => {
-            return {browsers: parseResponse(data)}
+            return {browsers: parseResponse(data)};
         });
     });
 }
 
 function active() {
-    return getAnalytics().then((analytics) => {
-        return analytics.data.realtime.getAsync({
+    return getAnalytics().then((an) => {
+        return an.data.realtime.getAsync({
             ids: GA_ID,
-            "dimensions": "rt:medium,rt:city",
-            "metrics": "rt:activeUsers"
+            dimensions: 'rt:medium,rt:city',
+            metrics: 'rt:activeUsers'
         }).spread((data) => {
-            return {active: parseResponse(data)}
+            return {active: parseResponse(data)};
         });
     });
 }
@@ -157,11 +156,10 @@ function checkEnabled(func, ...rest) {
     }
 }
 
-
 module.exports = {
     topSearches: checkEnabled.bind(null, topSearches),
     imageErrors: checkEnabled.bind(null, imageErrors),
     sources: checkEnabled.bind(null, sources),
     active: checkEnabled.bind(null, active),
-    browsers: checkEnabled.bind(null, browsers),
+    browsers: checkEnabled.bind(null, browsers)
 };

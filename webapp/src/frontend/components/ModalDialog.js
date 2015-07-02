@@ -38,7 +38,8 @@ class ModalDialog extends React.Component {
 ModalDialog.propTypes = {
     title: React.PropTypes.string.isRequired,
     visible: React.PropTypes.bool.isRequired,
-    onClose: React.PropTypes.func.isRequired
+    onClose: React.PropTypes.func.isRequired,
+    children: React.PropTypes.array
 };
 
 module.exports = ModalDialog;

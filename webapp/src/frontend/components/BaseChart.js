@@ -88,8 +88,9 @@ class BaseChart extends React.Component {
             val = (+val);
 
             let text = (Math.floor(val) === val ? val : val.toFixed(2)).toString();
+
             if (this.props.tooltipSuffix) {
-                text = text + this.props.tooltipSuffix;
+                text += this.props.tooltipSuffix;
             }
 
             this.setState({
@@ -185,7 +186,6 @@ class BaseChart extends React.Component {
                         }
                     });
 
-
                     state.set(groupKey, seq);
                     break;
                 case 'line':
@@ -217,7 +217,6 @@ class BaseChart extends React.Component {
                     // noop
             }
         });
-
     }
 }
 
@@ -225,7 +224,8 @@ BaseChart.propTypes = {
     type: React.PropTypes.string.isRequired,
     data: React.PropTypes.object.isRequired,
     options: React.PropTypes.object,
-    aspectRatios: React.PropTypes.array
+    aspectRatios: React.PropTypes.array,
+    tooltipSuffix: React.PropTypes.string
 };
 
 module.exports = BaseChart;

@@ -15,13 +15,13 @@ class Timeline extends React.Component {
             fullWidth: false,
             axisX: {
                 showGrid: false,
-                labelOffset: { x: -15, y: 8 },
+                labelOffset: { x: -15, y: 8 }
             },
             axisY: {
                 labelOffset: { x: -5, y: 6 },
                 showGrid: true,
                 labelInterpolationFnc: this.formatValue.bind(this)
-            },
+            }
         };
 
         this.responsiveOptions = [
@@ -30,7 +30,7 @@ class Timeline extends React.Component {
                 fullWidth: true,
                 axisX: {
                     labelOffset: { x: 0, y: 0 },
-                    labelInterpolationFnc: d => d.slice(2,4)
+                    labelInterpolationFnc: d => d.slice(2, 4)
                 }
             }]
         ];
@@ -64,7 +64,6 @@ class Timeline extends React.Component {
     setAbsolute() {
         this.props.onUnitChange({target: {value: 'Absolutt'}});
     }
-
 
     fetchStateFrom(props) {
         let queries = [];
@@ -155,7 +154,6 @@ class Timeline extends React.Component {
             let className = Colors.colorAt(i);
             let query;
 
-
             if (+this.props.focusedIndex === i) {
                 query = <span className={className} style={{fontWeight: '700'}}>{q}</span>;
             } else {
@@ -185,7 +183,7 @@ class Timeline extends React.Component {
     }
 
     formatLabel(d) {
-       return TimeUtils.formatIntervalLabel(d.key, this.props.interval);
+        return TimeUtils.formatIntervalLabel(d.key, this.props.interval);
     }
 
     formatValue(value) {
@@ -196,7 +194,7 @@ class Timeline extends React.Component {
 Timeline.propTypes = {
     unit         :  React.PropTypes.string.isRequired,
     interval     :  React.PropTypes.string.isRequired,
-    onUnitChange :  React.PropTypes.func,
+    onUnitChange :  React.PropTypes.func
 };
 
 module.exports = Timeline;

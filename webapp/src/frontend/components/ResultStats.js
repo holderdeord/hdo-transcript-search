@@ -198,7 +198,6 @@ class ResultStats extends React.Component {
                 </div>
             </div>
         );
-
     }
 
     topParties(parties) {

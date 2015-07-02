@@ -1,4 +1,4 @@
-require("./styles/main.less");
+require('./styles/main.less');
 require('./styles/chartist.scss');
 
 import React         from 'react';
@@ -12,7 +12,6 @@ import Analytics     from './stores/Analytics';
 import SearchActions from './actions/SearchActions';
 import routes        from './routes';
 import titleSuffix   from './constants/titleSuffix';
-
 
 class AppFlux extends Flux {
     constructor() {
@@ -56,7 +55,7 @@ class AppFlux extends Flux {
 
 let flux = new AppFlux();
 
-Router.run(routes, Router.HistoryLocation, function (Handler, state) {
+Router.run(routes, Router.HistoryLocation, (Handler, state) => {
     React.render(
         <FluxComponent flux={flux}>
             <Handler {...state} />

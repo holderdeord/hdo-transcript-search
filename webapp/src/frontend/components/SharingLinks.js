@@ -3,18 +3,17 @@ import Icon  from 'react-fa';
 
 class SharingLinks extends React.Component {
     render() {
-
         return (
             <div className="sharing-links text-center hidden-xs">
                 <span>
                     <a href="#" onClick={this.handleFacebookShare.bind(this)}>
-                        <Icon name="facebook-square" size='2x' />
+                        <Icon name="facebook-square" size="2x" />
                     </a>
                 </span>
 
                 <span>
-                    <a href='#' onClick={this.handleTwitterShare.bind(this)}>
-                        <Icon name="twitter-square" size='2x' />
+                    <a href="#" onClick={this.handleTwitterShare.bind(this)}>
+                        <Icon name="twitter-square" size="2x" />
                     </a>
                 </span>
             </div>
@@ -41,14 +40,13 @@ class SharingLinks extends React.Component {
         if (this.props.joinedQuery.length) {
             text = `Hvem snakker mest om «${this.props.joinedQuery}» på Stortinget?`;
         } else {
-            text = "Hva snakker politikerne om på Stortinget?";
+            text = 'Hva snakker politikerne om på Stortinget?';
         }
 
         let shareUrl = `https://twitter.com/intent/tweet
                             ?text=${encodeURIComponent(text)}
                             &url=${this.getUrl()}
                             &via=holderdeord`.replace(/\s+/g, '');
-
 
         this.open(shareUrl, 'Twitter');
     }
@@ -69,7 +67,8 @@ class SharingLinks extends React.Component {
 }
 
 SharingLinks.propTypes = {
-    facebookAppId: React.PropTypes.string.isRequired
+    facebookAppId: React.PropTypes.string.isRequired,
+    joinedQuery: React.PropTypes.string
 };
 
 module.exports = SharingLinks;

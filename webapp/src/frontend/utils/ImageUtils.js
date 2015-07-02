@@ -1,14 +1,14 @@
 export default class ImageUtils {
-    static personImageFor(external_id) {
-        if (external_id) {
-            return `/images/${external_id}.jpg`;
+    static personImageFor(externalId) {
+        if (externalId) {
+            return `/images/${externalId}.jpg`;
         } else {
             return this.fallbackImage();
         }
     }
 
-    static partyLogoFor(external_id) {
-        return `/images/${external_id.toLowerCase()}.png`;
+    static partyLogoFor(externalId) {
+        return `/images/${externalId.toLowerCase()}.png`;
     }
 
     static fallbackImage() {

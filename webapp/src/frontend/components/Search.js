@@ -1,14 +1,14 @@
-import React         from 'react';
-import assign        from 'react/lib/Object.assign';
-import FluxComponent from 'flummox/component';
+import React, { PropTypes } from 'react';
+import assign               from 'react/lib/Object.assign';
+import FluxComponent        from 'flummox/component';
 
-import Intervals     from '../constants/Intervals';
-import key           from 'keymaster';
-import SearchForm    from './SearchForm';
-import Timeline      from './Timeline';
-import DevPanel      from './DevPanel';
-import ResultStats   from './ResultStats';
-import SearchResults from './SearchResults';
+import Intervals            from '../constants/Intervals';
+import key                  from 'keymaster';
+import SearchForm           from './SearchForm';
+import Timeline             from './Timeline';
+import DevPanel             from './DevPanel';
+import ResultStats          from './ResultStats';
+import SearchResults        from './SearchResults';
 
 class Search extends React.Component {
     constructor(props) {
@@ -117,7 +117,14 @@ class Search extends React.Component {
 }
 
 Search.contextTypes = {
-    router: React.PropTypes.func
+    router: PropTypes.func
+};
+
+Search.propTypes = {
+    params: PropTypes.shape({
+        focused: PropTypes.string,
+        unit: PropTypes.string
+    })
 };
 
 module.exports = Search;

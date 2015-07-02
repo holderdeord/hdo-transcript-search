@@ -1,7 +1,6 @@
 import React     from 'react';
 import Analytics from '../stores/Analytics';
 
-
 export default class ImageWithFallback extends React.Component {
     constructor() {
         this.state = { useFallbackImage: false };
@@ -33,6 +32,5 @@ ImageWithFallback.propTypes = {
     fallbackSrc: React.PropTypes.string.isRequired,
     height: React.PropTypes.number,
     className: React.PropTypes.string
-}
-
+};
 

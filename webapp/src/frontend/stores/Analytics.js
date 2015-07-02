@@ -3,7 +3,7 @@ import { Store } from 'flummox';
 export default class Analytics extends Store {
 
     static ga() {
-        return window.ga || ((...args) => console.log(args));
+        return window.ga || ((...args) => console.log(args)); // eslint-disable-line
     }
 
     static sendEvent(name, arg) {

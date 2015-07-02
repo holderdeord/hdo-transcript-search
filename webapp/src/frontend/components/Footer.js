@@ -2,7 +2,6 @@ import React from 'react';
 
 class Footer extends React.Component {
     render() {
-        // jshint ignore:start
         return (
             <footer>
                 <a href="https://www.holderdeord.no/">
@@ -26,7 +25,6 @@ class Footer extends React.Component {
                 </p>
             </footer>
         );
-        // jshint ignore:end
     }
 }
 

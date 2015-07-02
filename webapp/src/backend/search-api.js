@@ -18,7 +18,7 @@ const MIN_SPEECH_COUNT = require('../shared/minSpeechCount');
 
 class SearchAPI {
     constructor() {
-        this.cache = LRU({max: 500});
+        this.cache = LRU({max: 500}); // eslint-disable-line
     }
 
     summary(opts) {
@@ -124,7 +124,9 @@ class SearchAPI {
 
         if (opts && opts.combineKeys) {
             keys = Object.keys(subset).concat(Object.keys(set));
-            keys = keys.filter((k, i) => keys.indexOf(k) === i); // index
+
+            // unique
+            keys = keys.filter((k, i) => keys.indexOf(k) === i);
         } else {
             keys = Object.keys(subset);
         }
@@ -168,7 +170,7 @@ class SearchAPI {
             {combineKeys: true}
         );
 
-        timeline.sort((a,b) => {
+        timeline.sort((a, b) => {
             return moment(a.key).valueOf() - moment(b.key).valueOf();
         });
 
@@ -189,8 +191,13 @@ class SearchAPI {
             timeline: timeline,
             parties: parties,
             people: {
-                count: people.sort((a,b) => b.count - a.count).slice(0, 20),
-                pct: people.filter(d => d.total > MIN_SPEECH_COUNT).sort((a,b) => b.pct - a.pct).slice(0, 20)
+                count: people
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 20),
+                pct: people
+                    .filter(d => d.total > MIN_SPEECH_COUNT)
+                    .sort((a, b) => b.pct - a.pct)
+                    .slice(0, 20)
             }
         };
     }
@@ -226,6 +233,7 @@ class SearchAPI {
 
         if (opts.highlight !== false) {
             body.highlight = {
+                /*eslint-disable*/
                 pre_tags: ['<mark>'],
                 post_tags: ['</mark>'],
                 fields: {
@@ -233,7 +241,8 @@ class SearchAPI {
                         number_of_fragments: +(opts.fragments || 0)
                     }
                 }
-            }
+                /*eslint-enable*/
+            };
         }
 
         return {
@@ -266,10 +275,10 @@ class SearchAPI {
         var aggregations = {
             timeline: {
                 // could do a terms aggregation on "session" instead
-                date_histogram: {
-                    field: "time",
+                date_histogram: { // eslint-disable-line
+                    field: 'time',
                     interval: opts.interval,
-                    time_zone: 2
+                    time_zone: 2 // eslint-disable-line
                 }
             },
 
@@ -309,9 +318,9 @@ class SearchAPI {
                         },
                         aggs: {
                             person: {
-                                top_hits: {
+                                top_hits: { // eslint-disable-line
                                     size: 1,
-                                    _source: { include: ["external_id", "party"] }
+                                    _source: { include: ['external_id', 'party'] }
                                 }
                             }
                         }
@@ -333,6 +342,7 @@ class SearchAPI {
     }
 
     _queryFor(str) {
+        /*eslint-disable*/
         return {
             query_string: {
                 query: str,
@@ -340,6 +350,7 @@ class SearchAPI {
                 default_field: 'text'
             }
         };
+        /*eslint-enable*/
     }
 
     _filterFor(opts) {
@@ -349,7 +360,7 @@ class SearchAPI {
             return {
                 not: {
                     filter: {
-                        term: { name: "Presidenten" }
+                        term: { name: 'Presidenten' }
                     }
                 }
             };

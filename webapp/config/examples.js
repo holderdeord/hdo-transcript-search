@@ -19,5 +19,5 @@ module.exports = [
     ['barnehage', 'kontantstøtte'],
     ['facebook', 'twitter'],
     ['søndagsåpne butikker'],
-    ['nasjonale prøver', 'karakterer'],
+    ['nasjonale prøver', 'karakterer']
 ];

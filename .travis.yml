@@ -3,7 +3,7 @@ language: node_js
 node_js:
 - '0.10'
 script:
-- cd webapp && npm install && npm test && npm run build
+- cd webapp && npm install && npm run lint && npm test && npm run build
 notifications:
   webhooks: http://deploy.holderdeord.no/travis
   hipchat:

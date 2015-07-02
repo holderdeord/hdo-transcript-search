@@ -1,4 +1,4 @@
-import React     from 'react';
+import React, { PropTypes } from 'react';
 import BaseChart from './BaseChart';
 
 class TopListChart extends React.Component {
@@ -8,7 +8,7 @@ class TopListChart extends React.Component {
         let counts = this.props.counts;
 
         if (this.props.sort) {
-            counts = counts.slice(0).sort((a,b) => a[this.props.unit] - b[this.props.unit]);
+            counts = counts.slice(0).sort((a, b) => a[this.props.unit] - b[this.props.unit]);
         }
 
         let data = {
@@ -88,10 +88,14 @@ class TopListChart extends React.Component {
 }
 
 TopListChart.propTypes = {
-    title: React.PropTypes.string,
-    subtitle: React.PropTypes.string,
-    counts: React.PropTypes.array.isRequired,
-    unit: React.PropTypes.string.isRequired
+    title: PropTypes.string,
+    subtitle: PropTypes.string,
+    counts: PropTypes.array.isRequired,
+    unit: PropTypes.string.isRequired,
+    orientation: PropTypes.string.isRequired,
+    star: PropTypes.bool,
+    className: PropTypes.string,
+    sort: PropTypes.bool
 };
 
 module.exports = TopListChart;
