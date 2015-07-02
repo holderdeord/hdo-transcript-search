@@ -29,6 +29,11 @@ module Hdo
         @force        = options.fetch(:force)
         @errors       = []
         @extras       = JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/extras.json", __FILE__)))
+        @ner          = options.fetch(:ner)
+
+        if @ner && !system("which polyglot 2>&1 >/dev/null")
+          raise "polyglot not installed, please run `pip install polyglot && polyglot download embeddings2.no ner2.no`"
+        end
 
         @index = Index.new(
           options.fetch(:elasticsearch_url),
@@ -206,8 +211,13 @@ module Hdo
         else
           @logger.info "converting: #{input_file} => #{dest}"
 
-          converter = Converter.parse(input_file.to_s, cache: @party_cache, names: @extras.fetch('names'))
-          json = converter.to_json
+          json = Converter.parse(
+            input_file.to_s,
+            cache: @party_cache,
+            names: @extras.fetch('names'),
+            ner: @ner
+          ).to_json
+
 
           dest.open('w') { |io| io << json }
         end

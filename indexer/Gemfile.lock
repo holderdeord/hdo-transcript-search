@@ -81,6 +81,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  childprocess
   elasticsearch
   faraday_middleware
   hashie

@@ -3,6 +3,9 @@ require 'time'
 require 'set'
 require 'hashie/mash'
 require 'hdo/storting_importer'
+require 'childprocess'
+
+ChildProcess.posix_spawn = true
 
 module Hdo
   module Transcript
@@ -24,9 +27,10 @@ module Hdo
         end
       end
 
-      PARTIES   = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "TF", "V", "uav", "uavh"]
-      DATE_EXP  = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
-      PARTY_EXP = /\s*[\( ]\s*(#{PARTIES.join('|')})\s*[\) ]\s*?/
+      PARTIES    = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "TF", "V", "uav", "uavh"]
+      DATE_EXP   = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
+      PARTY_EXP  = /\s*[\( ]\s*(#{PARTIES.join('|')})\s*[\) ]\s*?/
+      NER_SCRIPT = File.expand_path('../extract_entities.py', __FILE__)
 
       def initialize(doc, time, options = {})
         @time             = time
@@ -35,6 +39,7 @@ module Hdo
         @last_section     = {}
         @name_to_party    = options[:cache] || {}
         @name_corrections = options[:names] || {}
+        @ner              = !!options[:ner]
         @errors           = Set.new
 
         session = Hdo::StortingImporter::Util.session_for_date(@time.to_date)
@@ -95,18 +100,22 @@ module Hdo
       def parse_section(node)
         @current_node = node
 
-        case node.name
-        when 'innlegg'
-          parse_speech(node)
-        when 'presinnl'
-          parse_president_speech(node)
+        section = case node.name
+                  when 'innlegg'
+                    parse_speech(node)
+                  when 'presinnl'
+                    parse_president_speech(node)
+                  end
+
+        if @ner
+          section[:entities] = extract_entities(section)
         end
+
+        section
       end
 
       def text_from(node)
         text = []
-        # node.text.sub(/\s*#{Regexp.escape name_str}\s*/m, '')
-        unknown = node.elements.map(&:name).uniq - ['a', 'navn', 'merknad', 'blokksitat', 'liste']
 
         node.elements.each do |element|
           case element.name
@@ -309,8 +318,6 @@ module Hdo
         end
 
         result
-      rescue ParseError => ex
-        binding.pry
       end
 
       def create_time(hour, minute, second)
@@ -329,6 +336,47 @@ module Hdo
       def midnight?(str)
         t = Time.parse(str)
         [t.hour, t.min, t.sec] == [0,0,0]
+      end
+
+      def extract_entities(section)
+        r, w = IO.pipe
+
+        process = ChildProcess.build("python", NER_SCRIPT)
+        process.duplex = true
+
+        process.io.stdout = process.io.stderr = w
+        process.start
+        w.close
+
+        process.io.stdin.puts section[:text]
+        process.io.stdin.close
+        data = r.read
+
+        process.wait
+
+        if process.crashed?
+          raise "could not extract entities: #{data}"
+        end
+
+        entities = JSON.parse(data)
+
+        counts = Hash.new(0)
+        grouped = Hash.new { |hash, type| hash[type] = [] }
+
+        entities.each do |e|
+          counts[e['text']] += 1
+          grouped[e['type']] << e
+        end
+
+        entities.each do |e|
+          e['mentions'] = counts[e['text']]
+        end
+
+        {
+          people: grouped['person'].uniq.map { |e| e['text'] },
+          organisations: grouped['organisation'].uniq.map { |e| e['text'] },
+          locations: grouped['location'].uniq.map { |e| e['text'] }
+        }
       end
 
     end
