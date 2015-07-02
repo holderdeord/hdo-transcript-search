@@ -18,6 +18,7 @@
   "dependencies": {
     "babel": "^5.4.7",
     "bluebird": "^2.9.27",
+    "compression": "^1.5.0",
     "csv": "^0.4.1",
     "d3": "^3.5.3",
     "debug": "^2.1.0",

@@ -1,17 +1,19 @@
-import express   from 'express';
-import logger    from 'morgan';
-import hbs       from 'express-hbs';
-import api       from './search-api';
-import config    from '../../config';
-import examples  from '../../config/examples';
-import path      from 'path';
-import analytics from './analytics';
-import fs        from 'fs';
+import express     from 'express';
+import logger      from 'morgan';
+import hbs         from 'express-hbs';
+import api         from './search-api';
+import config      from '../../config';
+import examples    from '../../config/examples';
+import path        from 'path';
+import analytics   from './analytics';
+import fs          from 'fs';
+import compression from 'compression';
 
 let app = express();
 
 // config
 app.use(logger('short'));
+app.use(compression());
 app.set('port', +config.get('PORT'));
 app.disable('x-powered-by');
 app.engine('hbs', hbs.express4());
