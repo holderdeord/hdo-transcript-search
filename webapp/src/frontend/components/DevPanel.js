@@ -1,7 +1,15 @@
 import React, { PropTypes } from 'react';
 import Intervals from '../constants/Intervals';
 
-class DevPanel extends React.Component {
+export default class DevPanel extends React.Component {
+    static propTypes = {
+        visible: PropTypes.bool.isRequired,
+        interval: PropTypes.string.isRequired,
+        onOrientationChange: PropTypes.func.isRequired,
+        onIntervalChange: PropTypes.func.isRequired,
+        orientation: PropTypes.string.isRequired
+    };
+
     render() {
         if (!this.props.visible) {
             return null;
@@ -41,12 +49,3 @@ class DevPanel extends React.Component {
 
 }
 
-DevPanel.propTypes = {
-    visible: PropTypes.bool.isRequired,
-    interval: PropTypes.string.isRequired,
-    onOrientationChange: PropTypes.func.isRequired,
-    onIntervalChange: PropTypes.func.isRequired,
-    orientation: PropTypes.string.isRequired
-};
-
-module.exports = DevPanel;

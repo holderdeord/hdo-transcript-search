@@ -7,7 +7,7 @@ import ImageWithFallback from './ImageWithFallback';
 
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
-class ResultStats extends React.Component {
+export default class ResultStats extends React.Component {
     constructor(props) {
         super(props);
 
@@ -207,8 +207,3 @@ class ResultStats extends React.Component {
         };
     }
 }
-
-ResultStats.propTypes = {
-};
-
-module.exports = ResultStats;

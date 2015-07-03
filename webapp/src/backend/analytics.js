@@ -156,7 +156,7 @@ function checkEnabled(func, ...rest) {
     }
 }
 
-module.exports = {
+export default {
     topSearches: checkEnabled.bind(null, topSearches),
     imageErrors: checkEnabled.bind(null, imageErrors),
     sources: checkEnabled.bind(null, sources),

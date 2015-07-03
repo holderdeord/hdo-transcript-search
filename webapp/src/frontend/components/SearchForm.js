@@ -1,10 +1,22 @@
-import React  from 'react';
+import React, { PropTypes, Component }  from 'react';
 import key    from 'keymaster';
 import assign from 'react/lib/Object.assign';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 
-class SearchForm extends React.Component {
+export default class SearchForm extends Component {
+
+    static propTypes = {
+        joinedQuery: PropTypes.string,
+        params: PropTypes.shape({
+            unit: PropTypes.string
+        })
+    };
+
+    static contextTypes = {
+        router: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
 
@@ -129,16 +141,3 @@ class SearchForm extends React.Component {
         this.context.router.transitionTo(name, params);
     }
 }
-
-SearchForm.propTypes = {
-    joinedQuery: React.PropTypes.string,
-    params: React.PropTypes.shape({
-        unit: React.PropTypes.string
-    })
-};
-
-SearchForm.contextTypes = {
-    router: React.PropTypes.func
-};
-
-module.exports = SearchForm;

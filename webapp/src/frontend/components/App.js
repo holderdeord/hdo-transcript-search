@@ -1,4 +1,4 @@
-import React          from 'react';
+import React, { Component } from 'react';
 import FluxComponent  from 'flummox/component';
 import {RouteHandler} from 'react-router';
 
@@ -6,8 +6,10 @@ import Header        from './Header';
 import SharingLinks  from './SharingLinks';
 import Footer        from './Footer';
 
-class App extends React.Component {
-    constructor() {
+export default class App extends Component {
+    constructor(...args) {
+        super(...args);
+
         this.state = {
             title: document.body.getAttribute('data-title'),
             desc: document.body.getAttribute('data-description'),
@@ -32,4 +34,3 @@ class App extends React.Component {
     }
 }
 
-module.exports = App;

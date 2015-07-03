@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import Icon  from 'react-fa';
 
-class SharingLinks extends React.Component {
+export default class SharingLinks extends Component {
+
+    static propTypes = {
+        facebookAppId: PropTypes.string.isRequired,
+        joinedQuery: PropTypes.string
+    };
+
     render() {
         return (
             <div className="sharing-links text-center hidden-xs">
@@ -65,10 +71,3 @@ class SharingLinks extends React.Component {
         return encodeURIComponent(window.location.toString());
     }
 }
-
-SharingLinks.propTypes = {
-    facebookAppId: React.PropTypes.string.isRequired,
-    joinedQuery: React.PropTypes.string
-};
-
-module.exports = SharingLinks;

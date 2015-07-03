@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import assign               from 'react/lib/Object.assign';
 import FluxComponent        from 'flummox/component';
 
@@ -10,9 +10,20 @@ import DevPanel             from './DevPanel';
 import ResultStats          from './ResultStats';
 import SearchResults        from './SearchResults';
 
-class Search extends React.Component {
-    constructor(props) {
-        super(props);
+export default class Search extends Component {
+    static contextTypes = {
+        router: PropTypes.func
+    };
+
+    static propTypes = {
+        params: PropTypes.shape({
+            focused: PropTypes.string,
+            unit: PropTypes.string
+        })
+    };
+
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             title: document.body.getAttribute('data-title'),
@@ -115,17 +126,3 @@ class Search extends React.Component {
         key.unbind('ctrl+`');
     }
 }
-
-Search.contextTypes = {
-    router: PropTypes.func
-};
-
-Search.propTypes = {
-    params: PropTypes.shape({
-        focused: PropTypes.string,
-        unit: PropTypes.string
-    })
-};
-
-module.exports = Search;
-

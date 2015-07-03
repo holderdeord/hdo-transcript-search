@@ -1,8 +1,18 @@
-import React     from 'react';
+import React, { PropTypes, Component } from 'react';
 import Analytics from '../stores/Analytics';
 
-export default class ImageWithFallback extends React.Component {
-    constructor() {
+export default class ImageWithFallback extends Component {
+    static propTypes = {
+        src: PropTypes.string.isRequired,
+        alt: PropTypes.string.isRequired,
+        fallbackSrc: PropTypes.string.isRequired,
+        height: PropTypes.number,
+        className: PropTypes.string
+    };
+
+    constructor(...args) {
+        super(...args);
+
         this.state = { useFallbackImage: false };
     }
 
@@ -25,12 +35,3 @@ export default class ImageWithFallback extends React.Component {
         }
     }
 }
-
-ImageWithFallback.propTypes = {
-    src: React.PropTypes.string.isRequired,
-    alt: React.PropTypes.string.isRequired,
-    fallbackSrc: React.PropTypes.string.isRequired,
-    height: React.PropTypes.number,
-    className: React.PropTypes.string
-};
-

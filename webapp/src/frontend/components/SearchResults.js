@@ -2,7 +2,7 @@ import React  from 'react';
 import Speech from './Speech';
 import Icon   from 'react-fa';
 
-class SearchResults extends React.Component {
+export default class SearchResults extends React.Component {
     constructor(props) {
         super(props);
         this.searchActions = props.flux.getActions('search');
@@ -117,8 +117,3 @@ class SearchResults extends React.Component {
         }
     }
 }
-
-SearchResults.propTypes = {
-};
-
-module.exports = SearchResults;

@@ -1,13 +1,20 @@
-import React     from 'react';
+import React, { PropTypes, Component } from 'react';
 import BaseChart from './BaseChart';
 import TimeUtils from '../utils/TimeUtils';
 import Colors    from '../utils/Colors';
 import {Link}    from 'react-router';
 import key       from 'keymaster';
 
-class Timeline extends React.Component {
-    constructor(props) {
-        super(props);
+export default class Timeline extends Component {
+
+    static propTypes = {
+        unit         :  PropTypes.string.isRequired,
+        interval     :  PropTypes.string.isRequired,
+        onUnitChange :  PropTypes.func
+    };
+
+    constructor(props, context) {
+        super(props, context);
 
         this.chartOptions = {
             chartPadding: { left: 10, top: 35 },
@@ -190,11 +197,3 @@ class Timeline extends React.Component {
         return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
     }
 }
-
-Timeline.propTypes = {
-    unit         :  React.PropTypes.string.isRequired,
-    interval     :  React.PropTypes.string.isRequired,
-    onUnitChange :  React.PropTypes.func
-};
-
-module.exports = Timeline;

@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import key   from 'keymaster';
 
-class ModalDialog extends React.Component {
+export default class ModalDialog extends Component {
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        visible: PropTypes.bool.isRequired,
+        onClose: PropTypes.func.isRequired,
+        children: PropTypes.array
+    };
 
     componentDidMount() {
         key('esc', this.props.onClose);
@@ -35,11 +41,3 @@ class ModalDialog extends React.Component {
     }
 }
 
-ModalDialog.propTypes = {
-    title: React.PropTypes.string.isRequired,
-    visible: React.PropTypes.bool.isRequired,
-    onClose: React.PropTypes.func.isRequired,
-    children: React.PropTypes.array
-};
-
-module.exports = ModalDialog;

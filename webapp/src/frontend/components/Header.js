@@ -1,6 +1,11 @@
 import React, { PropTypes } from 'react';
 
-class Header extends React.Component {
+export default class Header extends React.Component {
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+    };
 
     render() {
         let title = this.props.title;
@@ -22,11 +27,3 @@ class Header extends React.Component {
     }
 
 }
-
-Header.propTypes = {
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
-};
-
-module.exports = Header;

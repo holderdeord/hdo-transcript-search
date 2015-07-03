@@ -1,7 +1,15 @@
-import React    from 'react';
+import React, { Component, PropTypes }    from 'react';
 import Chartist from 'chartist';
 
-class BaseChart extends React.Component {
+export default class BaseChart extends Component {
+    static propTypes = {
+        type: PropTypes.string.isRequired,
+        data: PropTypes.object.isRequired,
+        options: PropTypes.object,
+        aspectRatios: PropTypes.array,
+        tooltipSuffix: PropTypes.string
+    };
+
     constructor(props) {
         super(props);
         this.groups = this._blankGroups();
@@ -219,13 +227,3 @@ class BaseChart extends React.Component {
         });
     }
 }
-
-BaseChart.propTypes = {
-    type: React.PropTypes.string.isRequired,
-    data: React.PropTypes.object.isRequired,
-    options: React.PropTypes.object,
-    aspectRatios: React.PropTypes.array,
-    tooltipSuffix: React.PropTypes.string
-};
-
-module.exports = BaseChart;

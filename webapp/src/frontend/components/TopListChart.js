@@ -1,7 +1,17 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import BaseChart from './BaseChart';
 
-class TopListChart extends React.Component {
+export default class TopListChart extends Component {
+    static propTypes = {
+        title: PropTypes.string,
+        subtitle: PropTypes.string,
+        counts: PropTypes.array.isRequired,
+        unit: PropTypes.string.isRequired,
+        orientation: PropTypes.string.isRequired,
+        star: PropTypes.bool,
+        className: PropTypes.string,
+        sort: PropTypes.bool
+    };
 
     render() {
         let unit   = this.props.unit;
@@ -86,16 +96,3 @@ class TopListChart extends React.Component {
     }
 
 }
-
-TopListChart.propTypes = {
-    title: PropTypes.string,
-    subtitle: PropTypes.string,
-    counts: PropTypes.array.isRequired,
-    unit: PropTypes.string.isRequired,
-    orientation: PropTypes.string.isRequired,
-    star: PropTypes.bool,
-    className: PropTypes.string,
-    sort: PropTypes.bool
-};
-
-module.exports = TopListChart;

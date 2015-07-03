@@ -1,12 +1,20 @@
-import React             from 'react';
+import React, { PropTypes, Component } from 'react';
 import TimeUtils         from '../utils/TimeUtils';
 import ImageUtils        from '../utils/ImageUtils';
 import { Link }          from 'react-router';
 import Icon              from 'react-fa';
 import ImageWithFallback from './ImageWithFallback';
 
-class Speech extends React.Component {
-    constructor() {
+export default class Speech extends Component {
+
+    static propTypes = {
+        speech: PropTypes.object.isRequired,
+        showTime: PropTypes.bool,
+        showContextLink: PropTypes.bool
+    };
+
+    constructor(...args) {
+        super(...args);
         this.state = {useFallbackImage: false};
     }
 
@@ -122,10 +130,3 @@ class Speech extends React.Component {
     }
 }
 
-Speech.propTypes = {
-    speech: React.PropTypes.object.isRequired,
-    showTime: React.PropTypes.bool,
-    showContextLink: React.PropTypes.bool
-};
-
-module.exports = Speech;
