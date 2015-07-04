@@ -7,7 +7,7 @@ script:
 after_success:
 - scripts/deploy
 notifications:
-  emails:
+  email:
   - jari@holderdeord.no
   hipchat:
     rooms:
