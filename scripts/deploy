@@ -1,6 +1,3 @@
 #!/bin/bash
 
-# basic deploy script
-
 ssh hdo@tale.holderdeord.no "cd /webapps/hdo-transcript-search && git pull origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
-ssh hdo@tale2.holderdeord.no "cd /webapps/hdo-transcript-search && git pull origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
