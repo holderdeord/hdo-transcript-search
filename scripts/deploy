@@ -1,3 +1,28 @@
 #!/bin/bash
 
-ssh hdo@tale.holderdeord.no "cd /webapps/hdo-transcript-search && git pull origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
+DEPLOY_COMMAND="cd /webapps/hdo-transcript-search && git pull origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
+
+if [[ -n "$HIPCHAT_API_TOKEN" ]]; then
+  curl "https://api.hipchat.com/v1/rooms/message?format=json&auth_token=$HIPCHAT_API_TOKEN" \
+    -d "room_id=155708&from=Deploy&message=$USER+is+deploying+hdo-transcript-search+to+production"
+fi
+
+if [[ "$TRAVIS_BRANCH" = "master" ]]; then
+  openssl aes-256-cbc -K $encrypted_c0905604faef_key -iv $encrypted_c0905604faef_iv -in scripts/deploy.enc -out scripts/deploy_dsa -d
+  ssh -i scripts/deploy_dsa hdo@tale.holderdeord.no $DEPLOY_COMMAND
+else
+  ssh hdo@tale.holderdeord.no $DEPLOY_COMMAND
+fi
+
+result="$?"
+
+if [[ -n "$HIPCHAT_API_TOKEN" ]]; then
+  if [[ "$result" -eq 0 ]]; then
+    curl "https://api.hipchat.com/v1/rooms/message?format=json&auth_token=$HIPCHAT_API_TOKEN" \
+      -d "room_id=155708&from=Deploy&message=$USER+finished+deploying+hdo-transcript-search+to+production&color=green"
+  else
+    curl "https://api.hipchat.com/v1/rooms/message?format=json&auth_token=$HIPCHAT_API_TOKEN" \
+      -d "room_id=155708&from=Deploy&message=hdo-transcript-search+deploy+to+production+failed&color=red"
+  fi
+
+fi

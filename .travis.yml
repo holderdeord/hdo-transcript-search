@@ -3,9 +3,15 @@ language: node_js
 node_js:
 - '0.10'
 script:
-- cd webapp && npm install && npm run lint && npm test && npm run build
+- cd webapp && npm install && npm test && npm run build
+after_success:
+- scripts/deploy
 notifications:
-  webhooks: http://deploy.holderdeord.no/travis
+  emails:
+  - jari@holderdeord.no
   hipchat:
     rooms:
       secure: KtzDTt1HzBZSWIHiEYspGF7TdXPSwyOuyxSn4DZA+E/4c/tVCYOw7N+egBzwkHLU6B/1tTlaXEkv8deOVsiG63fM+f7xvIbbRhQ/flJfZzDBGfySVnuPCg0QafcedKoizBujc0rXolG52Rcs7pVGqK4NEPHGv8BbLo7g7esTrY8=
+env:
+  global:
+    secure: YTaSgDcEWrn/D12qiQvpb4IyFmFOcCrJnxG1mCUOTPJnU7j2ILkO7cKIjAteBemvauVM1a78+DKDUb+F8xZN+vnKcUrgTFxT4rhgmyV0+biHVI5+AOX1hJ0/QZkGPTQKGC84ohz98Zpgky4AIjdNnLqCDGNw+1PTBmLmB8T0UOA=
