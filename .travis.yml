@@ -8,7 +8,7 @@ after_success:
 - scripts/deploy
 notifications:
   email:
-  - jari@holderdeord.no
+    - jari@holderdeord.no
   hipchat:
     rooms:
       secure: KtzDTt1HzBZSWIHiEYspGF7TdXPSwyOuyxSn4DZA+E/4c/tVCYOw7N+egBzwkHLU6B/1tTlaXEkv8deOVsiG63fM+f7xvIbbRhQ/flJfZzDBGfySVnuPCg0QafcedKoizBujc0rXolG52Rcs7pVGqK4NEPHGv8BbLo7g7esTrY8=
