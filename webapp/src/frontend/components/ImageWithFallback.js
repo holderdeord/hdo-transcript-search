@@ -23,7 +23,7 @@ export default class ImageWithFallback extends Component {
                 src={this.state.useFallbackImage ? this.props.fallbackSrc : this.props.src}
                 alt={this.props.alt}
                 height={this.props.height}
-                onError={this.handleImageError.bind(this)}
+                onError={::this.handleImageError}
             />
         );
     }

@@ -70,10 +70,8 @@ export default class SearchResults extends React.Component {
 
         if (this.state.loaded) {
             el = (
-                <button
-                    className="btn btn-primary"
-                    onClick={this.handleLoadMore.bind(this)}
-                    >
+                <button className="btn btn-primary"
+                        onClick={::this.handleLoadMore}>
                     Vis flere innlegg
                 </button>
             );

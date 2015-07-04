@@ -27,7 +27,7 @@ class SearchAPI {
         return this.cached('summary', opts, () => {
             return es
                 .search(this._buildAggregationsQuery(opts))
-                .then(this._buildResponse.bind(this));
+                .then(::this._buildResponse);
         });
     }
 

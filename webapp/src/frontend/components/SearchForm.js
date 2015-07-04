@@ -37,16 +37,16 @@ export default class SearchForm extends Component {
     }
 
     componentDidMount() {
-        key('/', this.handleFocusKey.bind(this));
+        key('/', ::this.handleFocusKey);
     }
 
     componentWillUnmount() {
-        key.unbind('/', this.handleFocusKey.bind(this));
+        key.unbind('/', ::this.handleFocusKey);
     }
 
     render() {
         return (
-            <form className="row" id="search-form" onSubmit={this.handleSearch.bind(this)}>
+            <form className="row" id="search-form" onSubmit={::this.handleSearch}>
                 <div className="col-md-6 col-md-offset-3">
                     <div className={`input-group ${this.state.focused ? 'focused' : ''}`}>
                         <input
@@ -55,12 +55,12 @@ export default class SearchForm extends Component {
                             name="query"
                             ref="query"
                             autoFocus="true"
-                            onFocus={this.handleFocus.bind(this)}
-                            onBlur={this.handleBlur.bind(this)}
+                            onFocus={::this.handleFocus}
+                            onBlur={::this.handleBlur}
                             placeholder="Søk etter noe politikere har sagt"
                             tabIndex="0"
                             value={this.state.query}
-                            onChange={this.handleQueryChange.bind(this)}
+                            onChange={::this.handleQueryChange}
                         />
 
                         <span className="input-group-btn">

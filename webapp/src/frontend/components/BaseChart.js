@@ -34,8 +34,8 @@ export default class BaseChart extends Component {
             <div>
                 <div ref="chart"
                     className={`ct-chart ct-${this.state.aspectRatio}`}
-                    onMouseOver={this._handleMouseOver.bind(this)}
-                    onMouseOut={this._handleMouseOut.bind(this)}
+                    onMouseOver={::this._handleMouseOver}
+                    onMouseOut={::this._handleMouseOut}
                 />
 
                 {tooltip}
@@ -49,12 +49,12 @@ export default class BaseChart extends Component {
 
     componentDidMount() {
         this._drawChart(this.props);
-        window.addEventListener('resize', this._handleResize.bind(this));
+        window.addEventListener('resize', ::this._handleResize);
     }
 
     componentWillUnmount() {
         this._detachChart();
-        window.removeEventListener('resize', this._handleResize.bind(this));
+        window.removeEventListener('resize', ::this._handleResize);
     }
 
     componentWillReceiveProps(newProps) {

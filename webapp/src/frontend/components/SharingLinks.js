@@ -12,13 +12,13 @@ export default class SharingLinks extends Component {
         return (
             <div className="sharing-links text-center hidden-xs">
                 <span>
-                    <a href="#" onClick={this.handleFacebookShare.bind(this)}>
+                    <a href="#" onClick={::this.handleFacebookShare}>
                         <Icon name="facebook-square" size="2x" />
                     </a>
                 </span>
 
                 <span>
-                    <a href="#" onClick={this.handleTwitterShare.bind(this)}>
+                    <a href="#" onClick={::this.handleTwitterShare}>
                         <Icon name="twitter-square" size="2x" />
                     </a>
                 </span>

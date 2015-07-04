@@ -27,7 +27,7 @@ export default class Timeline extends Component {
             axisY: {
                 labelOffset: { x: -5, y: 6 },
                 showGrid: true,
-                labelInterpolationFnc: this.formatValue.bind(this)
+                labelInterpolationFnc: ::this.formatValue
             }
         };
 
@@ -55,8 +55,8 @@ export default class Timeline extends Component {
     }
 
     componentDidMount() {
-        key('ctrl+1', this.setPercent.bind(this));
-        key('ctrl+2', this.setAbsolute.bind(this));
+        key('ctrl+1', ::this.setPercent);
+        key('ctrl+2', ::this.setAbsolute);
     }
 
     componentWillUnmount() {
@@ -84,7 +84,7 @@ export default class Timeline extends Component {
             queries.push(query);
 
             if (!labels.length && result.timeline.length) {
-                labels = result.timeline.map(this.formatLabel.bind(this));
+                labels = result.timeline.map(::this.formatLabel);
             }
 
             series.pct.push({ data: result.timeline.map(e => e.pct.toFixed(2)) });

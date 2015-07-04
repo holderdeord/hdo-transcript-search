@@ -60,7 +60,7 @@ export default class Search extends Component {
                             unit={unit}
                             interval={this.state.interval}
                             focusedIndex={focusedIndex}
-                            onUnitChange={this.handleUnitChange.bind(this)}
+                            onUnitChange={::this.handleUnitChange}
                         />
 
                         <ResultStats
@@ -79,8 +79,8 @@ export default class Search extends Component {
                         orientation={this.state.orientation}
                         interval={this.state.interval}
 
-                        onOrientationChange={this.handleOrientationChange.bind(this)}
-                        onIntervalChange={this.handleIntervalChange.bind(this)}
+                        onOrientationChange={::this.handleOrientationChange}
+                        onIntervalChange={::this.handleIntervalChange}
                     />
                 </div>
             </div>

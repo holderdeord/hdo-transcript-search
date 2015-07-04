@@ -34,13 +34,13 @@ export default class TopListChart extends Component {
             reverseData: !isHorizontal,
             axisX: {
                 showGrid: isHorizontal,
-                labelInterpolationFnc: this.formatValue.bind(this),
+                labelInterpolationFnc: ::this.formatValue,
                 offset: 60
             },
             axisY: {
                 labelOffset: { x: 0, y: 6 },
                 showGrid: !isHorizontal,
-                labelInterpolationFnc: this.formatValue.bind(this),
+                labelInterpolationFnc: ::this.formatValue,
                 offset: 50,
                 onlyInteger: this.props.unit === 'count'
             }
