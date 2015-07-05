@@ -101,7 +101,7 @@ app.get('/feed', (req, res) => {
             .then(results => {
                 let feedOpts = Object.assign({}, app.locals, {results: results, query: req.query});
 
-                res.type('atom');
+                res.type('rss');
                 res.send(createFeed(feedOpts));
             })
             .catch(errorHandler.bind(res));

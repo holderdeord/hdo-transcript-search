@@ -44,7 +44,7 @@ export default function createFeed(opts) {
         custom_elements: Object.keys(links).map(rel => {
             return {
                 'atom:link': {
-                    _attr: { href: links[rel], rel: rel }
+                    _attr: { href: links[rel], rel: rel, type: 'application/rss+xml' }
                 }
             };
         })
