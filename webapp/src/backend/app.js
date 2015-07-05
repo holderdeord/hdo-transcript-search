@@ -9,6 +9,7 @@ import analytics   from './analytics';
 import fs          from 'fs';
 import compression from 'compression';
 import createFeed  from './createFeed';
+import UrlUtils    from '../shared/UrlUtils';
 
 let app = express();
 
@@ -111,8 +112,13 @@ app.get('/feed', (req, res) => {
 });
 
 app.get('/search/:unit/:query/:focused', (req, res) => {
+    let queries = req.params.query.split('.');
+    let focusedIndex = +req.params.focused;
+    let focused = queries[focusedIndex];
+
     res.render('index', {
-        title: req.params.query.split('.').join(', ')
+        title: queries.join(', '),
+        feedUrl: focused ? `${app.locals.baseUrl}${UrlUtils.rssPathForQuery(focused)}` : null
     });
 });
 
