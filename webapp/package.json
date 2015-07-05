@@ -11,7 +11,7 @@
     "lint": "./node_modules/.bin/eslint -c .eslintrc config src",
     "start": "NODE_ENV=production node server.js",
     "build": "npm install && ./node_modules/.bin/webpack --optimize-minimize --optimize-occurence-order --optimize-dedupe",
-    "dev": "./node_modules/.bin/nodemon --watch src --watch public --watch views --watch config server.js",
+    "dev": "./node_modules/.bin/nodemon --watch src/backend --watch src/shared --watch views --watch config --watch webpack.config.js server.js",
     "test": "npm run lint"
   },
   "author": "jari@holderdeord.no",
