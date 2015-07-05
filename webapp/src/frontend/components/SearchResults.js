@@ -1,6 +1,7 @@
 import React  from 'react';
 import Speech from './Speech';
 import Icon   from 'react-fa';
+import UrlUtils from '../../shared/UrlUtils';
 
 export default class SearchResults extends React.Component {
     constructor(props) {
@@ -47,12 +48,26 @@ export default class SearchResults extends React.Component {
 
                 <div className="row" style={{padding: '1rem'}}>
                     <div className="export-links">
-                        <a href={this.getExportUrlFor(result.query)}>
-                            Last ned <strong>{result.counts.total}</strong> innlegg som CSV
-                            <span style={{paddingLeft: '.5rem'}}>
-                                <Icon name="download" />
-                            </span>
-                        </a>
+                        <div className="inner">
+                            <div>
+                                <a href={UrlUtils.csvPathForQuery(result.query)}>
+                                    Last ned <strong>{result.counts.total}</strong> innlegg som CSV
+                                    <span style={{paddingLeft: '.5rem'}}>
+                                        <Icon name="download" />
+                                    </span>
+                                </a>
+                            </div>
+
+                            <div>
+
+                            <a href={UrlUtils.rssPathForQuery(result.query)}>
+                                RSS-feed for dette søket
+                                <span style={{paddingLeft: '.5rem'}}>
+                                    <Icon name="rss" />
+                                </span>
+                            </a>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="text-center">
@@ -98,10 +113,6 @@ export default class SearchResults extends React.Component {
                 this.searchActions.moreHits(result.query, result.hits.length);
             });
         }
-    }
-
-    getExportUrlFor(query) {
-        return `/api/export?query=${encodeURIComponent(query)}&format=csv&sort=time.desc`;
     }
 
     getFocusedHitSet(props) {
