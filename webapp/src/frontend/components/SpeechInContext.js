@@ -1,10 +1,9 @@
 /*eslint-disable react/no-multi-comp */
 
 import React, { PropTypes, Component } from 'react';
-import FluxComponent        from 'flummox/component';
-import Speech               from './Speech';
-import { Link }             from 'react-router';
-import Icon                 from 'react-fa';
+import Speech from './Speech';
+import { Link } from 'react-router';
+import Icon from 'react-fa';
 
 class SpeechBrowser extends Component {
     static propTypes = { speeches: PropTypes.array };
@@ -70,14 +69,4 @@ class SpeechBrowser extends Component {
     }
 }
 
-export default class SpeechInContext extends Component {
-    render() {
-        return (
-            <FluxComponent connectToStores={['speech']}>
-                <SpeechBrowser />
-            </FluxComponent>
-        );
-    }
-}
-
-module.exports = SpeechInContext;
+module.exports = SpeechBrowser;

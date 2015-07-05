@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
-import FluxComponent  from 'flummox/component';
-import {RouteHandler} from 'react-router';
+import React, { Component, PropTypes } from 'react';
 
 import Header        from './Header';
 import SharingLinks  from './SharingLinks';
 import Footer        from './Footer';
 
 export default class App extends Component {
+    static propTypes = {
+        children: PropTypes.object
+        // could be array
+    }
+
     constructor(...args) {
         super(...args);
 
@@ -21,12 +24,10 @@ export default class App extends Component {
         return (
             <div>
                 <Header title={this.state.title} description={this.state.desc}>
-                    <FluxComponent connectToStores={['summary']}>
-                        <SharingLinks facebookAppId={this.state.fbId} />
-                    </FluxComponent>
+                    <SharingLinks facebookAppId={this.state.fbId} />
                 </Header>
 
-                <RouteHandler />
+                {this.props.children}
 
                 <Footer/>
             </div>

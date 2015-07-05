@@ -1,18 +1,20 @@
 import React, { PropTypes, Component } from 'react';
-import assign               from 'react/lib/Object.assign';
-import FluxComponent        from 'flummox/component';
+import assign        from 'react/lib/Object.assign';
 
-import Intervals            from '../constants/Intervals';
-import key                  from 'keymaster';
-import SearchForm           from './SearchForm';
-import Timeline             from './Timeline';
-import DevPanel             from './DevPanel';
-import ResultStats          from './ResultStats';
-import SearchResults        from './SearchResults';
+import Intervals     from '../constants/Intervals';
+import key           from 'keymaster';
+import SearchForm    from './SearchForm';
+import Timeline      from './Timeline';
+import DevPanel      from './DevPanel';
+import ResultStats   from './ResultStats';
+import SearchResults from './SearchResults';
+import { connect }   from 'redux/react';
 
+@connect(state => state)
 export default class Search extends Component {
     static contextTypes = {
-        router: PropTypes.func
+        router: PropTypes.object,
+        store: PropTypes.object,
     };
 
     static propTypes = {
@@ -50,29 +52,25 @@ export default class Search extends Component {
         return (
             <div>
                 <div className="container">
-                    <FluxComponent connectToStores={['summary']}>
-                        <SearchForm
-                            interval={this.state.interval}
-                            params={this.props.params}
-                        />
+                    <SearchForm
+                        interval={this.state.interval}
+                        params={this.props.params}
+                    />
 
-                        <Timeline
-                            unit={unit}
-                            interval={this.state.interval}
-                            focusedIndex={focusedIndex}
-                            onUnitChange={::this.handleUnitChange}
-                        />
+                    <Timeline
+                        unit={unit}
+                        interval={this.state.interval}
+                        focusedIndex={focusedIndex}
+                        onUnitChange={::this.handleUnitChange}
+                    />
 
-                        <ResultStats
-                            unit={unit}
-                            orientation={this.state.orientation}
-                            focusedIndex={focusedIndex}
-                        />
-                    </FluxComponent>
+                    <ResultStats
+                        unit={unit}
+                        orientation={this.state.orientation}
+                        focusedIndex={focusedIndex}
+                    />
 
-                    <FluxComponent connectToStores={['hits']}>
-                        <SearchResults focusedIndex={focusedIndex}/>
-                    </FluxComponent>
+                    <SearchResults focusedIndex={focusedIndex}/>
 
                     <DevPanel
                         visible={this.state.showDevPanel}

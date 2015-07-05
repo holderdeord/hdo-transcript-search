@@ -1,6 +1,4 @@
-import { Store } from 'flummox';
-
-export default class SpeechStore extends Store {
+export default class SpeechStore {
     constructor(flux) {
         super();
 

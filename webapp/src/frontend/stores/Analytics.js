@@ -1,6 +1,4 @@
-import { Store } from 'flummox';
-
-export default class Analytics extends Store {
+export default class Analytics {
 
     static ga() {
         return window.ga || ((...args) => console.log(args)); // eslint-disable-line
@@ -11,8 +9,6 @@ export default class Analytics extends Store {
     }
 
     constructor(flux) {
-        super();
-
         let searchActions = flux.getActions('search');
         let ga = this.constructor.ga();
 

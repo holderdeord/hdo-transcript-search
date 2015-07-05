@@ -1,74 +1,89 @@
 require('./styles/main.less');
 require('./styles/chartist.scss');
 
-import React         from 'react';
-import Flux          from 'flummox';
-import FluxComponent from 'flummox/component';
-import Router        from 'react-router';
-import SummaryStore  from './stores/SummaryStore';
-import HitsStore     from './stores/HitsStore';
-import SpeechStore   from './stores/SpeechStore';
-import Analytics     from './stores/Analytics';
-import SearchActions from './actions/SearchActions';
-import routes        from './routes';
-import titleSuffix   from './constants/titleSuffix';
+import React  from 'react';
+import { Router } from 'react-router';
+import { history } from 'react-router/lib/BrowserHistory';
+import routes from './routes';
+import { Provider } from 'redux/react';
+import { createStore } from 'redux';
 
-class AppFlux extends Flux {
-    constructor() {
-        super();
+/* disable-eslint */
+let reducers = {
+    search: (state) => state,
+    summary: (state) => state,
+    hits: (state) => state,
+    speech: (state) => state,
+    analytics: (state) => state,
+};
+/* enable-eslint */
 
-        this.createActions('search', SearchActions);
+const initialState = {};
+const store = createStore(reducers, initialState);
 
-        this.createStore('summary', SummaryStore, this);
-        this.createStore('hits', HitsStore, this);
-        this.createStore('speech', SpeechStore, this);
-        this.createStore('analytics', Analytics, this);
+React.render(
+    <Provider store={store}>
+        {() => <Router history={history}>{routes}</Router>}
+    </Provider>,
+    document.getElementById('content')
+);
 
-        this.searchActions = this.getActions('search');
-        this.summaryStore = this.getStore('summary');
-    }
+// class AppFlux extends Flux {
+//     constructor() {
+//         super();
 
-    executeSearch(queries) {
-        let lastQuery = this.summaryStore.state.joinedQuery;
+//         this.createActions('search', SearchActions);
 
-        if (!lastQuery.length || lastQuery !== queries.join(', ')) {
-            this.searchActions.summary(queries);
-            this.searchActions.hits(queries);
-        } else {
-            // this is apparently needed to redraw the charts
-            this.summaryStore.forceUpdate();
-        }
+//         this.createStore('summary', SummaryStore, this);
+//         this.createStore('hits', HitsStore, this);
+//         this.createStore('speech', SpeechStore, this);
+//         this.createStore('analytics', Analytics, this);
 
-        document.title = `«${queries.join(', ')}» · ${titleSuffix}`;
-    }
+//         this.searchActions = this.getActions('search');
+//         this.summaryStore = this.getStore('summary');
+//     }
 
-    executeReset() {
-        this.searchActions.reset();
-    }
+//     executeSearch(queries) {
+//         let lastQuery = this.summaryStore.state.joinedQuery;
 
-    executeSpeechContext(transcript, order) {
-        this.searchActions.speechContext(transcript, order).then(() => {
-            document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
-        });
-    }
-}
+//         if (!lastQuery.length || lastQuery !== queries.join(', ')) {
+//             this.searchActions.summary(queries);
+//             this.searchActions.hits(queries);
+//         } else {
+//             // this is apparently needed to redraw the charts
+//             this.summaryStore.forceUpdate();
+//         }
 
-let flux = new AppFlux();
+//         document.title = `«${queries.join(', ')}» · ${titleSuffix}`;
+//     }
 
-Router.run(routes, Router.HistoryLocation, (Handler, state) => {
-    React.render(
-        <FluxComponent flux={flux}>
-            <Handler {...state} />
-        </FluxComponent>,
-        document.getElementById('content')
-    );
+//     executeReset() {
+//         this.searchActions.reset();
+//     }
 
-    if (state.params.queries && state.params.queries.length) {
-        flux.executeSearch(state.params.queries.split('.'));
-    } else if (state.params.transcript && state.params.order) {
-        flux.executeSpeechContext(state.params.transcript, +state.params.order);
-    } else {
-        flux.executeReset();
-    }
-});
+//     executeSpeechContext(transcript, order) {
+//         this.searchActions.speechContext(transcript, order).then(() => {
+//             document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
+//         });
+//     }
+// }
+
+// let flux = new AppFlux();
+
+// Router.run(routes, Router.HistoryLocation, (Handler, state) => {
+//     React.render(
+//         <FluxComponent flux={flux}>
+//             <Handler {...state} />
+//         </FluxComponent>,
+//         document.getElementById('content')
+//     );
+
+//     if (state.params.queries && state.params.queries.length) {
+//         flux.executeSearch(state.params.queries.split('.'));
+//     } else if (state.params.transcript && state.params.order) {
+//         flux.executeSpeechContext(state.params.transcript, +state.params.order);
+//     } else {
+//         flux.executeReset();
+//     }
+// });
 

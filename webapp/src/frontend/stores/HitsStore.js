@@ -1,6 +1,4 @@
-import { Store } from 'flummox';
-
-export default class HitsStore extends Store {
+export default class HitsStore {
     constructor(flux) {
         super();
 

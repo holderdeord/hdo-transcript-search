@@ -6,7 +6,7 @@ import UrlUtils from '../../shared/UrlUtils';
 export default class SearchResults extends React.Component {
     constructor(props) {
         super(props);
-        this.searchActions = props.flux.getActions('search');
+        // this.searchActions = props.flux.getActions('search');
         this.state = { loaded: true };
     }
 

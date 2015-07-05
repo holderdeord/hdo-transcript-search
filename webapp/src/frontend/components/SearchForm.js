@@ -14,11 +14,11 @@ export default class SearchForm extends Component {
     };
 
     static contextTypes = {
-        router: PropTypes.func
+        router: PropTypes.object
     };
 
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             query: this.props.joinedQuery,
