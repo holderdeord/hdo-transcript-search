@@ -7,7 +7,7 @@ if [[ -n "$HIPCHAT_API_TOKEN" ]]; then
     -d "room_id=155708&from=Deploy&message=$USER+is+deploying+hdo-transcript-search+to+production"
 fi
 
-if [[ "$TRAVIS_BRANCH" = "master" ]]; then
+if [[ -n "$TRAVIS" ]]; then
   touch scripts/deploy_dsa && chmod 0600 scripts/deploy_dsa && openssl aes-256-cbc -K $encrypted_c0905604faef_key -iv $encrypted_c0905604faef_iv -in scripts/deploy.enc -out scripts/deploy_dsa -d
   ssh -o StrictHostKeyChecking=no -i scripts/deploy_dsa hdo@tale.holderdeord.no $DEPLOY_COMMAND
 else
