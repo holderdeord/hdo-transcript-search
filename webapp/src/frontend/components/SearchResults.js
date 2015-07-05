@@ -61,7 +61,7 @@ export default class SearchResults extends React.Component {
                             <div>
 
                             <a href={UrlUtils.rssPathForQuery(result.query)}>
-                                RSS-feed for dette søket
+                                RSS for dette søket
                                 <span style={{paddingLeft: '.5rem'}}>
                                     <Icon name="rss" />
                                 </span>
