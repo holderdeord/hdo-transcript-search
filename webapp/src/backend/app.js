@@ -95,7 +95,7 @@ app.get('/search', (req, res) => {
 
 app.get('/feed', (req, res) => {
     if (validQuery(req.query.query)) {
-        let query = Object.assign({}, req.query, {highlight: false});
+        let query = Object.assign({}, req.query, {highlight: false, sort: 'time.desc'});
 
         api.hits(query)
             .then(results => {
