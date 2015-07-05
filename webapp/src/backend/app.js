@@ -118,7 +118,8 @@ app.get('/search/:unit/:query/:focused', (req, res) => {
 
     res.render('index', {
         title: queries.join(', '),
-        feedUrl: focused ? `${app.locals.baseUrl}${UrlUtils.rssPathForQuery(focused)}` : null
+        feedUrl: focused ? `${app.locals.baseUrl}${UrlUtils.rssPathForQuery(focused)}` : null,
+        focused: focused
     });
 });
 
