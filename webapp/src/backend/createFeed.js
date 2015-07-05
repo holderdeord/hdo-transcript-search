@@ -29,8 +29,8 @@ export default function createFeed(opts) {
 
     /* eslint-disable */
     let feed = new RSS({
-        title: `Søk etter «${results.query}» - Sagt i salen - Holder de ord`,
-        description: `Treff på «${results.query}» i Stortingets referater.`,
+        title: `Innlegg om «${results.query}» - Sagt i salen - Holder de ord`,
+        description: `Innlegg fra Stortinget som inneholder «${results.query}».`,
         feed_url: absoluteUrl,
         site_url: baseUrl,
         image_url: imageUrl,
