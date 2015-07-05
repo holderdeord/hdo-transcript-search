@@ -8,6 +8,7 @@ import path        from 'path';
 import analytics   from './analytics';
 import fs          from 'fs';
 import compression from 'compression';
+import createFeed  from './createFeed';
 
 let app = express();
 
@@ -24,6 +25,7 @@ app.set('analytics', app.get('env') === 'production');
 app.locals.appTitle       = 'Sagt i salen';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
 app.locals.facebookAppId  = 504447209668308;
+app.locals.imageUrl       = 'http://files.holderdeord.no/images/tale.png';
 
 if (app.get('env') === 'development') {
     app.use(require('errorhandler')());
@@ -58,8 +60,8 @@ if (app.get('env') === 'development') {
 app.use(express.static(path.resolve(__dirname, '../../public')));
 
 app.use((req, res, next) => {
-    res.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
-    res.locals.absoluteUrl = res.locals.baseUrl + req.originalUrl;
+    app.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
+    app.locals.absoluteUrl = app.locals.baseUrl + req.originalUrl;
 
     if (req.path.indexOf('analytics') !== -1) {
         res.setHeader('Cache-Control', 'public, max-age=5');
@@ -89,6 +91,23 @@ app.get('/search', (req, res) => {
     res.render('index', {
         title: 'Stortingssøk'
     });
+});
+
+app.get('/feed', (req, res) => {
+    if (validQuery(req.query.query)) {
+        let query = Object.assign({}, req.query, {highlight: false});
+
+        api.hits(query)
+            .then(results => {
+                let feedOpts = Object.assign({}, app.locals, {results: results, query: req.query});
+
+                res.type('atom');
+                res.send(createFeed(feedOpts));
+            })
+            .catch(errorHandler.bind(res));
+    } else {
+        res.status(400).json({error: {message: 'missing or invalid query param'}});
+    }
 });
 
 app.get('/search/:unit/:query/:focused', (req, res) => {
