@@ -31,3 +31,5 @@ export default class ServerFacade {
         return `/api/search/summary?interval=${interval}&query=${query}`;
     }
 }
+
+export const facade = new ServerFacade();

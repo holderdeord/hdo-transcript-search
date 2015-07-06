@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import assign        from 'react/lib/Object.assign';
 
 import Intervals     from '../constants/Intervals';
 import key           from 'keymaster';
@@ -8,9 +7,7 @@ import Timeline      from './Timeline';
 import DevPanel      from './DevPanel';
 import ResultStats   from './ResultStats';
 import SearchResults from './SearchResults';
-import { connect }   from 'redux/react';
 
-@connect(state => state)
 export default class Search extends Component {
     static contextTypes = {
         router: PropTypes.object,
@@ -20,7 +17,8 @@ export default class Search extends Component {
     static propTypes = {
         params: PropTypes.shape({
             focused: PropTypes.string,
-            unit: PropTypes.string
+            unit: PropTypes.string,
+            queries: PropTypes.string,
         })
     };
 
@@ -95,7 +93,9 @@ export default class Search extends Component {
 
     handleUnitChange(event) {
         let newUnit = event.target.value === 'Prosent' ? 'pct' : 'count';
-        this.context.router.transitionTo('search', assign({}, this.props.params, {unit: newUnit}));
+        let { queries, focused } = this.props.params;
+
+        this.context.router.transitionTo(`/search/${newUnit}/${queries}/${focused}`);
     }
 
     registerKeyBindings() {

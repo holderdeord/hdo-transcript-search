@@ -1,31 +1,64 @@
-import { Actions }  from 'flummox';
-import ServerFacade from '../utils/ServerFacade';
-import titleSuffix  from '../constants/titleSuffix';
+import { facade } from '../utils/ServerFacade';
+import {
+    SUMMARY,
+    HITS,
+    MORE_HITS,
+    SPEECH_CONTEXT,
+    RESET
+} from '../constants/ActionTypes';
 
-export default class SearchActions extends Actions {
-    constructor() {
-        super();
-        this.server = new ServerFacade();
-    }
+export function summary(queries, interval = 'year') {
+    return dispatch => {
+        facade
+            .summary(queries, interval)
+            .then(
+                success(dispatch, SUMMARY),
+                error(dispatch, SUMMARY)
+            );
+    };
+}
 
-    summary(queries, interval = 'year') {
-        return this.server.summary(queries, interval);
-    }
+export function hits(queries) {
+    return dispatch => {
+        facade
+            .hits(queries)
+            .then(
+                success(dispatch, HITS),
+                error(dispatch, HITS)
+            );
+    };
+}
 
-    hits(queries) {
-        return this.server.hits(queries);
-    }
+export function moreHits(query, start) {
+    return dispatch => {
+        facade
+            .hits([query], start, 10)
+            .then(
+                success(dispatch, MORE_HITS),
+                error(dispatch, MORE_HITS)
+            );
+    };
+}
 
-    moreHits(query, start) {
-        return this.server.hits([query], start, 10);
-    }
+export function speechContext(transcriptId, order) {
+    return dispatch => {
+        facade
+            .speechContext(transcriptId, order - 1, order + 1)
+            .then(
+                success(dispatch, SPEECH_CONTEXT),
+                error(dispatch, SPEECH_CONTEXT)
+            );
+    };
+}
 
-    speechContext(transcript, order) {
-        return this.server.speechContext(transcript, order - 1, order + 1);
-    }
+export function reset() {
+    return { type: RESET };
+}
 
-    reset() {
-        document.title = titleSuffix;
-        return null;
-    }
+function success(dispatch, type) {
+    return (payload) => dispatch({type: type, payload: payload });
+}
+
+function error(dispatch, type) {
+    return (payload) => dispatch({type: type, error: true, payload: payload });
 }

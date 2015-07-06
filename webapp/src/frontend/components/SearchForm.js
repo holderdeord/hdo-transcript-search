@@ -1,9 +1,10 @@
 import React, { PropTypes, Component }  from 'react';
 import key    from 'keymaster';
-import assign from 'react/lib/Object.assign';
+import { connect } from 'redux/react';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 
+@connect(({summary: {joinedQuery}}) => ({joinedQuery}))
 export default class SearchForm extends Component {
 
     static propTypes = {
@@ -124,20 +125,14 @@ export default class SearchForm extends Component {
     }
 
     transitionToQueries(queries) {
-        var name = 'blank';
-        var queryPath = null;
+        let unit = this.props.params.unit || 'pct';
+        let focused = queries.length - 1;
 
         if (queries.length) {
-            name = 'search';
-            queryPath = queries.join('.');
+            let queryPath = queries.join('.');
+            this.context.router.transitionTo(`/search/${unit}/${queryPath}/${focused}`);
+        } else {
+            this.context.router.transitionTo('/search');
         }
-
-        let params = assign({}, this.props.params, {
-            queries: queryPath,
-            unit: this.props.params.unit || 'pct',
-            focused: queries.length - 1
-        });
-
-        this.context.router.transitionTo(name, params);
     }
 }

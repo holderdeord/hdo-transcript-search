@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import Analytics from '../stores/Analytics';
+import { ga } from '../reducers/analytics';
 
 export default class ImageWithFallback extends Component {
     static propTypes = {
@@ -9,6 +9,10 @@ export default class ImageWithFallback extends Component {
         height: PropTypes.number,
         className: PropTypes.string
     };
+
+    static contextTypes = {
+        store: PropTypes.object.isRequired
+    }
 
     constructor(...args) {
         super(...args);
@@ -30,7 +34,7 @@ export default class ImageWithFallback extends Component {
 
     handleImageError() {
         if (!this.state.useFallbackImage) {
-            Analytics.sendEvent('image-error', this.props.src);
+            ga('send', 'event', 'image-error', this.props.src);
             this.setState({useFallbackImage: true});
         }
     }

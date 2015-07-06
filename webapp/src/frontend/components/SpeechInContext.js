@@ -4,14 +4,16 @@ import React, { PropTypes, Component } from 'react';
 import Speech from './Speech';
 import { Link } from 'react-router';
 import Icon from 'react-fa';
+import { connect } from 'redux/react';
 
+@connect(({speech: {speeches}}) => ({speeches}))
 class SpeechBrowser extends Component {
     static propTypes = { speeches: PropTypes.array };
 
     render() {
         let speeches = this.props.speeches;
 
-        if (!speeches) {
+        if (!speeches.length) {
             return null;
         }
 
@@ -21,7 +23,7 @@ class SpeechBrowser extends Component {
 
         if (first && first.order > 0) {
             prevLink = (
-                <Link to="speech" params={{transcript: first.transcript, order: first.order}}>
+                <Link to={`/speeches/${last.transcript}/${last.order}`}>
                     <Icon name="chevron-left"/>
 
                     <strong>Forrige innlegg:</strong>
@@ -35,7 +37,7 @@ class SpeechBrowser extends Component {
 
         if (last) {
             nextLink = (
-                <Link to="speech" params={{transcript: last.transcript, order: last.order}}>
+                <Link to={`/speeches/${last.transcript}/${last.order}`} >
                     <strong>Neste innlegg:</strong>
 
                     <span>

@@ -4,9 +4,10 @@ import TimeUtils from '../utils/TimeUtils';
 import Colors    from '../utils/Colors';
 import {Link}    from 'react-router';
 import key       from 'keymaster';
+import {connect} from 'redux/react';
 
+@connect(({summary: {results}}) => ({results}))
 export default class Timeline extends Component {
-
     static propTypes = {
         unit         :  PropTypes.string.isRequired,
         interval     :  PropTypes.string.isRequired,
@@ -76,8 +77,9 @@ export default class Timeline extends Component {
         let queries = [];
         let labels  = [];
         let series  = {pct: [], count: []};
+        let results = props.results || [];
 
-        props.results.forEach((r) => {
+        results.forEach((r) => {
             let query = r.query;
             let result = r.result;
 
@@ -164,14 +166,12 @@ export default class Timeline extends Component {
             if (+this.props.focusedIndex === i) {
                 query = <span className={className} style={{fontWeight: '700'}}>{q}</span>;
             } else {
-                let params = {
-                    queries: this.state.queries.join('.'),
-                    unit: this.props.unit,
-                    focused: i
-                };
+                let queryPath = this.state.queries.join('.');
+                let unit = this.props.unit;
+                let focused = i;
 
                 query = (
-                    <Link to="search" params={params}>
+                    <Link to={`/search/${unit}/${queryPath}/${focused}`}>
                         <span className={className}>{q}</span>
                     </Link>
                 );

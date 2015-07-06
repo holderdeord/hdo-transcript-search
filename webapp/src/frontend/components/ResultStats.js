@@ -1,4 +1,5 @@
 import React             from 'react';
+import { connect }       from 'redux/react';
 import TopListChart      from './TopListChart';
 import Parties           from '../../shared/Parties';
 import ImageUtils        from '../utils/ImageUtils';
@@ -7,6 +8,7 @@ import ImageWithFallback from './ImageWithFallback';
 
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
+@connect(({summary: {results}}) => ({results}))
 export default class ResultStats extends React.Component {
     constructor(props) {
         super(props);
@@ -25,12 +27,13 @@ export default class ResultStats extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+        let results = props.results || [];
         let parties = [];
         let people  = {};
         let query   = '';
 
         let focusedIndex = props.focusedIndex || 0;
-        let result = props.results[focusedIndex];
+        let result = results[focusedIndex];
 
         if (result) {
             query   = result.query;

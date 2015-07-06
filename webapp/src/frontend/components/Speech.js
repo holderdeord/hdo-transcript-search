@@ -48,7 +48,7 @@ export default class Speech extends Component {
                             </div>
 
                             <div className="col-xs-8">
-                                <Link to="speech" params={{transcript: speech.transcript, order: speech.order}}>
+                                <Link to={`/speeches/${speech.transcript}/${speech.order}`}>
                                     <span className="text-muted">{timestamp}</span>
                                 </Link>
                             </div>
@@ -100,14 +100,11 @@ export default class Speech extends Component {
         if (this.props.showContextLink === false) {
             return null;
         } else {
-            let linkParams = {
-                transcript: this.props.speech.transcript,
-                order: this.props.speech.order
-            };
+            const { transcript, order } = this.props.speech;
 
             return (
                 <div className="context-link">
-                    <Link to="speech" params={linkParams}>
+                    <Link to={`/speeches/${transcript}/${order}`}>
                         Se innlegget i kontekst
 
                         <span style={{paddingLeft: '.5rem'}}>

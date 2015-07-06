@@ -1,12 +1,21 @@
-import React  from 'react';
+import React, { Component, PropTypes } from 'react';
 import Speech from './Speech';
-import Icon   from 'react-fa';
+import Icon from 'react-fa';
 import UrlUtils from '../../shared/UrlUtils';
+import { connect }  from 'redux/react';
+import { moreHits } from '../actions/SearchActions';
 
-export default class SearchResults extends React.Component {
+@connect(state => ({ hits: state.hits.hits }))
+export default class SearchResults extends Component {
+    static contextTypes = {
+        store: PropTypes.object.isRequired
+    }
+
+    static propTypes = {
+    }
+
     constructor(props) {
         super(props);
-        // this.searchActions = props.flux.getActions('search');
         this.state = { loaded: true };
     }
 
@@ -25,6 +34,7 @@ export default class SearchResults extends React.Component {
         if (!result) {
             return null;
         }
+
         let hasMore = result.hits.length < result.counts.total;
 
         return (
@@ -109,7 +119,7 @@ export default class SearchResults extends React.Component {
 
         if (result) {
             this.setState({loaded: false}, () => {
-                this.searchActions.moreHits(result.query, result.hits.length);
+                this.context.store.dispatch(moreHits(result.query, result.hits.length));
             });
         }
     }
