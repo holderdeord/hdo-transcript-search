@@ -5,7 +5,7 @@ class Footer extends React.Component {
         return (
             <footer>
                 <a href="https://www.holderdeord.no/">
-                    <div className="logo" />
+                    <img className="logo" src="/logo.png" />
                 </a>
 
                 <h4>Holder de ord &copy; 2014 - {new Date().getFullYear()}</h4>
