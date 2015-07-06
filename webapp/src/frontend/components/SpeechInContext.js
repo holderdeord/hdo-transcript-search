@@ -23,7 +23,7 @@ class SpeechBrowser extends Component {
 
         if (first && first.order > 0) {
             prevLink = (
-                <Link to={`/speeches/${last.transcript}/${last.order}`}>
+                <Link to={`/speeches/${first.transcript}/${first.order}`}>
                     <Icon name="chevron-left"/>
 
                     <strong>Forrige innlegg:</strong>
