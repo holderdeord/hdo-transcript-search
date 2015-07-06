@@ -44,11 +44,19 @@ export default class SearchResults extends React.Component {
                     ])
                 }
 
-                {hasMore && this.renderLoadMore()}
-
                 <div className="row" style={{padding: '1rem'}}>
-                    <div className="export-links">
-                        <div className="inner">
+                    <div className="col-md-4 col-md-offset-4">
+                        {hasMore && this.renderLoadMore()}
+
+                        <div className="text-center">
+                            <small className="text-muted" style={{marginLeft: '1rem'}}>
+                                Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div className="col-md-4">
+                        <div className="export-links">
                             <div>
                                 <a href={UrlUtils.csvPathForQuery(result.query)}>
                                     Last ned <strong>{result.counts.total}</strong> innlegg som CSV
@@ -59,21 +67,14 @@ export default class SearchResults extends React.Component {
                             </div>
 
                             <div>
-
-                            <a href={UrlUtils.rssPathForQuery(result.query)}>
-                                RSS for dette søket
-                                <span style={{paddingLeft: '.5rem'}}>
-                                    <Icon name="rss" />
-                                </span>
-                            </a>
+                                <a href={UrlUtils.rssPathForQuery(result.query)}>
+                                    RSS for dette søket
+                                    <span style={{paddingLeft: '.5rem'}}>
+                                        <Icon name="rss" />
+                                    </span>
+                                </a>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="text-center">
-                        <small className="text-muted" style={{marginLeft: '1rem'}}>
-                            Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
-                        </small>
                     </div>
                 </div>
             </div>
@@ -97,10 +98,8 @@ export default class SearchResults extends React.Component {
         }
 
         return (
-            <div className="row" style={{paddingTop: '1rem'}}>
-                <div className="text-center">
-                    {el}
-                </div>
+            <div className="text-center">
+                {el}
             </div>
         );
     }
