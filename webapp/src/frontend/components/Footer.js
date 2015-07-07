@@ -18,7 +18,7 @@ class Footer extends React.Component {
                     </small>
                 </div>
 
-                <p>
+                <p style={{paddingTop: '1rem'}}>
                     <a href="https://www.holderdeord.no/" alt="Holder de ord">holderdeord.no</a>
                     &nbsp;&middot;&nbsp;
                     <a href="https://twitter.com/holderdeord/" alt="Holder de ord på Twitter">@holderdeord</a>
