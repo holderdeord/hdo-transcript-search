@@ -8,47 +8,43 @@ import {
 } from '../constants/ActionTypes';
 
 export function summary(queries, interval = 'year') {
-    return dispatch => {
+    return dispatch =>
         facade
             .summary(queries, interval)
             .then(
                 success(dispatch, SUMMARY),
                 error(dispatch, SUMMARY)
             );
-    };
 }
 
 export function hits(queries) {
-    return dispatch => {
+    return dispatch =>
         facade
             .hits(queries)
             .then(
                 success(dispatch, HITS),
                 error(dispatch, HITS)
             );
-    };
 }
 
 export function moreHits(query, start) {
-    return dispatch => {
+    return dispatch =>
         facade
             .hits([query], start, 10)
             .then(
                 success(dispatch, MORE_HITS),
                 error(dispatch, MORE_HITS)
             );
-    };
 }
 
 export function speechContext(transcriptId, order) {
-    return dispatch => {
+    return dispatch =>
         facade
             .speechContext(transcriptId, order - 1, order + 1)
             .then(
                 success(dispatch, SPEECH_CONTEXT),
                 error(dispatch, SPEECH_CONTEXT)
             );
-    };
 }
 
 export function reset() {

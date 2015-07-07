@@ -77,8 +77,11 @@ export default class App extends Component {
     }
 
     executeSpeechContext(transcript, order) {
-        this.context.store.dispatch(actions.speechContext(transcript, order));
-        document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
+        this.context.store
+            .dispatch(actions.speechContext(transcript, order))
+            .then(() => {
+                document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
+            });
     }
 
 }
