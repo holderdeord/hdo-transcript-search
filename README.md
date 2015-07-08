@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/holderdeord/hdo-transcript-search.png?branch=master)](https://travis-ci.org/holderdeord/hdo-transcript-search)
 [![Code Climate](https://codeclimate.com/github/holderdeord/hdo-transcript-search/badges/gpa.svg)](https://codeclimate.com/github/holderdeord/hdo-transcript-search)
 
-Visualize language usage in the Norwegian parliament.
+Visualize language usage in the Norwegian parliament. See it in action at [tale.holderdeord.no](https://tale.holderdeord.no).
 
 ![image](https://cloud.githubusercontent.com/assets/572/8212260/fc7aab26-151a-11e5-87ca-63636abe06ee.png)
 
