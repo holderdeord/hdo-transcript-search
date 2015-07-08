@@ -4,8 +4,9 @@ import Header from './Header';
 import SharingLinks from './SharingLinks';
 import Footer from './Footer';
 import titleSuffix from '../constants/titleSuffix';
-import * as actions from '../actions/SearchActions';
-import { connect} from 'redux/react';
+import * as SearchActions from '../actions/SearchActions';
+import { connect } from 'redux/react';
+import { bindActionCreators } from 'redux';
 import shallowEqualScalar from 'redux/lib/utils/shallowEqualScalar';
 
 @connect(({summary: {joinedQuery}}) => ({joinedQuery}))
@@ -22,6 +23,8 @@ export default class App extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        this.actions = bindActionCreators(SearchActions, context.store.dispatch);
 
         this.state = {
             title: document.body.getAttribute('data-title'),
@@ -70,21 +73,20 @@ export default class App extends Component {
         let lastQuery = this.props.joinedQuery;
 
         if (!lastQuery.length || lastQuery !== queries.join(', ')) {
-            this.context.store.dispatch(actions.summary(queries));
-            this.context.store.dispatch(actions.hits(queries));
+            this.actions.summary(queries);
+            this.actions.hits(queries);
         }
 
         document.title = `«${queries.join(', ')}» · ${titleSuffix}`;
     }
 
     executeReset() {
-        this.context.store.dispatch(actions.reset());
+        this.actions.reset();
         document.title = titleSuffix;
     }
 
     executeSpeechContext(transcript, order) {
-        this.context.store
-            .dispatch(actions.speechContext(transcript, order))
+        this.actions.speechContext(transcript, order)
             .then(() => {
                 document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
             });
