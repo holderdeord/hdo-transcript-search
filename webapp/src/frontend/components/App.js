@@ -6,12 +6,14 @@ import Footer from './Footer';
 import titleSuffix from '../constants/titleSuffix';
 import * as actions from '../actions/SearchActions';
 import { connect} from 'redux/react';
+import shallowEqualScalar from 'redux/lib/utils/shallowEqualScalar';
 
 @connect(({summary: {joinedQuery}}) => ({joinedQuery}))
 export default class App extends Component {
     static propTypes = {
         children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
         joinedQuery: PropTypes.string.isRequired,
+        params: PropTypes.object.isRequired,
     }
 
     static contextTypes = {
@@ -26,21 +28,15 @@ export default class App extends Component {
             desc: document.body.getAttribute('data-description'),
             fbId: document.body.getAttribute('data-facebook-app-id')
         };
-
-        this.handleProps(props);
     }
 
-    componentWillReceiveProps(props) {
-        this.handleProps(props);
+    componentWillMount() {
+        this.update();
     }
 
-    handleProps(props) {
-        if (props.params.queries && props.params.queries.length) {
-            this.executeSearch(props.params.queries.split('.'));
-        } else if (props.params.transcript && props.params.order) {
-            this.executeSpeechContext(props.params.transcript, +props.params.order);
-        } else {
-            this.executeReset();
+    componentDidUpdate(prevProps) {
+        if (!shallowEqualScalar(this.props.params, prevProps.params)) {
+            this.update();
         }
     }
 
@@ -58,7 +54,17 @@ export default class App extends Component {
         );
     }
 
-    // hacky
+    update() {
+        const { params } = this.props;
+
+        if (params.queries && params.queries.length) {
+            this.executeSearch(params.queries.split('.'));
+        } else if (params.transcript && params.order) {
+            this.executeSpeechContext(params.transcript, +params.order);
+        } else {
+            this.executeReset();
+        }
+    }
 
     executeSearch(queries) {
         let lastQuery = this.props.joinedQuery;
