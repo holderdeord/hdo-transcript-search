@@ -12,44 +12,40 @@ export default class Timeline extends Component {
         unit         :  PropTypes.string.isRequired,
         interval     :  PropTypes.string.isRequired,
         onUnitChange :  PropTypes.func
-    };
-
-    constructor(props, context) {
-        super(props, context);
-
-        this.chartOptions = {
-            chartPadding: { left: 10, top: 35 },
-            low: 0,
-            fullWidth: false,
-            axisX: {
-                showGrid: false,
-                labelOffset: { x: -15, y: 8 }
-            },
-            axisY: {
-                labelOffset: { x: -5, y: 6 },
-                showGrid: true,
-                labelInterpolationFnc: ::this.formatValue
-            }
-        };
-
-        this.responsiveOptions = [
-            ['screen and (max-width: 599px)', {
-                chartPadding: { left: 5 },
-                fullWidth: true,
-                axisX: {
-                    labelOffset: { x: 0, y: 0 },
-                    labelInterpolationFnc: d => d.slice(2, 4)
-                }
-            }]
-        ];
-
-        this.aspectRatios = [
-            ['screen and (max-width: 992px)', 'minor-sixth'],
-            ['screen', 'double-octave']
-        ];
-
-        this.state = this.fetchStateFrom({results: []});
     }
+
+    chartOptions = {
+        chartPadding: { left: 10, top: 35 },
+        low: 0,
+        fullWidth: false,
+        axisX: {
+            showGrid: false,
+            labelOffset: { x: -15, y: 8 }
+        },
+        axisY: {
+            labelOffset: { x: -5, y: 6 },
+            showGrid: true,
+            labelInterpolationFnc: ::this.formatValue
+        }
+    }
+
+    responsiveOptions = [
+        ['screen and (max-width: 599px)', {
+            chartPadding: { left: 5 },
+            fullWidth: true,
+            axisX: {
+                labelOffset: { x: 0, y: 0 },
+                labelInterpolationFnc: d => d.slice(2, 4)
+            }
+        }]
+    ]
+
+    aspectRatios = [
+        ['screen and (max-width: 992px)', 'minor-sixth'],
+        ['screen', 'double-octave']
+    ]
+
+    state = this.fetchStateFrom({results: []})
 
     componentWillReceiveProps(props) {
         this.setState(this.fetchStateFrom(props));

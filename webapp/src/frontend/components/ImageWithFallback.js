@@ -14,11 +14,7 @@ export default class ImageWithFallback extends Component {
         store: PropTypes.object.isRequired
     }
 
-    constructor(...args) {
-        super(...args);
-
-        this.state = { useFallbackImage: false };
-    }
+    state = { useFallbackImage: false }
 
     render() {
         return (

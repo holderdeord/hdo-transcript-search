@@ -10,20 +10,16 @@ const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
 @connect(({summary: {results}}) => ({results}))
 export default class ResultStats extends React.Component {
-    constructor(props) {
-        super(props);
+    state = {
+        parties: [],
+        people: {},
+        query: ''
+    }
 
-        this.state = {
-            parties: [],
-            people: {},
-            query: ''
-        };
-
-        this.bigNumberStyle = {
-            fontSize: '4rem',
-            padding: '10px',
-            verticalAlign: '-0.55rem'
-        };
+    bigNumberStyle = {
+        fontSize: '4rem',
+        padding: '10px',
+        verticalAlign: '-0.55rem'
     }
 
     componentWillReceiveProps(props) {

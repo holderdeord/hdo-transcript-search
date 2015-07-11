@@ -12,20 +12,16 @@ export default class SearchForm extends Component {
         params: PropTypes.shape({
             unit: PropTypes.string
         })
-    };
+    }
 
     static contextTypes = {
         router: PropTypes.object
-    };
+    }
 
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            query: this.props.joinedQuery,
-            lastReceivedQuery: null,
-            focused: true
-        };
+    state = {
+        query: this.props.joinedQuery,
+        lastReceivedQuery: null,
+        focused: true
     }
 
     componentWillReceiveProps(props) {

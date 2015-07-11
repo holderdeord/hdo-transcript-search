@@ -12,7 +12,7 @@ export default class Search extends Component {
     static contextTypes = {
         router: PropTypes.object,
         store: PropTypes.object,
-    };
+    }
 
     static propTypes = {
         params: PropTypes.shape({
@@ -20,19 +20,15 @@ export default class Search extends Component {
             unit: PropTypes.string,
             queries: PropTypes.string,
         })
-    };
+    }
 
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            title: document.body.getAttribute('data-title'),
-            desc: document.body.getAttribute('data-description'),
-            fbId: document.body.getAttribute('data-facebook-app-id'),
-            showDevPanel: false,
-            orientation: 'vertical',
-            interval: Intervals.YEAR
-        };
+    state = {
+        title: document.body.getAttribute('data-title'),
+        desc: document.body.getAttribute('data-description'),
+        fbId: document.body.getAttribute('data-facebook-app-id'),
+        showDevPanel: false,
+        orientation: 'vertical',
+        interval: Intervals.YEAR
     }
 
     componentDidMount() {

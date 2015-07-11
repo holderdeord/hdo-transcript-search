@@ -17,9 +17,7 @@ const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'title', 'n
 const MIN_SPEECH_COUNT = require('../shared/minSpeechCount');
 
 class SearchAPI {
-    constructor() {
-        this.cache = LRU({max: 500}); // eslint-disable-line
-    }
+    cache = LRU({max: 500}); // eslint-disable-line
 
     summary(opts) {
         opts.interval = this._intervalFrom(opts);

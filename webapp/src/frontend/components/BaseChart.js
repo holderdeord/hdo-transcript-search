@@ -10,13 +10,10 @@ export default class BaseChart extends Component {
         tooltipSuffix: PropTypes.string
     };
 
-    constructor(props) {
-        super(props);
-        this.groups = this._blankGroups();
-        this.state = {
-            tooltip: null,
-            aspectRatio: ''
-        };
+    groups = this._blankGroups()
+    state = {
+        tooltip: null,
+        aspectRatio: ''
     }
 
     render() {

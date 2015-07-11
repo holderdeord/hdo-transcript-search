@@ -11,13 +11,9 @@ export default class SearchResults extends Component {
         store: PropTypes.object.isRequired
     }
 
-    static propTypes = {
-    }
+    static propTypes = {}
 
-    constructor(props) {
-        super(props);
-        this.state = { loaded: true };
-    }
+    state = { loaded: true }
 
     componentWillReceiveProps(newProps) {
         let oldHits = this.getFocusedHitSet();
