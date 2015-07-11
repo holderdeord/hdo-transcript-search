@@ -1,4 +1,4 @@
-import React             from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect }       from 'redux/react';
 import TopListChart      from './TopListChart';
 import Parties           from '../../shared/Parties';
@@ -9,7 +9,12 @@ import ImageWithFallback from './ImageWithFallback';
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
 @connect(({summary: {results}}) => ({results}))
-export default class ResultStats extends React.Component {
+export default class ResultStats extends Component {
+    static propTypes = {
+        unit: PropTypes.string.isRequired,
+        orientation: PropTypes.string.isRequired
+    }
+
     state = {
         parties: [],
         people: {},

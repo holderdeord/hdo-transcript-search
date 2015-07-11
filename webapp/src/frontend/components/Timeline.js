@@ -9,9 +9,10 @@ import {connect} from 'redux/react';
 @connect(({summary: {results}}) => ({results}))
 export default class Timeline extends Component {
     static propTypes = {
-        unit         :  PropTypes.string.isRequired,
-        interval     :  PropTypes.string.isRequired,
-        onUnitChange :  PropTypes.func
+        unit:  PropTypes.string.isRequired,
+        interval:  PropTypes.string.isRequired,
+        onUnitChange:  PropTypes.func,
+        focusedIndex: PropTypes.number.isRequired
     }
 
     chartOptions = {
