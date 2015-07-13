@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Speech from './Speech';
-import Icon from 'react-fa';
 import UrlUtils from '../../shared/UrlUtils';
-import { connect }  from 'redux/react';
+import { connect }  from 'react-redux';
 import { moreHits } from '../actions/SearchActions';
 
 @connect(state => ({ hits: state.hits.hits }))
@@ -67,7 +66,7 @@ export default class SearchResults extends Component {
                                 <a href={UrlUtils.csvPathForQuery(result.query)}>
                                     Last ned <strong>{result.counts.total}</strong> innlegg som CSV
                                     <span style={{paddingLeft: '.5rem'}}>
-                                        <Icon name="download" />
+                                        <i className="fa fa-download" />
                                     </span>
                                 </a>
                             </div>
@@ -76,7 +75,7 @@ export default class SearchResults extends Component {
                                 <a href={UrlUtils.rssPathForQuery(result.query)}>
                                     RSS for dette søket
                                     <span style={{paddingLeft: '.5rem'}}>
-                                        <Icon name="rss" />
+                                        <i className="fa fa-rss" />
                                     </span>
                                 </a>
                             </div>
@@ -99,7 +98,7 @@ export default class SearchResults extends Component {
             );
         } else {
             el = (
-                <Icon spin name="refresh" style={{margin: '1rem', fontSize: '2rem'}}/>
+                <i className="fa fa-refresh fa-spin" style={{margin: '1rem', fontSize: '2rem'}}/>
             );
         }
 

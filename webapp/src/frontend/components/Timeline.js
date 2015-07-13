@@ -4,7 +4,7 @@ import TimeUtils from '../utils/TimeUtils';
 import Colors    from '../utils/Colors';
 import {Link}    from 'react-router';
 import key       from 'keymaster';
-import {connect} from 'redux/react';
+import {connect} from 'react-redux';
 
 @connect(({summary: {results}}) => ({results}))
 export default class Timeline extends Component {

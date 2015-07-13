@@ -1,6 +1,6 @@
 import React, { PropTypes, Component }  from 'react';
 import key    from 'keymaster';
-import { connect } from 'redux/react';
+import { connect } from 'react-redux';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 

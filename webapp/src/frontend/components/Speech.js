@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react';
 import TimeUtils         from '../utils/TimeUtils';
 import ImageUtils        from '../utils/ImageUtils';
 import { Link }          from 'react-router';
-import Icon              from 'react-fa';
 import ImageWithFallback from './ImageWithFallback';
 
 export default class Speech extends Component {
@@ -41,7 +40,7 @@ export default class Speech extends Component {
                     <div className="col-xs-6 col-md-3">
                         <div className="row">
                             <div className="col-xs-1">
-                                <Icon name="calendar" />
+                                <i className="fa fa-calendar" />
                             </div>
 
                             <div className="col-xs-8">
@@ -53,7 +52,7 @@ export default class Speech extends Component {
 
                         <div className="row" style={{paddingTop: '0.8rem'}}>
                             <div className="col-xs-1">
-                                <Icon name="user" />
+                                <i className="fa fa-user" />
                             </div>
 
                             <div className="col-xs-8">
@@ -105,7 +104,7 @@ export default class Speech extends Component {
                         Se innlegget i kontekst
 
                         <span style={{paddingLeft: '.5rem'}}>
-                            <Icon name="comments" size="lg" />
+                            <i className="fa fa-comments fa-lg" />
                         </span>
                     </Link>
                 </div>

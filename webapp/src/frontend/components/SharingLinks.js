@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import Icon  from 'react-fa';
 
 export default class SharingLinks extends Component {
 
@@ -13,13 +12,13 @@ export default class SharingLinks extends Component {
             <div className="sharing-links text-center hidden-xs">
                 <span>
                     <a href="#" onClick={::this.handleFacebookShare}>
-                        <Icon name="facebook-square" size="2x" />
+                        <i className="fa fa-facebook-square fa-2x" />
                     </a>
                 </span>
 
                 <span>
                     <a href="#" onClick={::this.handleTwitterShare}>
-                        <Icon name="twitter-square" size="2x" />
+                        <i className="fa fa-twitter-square fa-2x" />
                     </a>
                 </span>
             </div>
@@ -43,7 +42,7 @@ export default class SharingLinks extends Component {
 
         let text;
 
-        if (this.props.joinedQuery.length) {
+        if (this.props.joinedQuery && this.props.joinedQuery.length) {
             text = `Hvem snakker mest om «${this.props.joinedQuery}» på Stortinget?`;
         } else {
             text = 'Hva snakker politikerne om på Stortinget?';

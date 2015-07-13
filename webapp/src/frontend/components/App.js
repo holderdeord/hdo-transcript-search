@@ -5,9 +5,9 @@ import SharingLinks from './SharingLinks';
 import Footer from './Footer';
 import titleSuffix from '../constants/titleSuffix';
 import * as SearchActions from '../actions/SearchActions';
-import { connect } from 'redux/react';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import shallowEqualScalar from 'redux/lib/utils/shallowEqualScalar';
+import shallowEqualScalar from 'react-redux/lib/utils/shallowEqualScalar';
 
 @connect(({summary: {joinedQuery}}) => ({joinedQuery}))
 export default class App extends Component {

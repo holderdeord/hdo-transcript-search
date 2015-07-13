@@ -7,7 +7,7 @@ import {
 
 export const ga = window.ga || ((...args) => console.log(args)); // eslint-disable-line
 
-export default function analytics(state, action) {
+export default function analytics(state = null, action) {
     switch (action.type) {
         case SUMMARY:
             ga('send', 'event', 'summary', action.payload.map(r => r.query).sort().join(',').toLowerCase());
