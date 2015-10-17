@@ -47,7 +47,10 @@ GEM
       yajl-ruby
     jschematic (0.1.0)
       addressable
+    mail (2.6.3)
+      mime-types (>= 1.16, < 3)
     method_source (0.8.2)
+    mime-types (2.6.2)
     mini_portile (0.6.2)
     multi_json (1.10.1)
     multi_test (0.1.2)
@@ -86,6 +89,10 @@ DEPENDENCIES
   faraday_middleware
   hashie
   hdo-storting-importer
+  mail
   nokogiri
   patron
   pry
+
+BUNDLED WITH
+   1.10.3

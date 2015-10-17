@@ -8,6 +8,7 @@ require 'time'
 require 'set'
 require 'pry'
 require 'forwardable'
+require 'mail'
 
 require 'hdo-transcript-indexer/converter'
 require 'hdo-transcript-indexer/cache'
@@ -27,9 +28,12 @@ module Hdo
         @logger       = Logger.new(STDOUT)
         @create_index = options.fetch(:create_index)
         @force        = options.fetch(:force)
-        @errors       = []
         @extras       = JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/extras.json", __FILE__)))
         @ner          = options.fetch(:ner)
+        @mail         = options.fetch(:mail)
+
+        @errors       = []
+        @new_transcripts = []
 
         if @ner && !system("which polyglot 2>&1 >/dev/null")
           raise "polyglot not installed, please run `pip install polyglot && polyglot download embeddings2.no ner2.no`"
@@ -55,7 +59,7 @@ module Hdo
         convert
         create_index
         index_docs
-
+        notify
         @stats
       end
 
@@ -70,6 +74,19 @@ module Hdo
         build_slug_cache
 
         xml_transcripts.each { |input| convert_to_json(input) }
+      end
+
+      def notify
+        if @mail && @new_transcripts.any?
+          list = @new_transcripts.map { |e| "* #{e}" }.join("\n")
+
+          Mail.deliver do
+            from     'noreply@holderdeord.no'
+            to       'jari@holderdeord.no'
+            subject  "#{@new_transcripts.size} nye referater"
+            body     "Nye referater har blitt indeksert på https://tale.holderdeord.no/\n\n#{list}"
+          end
+        end
       end
 
       def index_docs
@@ -88,7 +105,7 @@ module Hdo
       end
 
       def files_matching(glob)
-        Pathname.glob(@data_dir.join(glob))
+        Pathname.glob(@data_dir.join(glob)).sort_by(&:to_s)
       end
 
       def cache_path(name)
@@ -196,6 +213,7 @@ module Hdo
         if dest.exist? && !@force
           @logger.info "download cached: #{dest}"
         else
+          @new_transcripts << id
           @logger.info "fetching transcript: #{id} => #{dest}"
 
           res = @faraday.get("http://data.stortinget.no/eksport/publikasjon?publikasjonid=#{id}")
