@@ -60,6 +60,7 @@ module Hdo
         create_index
         index_docs
         notify
+
         @stats
       end
 
@@ -77,15 +78,24 @@ module Hdo
       end
 
       def notify
-        if @mail && @new_transcripts.any?
-          list = @new_transcripts.map { |e| "* #{e}" }.join("\n")
+        return unless @mail
+        # return if @new_transcripts.empty?
 
-          Mail.deliver do
-            from     'noreply@holderdeord.no'
-            to       'jari@holderdeord.no'
-            subject  "#{@new_transcripts.size} nye referater"
-            body     "Nye referater har blitt indeksert på https://tale.holderdeord.no/\n\n#{list}"
-          end
+        list = @new_transcripts.map { |e| "* #{e}" }.join("\n")
+
+        stats = @stats.sort_by { |s, _| s }.reverse.map do |session, data|
+          "#{session}: #{data[:speeches]} innlegg i #{data[:transcripts]} referater"
+        end.join("\n")
+
+        content = "Nye referater har blitt indeksert på https://tale.holderdeord.no/\n\n#{list}\n\n#{stats}"
+
+        puts content
+
+        Mail.deliver do
+          from     'noreply@holderdeord.no'
+          to       'jari@holderdeord.no'
+          subject  "#{@new_transcripts.size} nye referater"
+          body     content
         end
       end
 
