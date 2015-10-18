@@ -79,7 +79,7 @@ module Hdo
 
       def notify
         return unless @mail
-        # return if @new_transcripts.empty?
+        return if @new_transcripts.empty?
 
         count = @new_transcripts.size
         list = @new_transcripts.map { |e| "* #{e}" }.join("\n")
@@ -92,7 +92,7 @@ module Hdo
 
         Mail.deliver do
           from     'noreply@holderdeord.no'
-          to       'jari@holderdeord.no'
+          to       'intern@holderdeord.no'
           subject  "#{count} nye referater"
           body     content
         end
