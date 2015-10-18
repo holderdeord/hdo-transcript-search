@@ -81,20 +81,19 @@ module Hdo
         return unless @mail
         # return if @new_transcripts.empty?
 
+        count = @new_transcripts.size
         list = @new_transcripts.map { |e| "* #{e}" }.join("\n")
 
         stats = @stats.sort_by { |s, _| s }.reverse.map do |session, data|
           "#{session}: #{data[:speeches]} innlegg i #{data[:transcripts]} referater"
         end.join("\n")
 
-        content = "Nye referater har blitt indeksert på https://tale.holderdeord.no/\n\n#{list}\n\n#{stats}"
-
-        puts content
+        content = "Nye referater lagt til:\n\n#{list}\n\n#{stats}\n\n-- https://tale.holderdeord.no/"
 
         Mail.deliver do
           from     'noreply@holderdeord.no'
           to       'jari@holderdeord.no'
-          subject  "#{@new_transcripts.size} nye referater"
+          subject  "#{count} nye referater"
           body     content
         end
       end
