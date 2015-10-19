@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import Promise            from 'bluebird';
 import LRU                from 'lru-cache';
 import es                 from './es-client';
@@ -273,10 +275,11 @@ class SearchAPI {
         var aggregations = {
             timeline: {
                 // could do a terms aggregation on "session" instead
-                date_histogram: { // eslint-disable-line
+                date_histogram: {
                     field: 'time',
                     interval: opts.interval,
-                    time_zone: 2 // eslint-disable-line
+                    time_zone: 2,
+                    min_doc_count: 0
                 }
             },
 
