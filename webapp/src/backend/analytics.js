@@ -49,14 +49,16 @@ function topSearches(params) {
             if (params.summary) {
                 let summary = {total: 0, words: {}};
 
-                result.forEach(r => {
-                    let term = r['ga:eventAction'].toLowerCase();
-                    let count = r['ga:totalEvents'];
+                result
+                    .sort((a, b) => b['ga:totalEvents'] - a['ga:totalEvents'])
+                    .forEach(r => {
+                        let term = r['ga:eventAction'].toString().toLowerCase();
+                        let count = r['ga:totalEvents'];
 
-                    summary.words[term]  = summary.words[term] || 0;
-                    summary.words[term] += count;
-                    summary.total += count;
-                });
+                        summary.words[term]  = summary.words[term] || 0;
+                        summary.words[term] += count;
+                        summary.total += count;
+                    });
 
                 return {summary: summary};
             }
