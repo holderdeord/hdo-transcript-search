@@ -160,66 +160,66 @@ export default class BaseChart extends Component {
             let duration = 500;
 
             switch (data.type) {
-                case 'point':
-                    seq = state.get(groupKey) || 0;
-                    seq++;
+            case 'point':
+                seq = state.get(groupKey) || 0;
+                seq++;
 
-                    if (seq >= (this.props.data.labels.length * 2)) {
-                        // we don't want to animate the same group twice
-                        return;
+                if (seq >= (this.props.data.labels.length * 2)) {
+                    // we don't want to animate the same group twice
+                    return;
+                }
+
+                data.element.animate({
+                    opacity: {
+                        // The delay when we like to start the animation
+                        begin: data.index * 80,
+                        // Duration of the animation
+                        dur: duration,
+                        // The value where the animation should start
+                        from: 0,
+                        // The value where it should end
+                        to: 1
+                    },
+                    x1: {
+                        begin: data.index * 80,
+                        dur: duration,
+                        from: data.x - 100,
+                        to: data.x,
+                        // You can specify an easing function name or use easing
+                        // functions from Chartist.Svg.Easing directly
+                        easing: Chartist.Svg.Easing.easeOutQuart
                     }
+                });
 
-                    data.element.animate({
-                        opacity: {
-                            // The delay when we like to start the animation
-                            begin: data.index * 80,
-                            // Duration of the animation
-                            dur: duration,
-                            // The value where the animation should start
-                            from: 0,
-                            // The value where it should end
-                            to: 1
-                        },
-                        x1: {
-                            begin: data.index * 80,
-                            dur: duration,
-                            from: data.x - 100,
-                            to: data.x,
-                            // You can specify an easing function name or use easing
-                            // functions from Chartist.Svg.Easing directly
-                            easing: Chartist.Svg.Easing.easeOutQuart
-                        }
-                    });
+                state.set(groupKey, seq);
+                break;
+            case 'line':
+                seq = state.get(groupKey) || 0;
+                seq++;
 
-                    state.set(groupKey, seq);
-                    break;
-                case 'line':
-                    seq = state.get(groupKey) || 0;
-                    seq++;
+                if (seq > (this.props.data.series.length)) {
+                    return;
+                }
 
-                    if (seq > (this.props.data.series.length)) {
-                        return;
+                data.element.animate({
+                    opacity: {
+                        // The delay when we like to start the animation
+                        begin: seq * 80,
+                        // Duration of the animation
+                        dur: duration,
+                        // The value where the animation should start
+                        from: 0,
+                        // The value where it should end
+                        to: 1
                     }
+                });
 
-                    data.element.animate({
-                        opacity: {
-                            // The delay when we like to start the animation
-                            begin: seq * 80,
-                            // Duration of the animation
-                            dur: duration,
-                            // The value where the animation should start
-                            from: 0,
-                            // The value where it should end
-                            to: 1
-                        }
-                    });
-
-                    state.set(groupKey, seq);
-                    break;
-                case 'bar':
-                    break;
-                default:
-                    // noop
+                state.set(groupKey, seq);
+                break;
+            case 'bar':
+                break;
+            default:
+                // noop
             }
         });
     }

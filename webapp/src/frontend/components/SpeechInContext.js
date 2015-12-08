@@ -1,5 +1,3 @@
-/*eslint-disable react/no-multi-comp */
-
 import React, { PropTypes, Component } from 'react';
 import Speech from './Speech';
 import { Link } from 'react-router';
