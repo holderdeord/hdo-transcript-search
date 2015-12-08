@@ -61,7 +61,7 @@ end
 
 parties = JSON.parse(FD.get('https://www.holderdeord.no/api/parties').body)
 parties['_embedded']['parties'].each do |party|
-  url = party['_links']['logo']['href'].sub('{?version}', '?version=large')
+  url = party['_links']['logo']['href'].sub('{version}', 'large')
 
   save url, "#{out_dir}/#{party['slug']}.png", fail: true
   p party['slug']
