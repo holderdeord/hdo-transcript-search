@@ -268,7 +268,7 @@ module Hdo
             'session'     => data['session'],
             'transcript'  => transcript_id,
             'order'       => idx,
-            'external_id' => @slug_cache[section['name']]
+            'external_id' => @slug_cache[section['name']],
           }.merge(section)
 
           [id, doc]
@@ -289,7 +289,6 @@ module Hdo
           @index.recreate!
         end
       end
-
     end
   end
 end

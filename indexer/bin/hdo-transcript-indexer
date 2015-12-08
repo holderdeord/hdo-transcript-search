@@ -28,7 +28,8 @@ options = {
   index_name: 'hdo-transcripts',
   create_index: false,
   force: false,
-  ner: false
+  ner: false,
+  mail: false
 }
 
 parser = OptionParser.new do |opt|

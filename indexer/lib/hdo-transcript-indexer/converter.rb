@@ -107,8 +107,12 @@ module Hdo
                     parse_president_speech(node)
                   end
 
-        if @ner
-          section[:entities] = extract_entities(section)
+        if section
+          section[:word_count] = word_count(section[:text])
+
+          if @ner
+            section[:entities] = extract_entities(section)
+          end
         end
 
         section
@@ -379,6 +383,9 @@ module Hdo
         }
       end
 
+      def word_count(str)
+        str.to_s.scan(/\S+/).size
+      end
     end
 
     class ParseError < StandardError
