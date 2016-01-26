@@ -13,7 +13,7 @@ export default class Timeline extends Component {
         interval:  PropTypes.string.isRequired,
         onUnitChange:  PropTypes.func,
         focusedIndex: PropTypes.number.isRequired
-    }
+    };
 
     chartOptions = {
         chartPadding: { left: 10, top: 35 },
@@ -28,7 +28,7 @@ export default class Timeline extends Component {
             showGrid: true,
             labelInterpolationFnc: ::this.formatValue
         }
-    }
+    };
 
     responsiveOptions = [
         ['screen and (max-width: 599px)', {
@@ -39,14 +39,14 @@ export default class Timeline extends Component {
                 labelInterpolationFnc: d => d.slice(2, 4)
             }
         }]
-    ]
+    ];
 
     aspectRatios = [
         ['screen and (max-width: 992px)', 'minor-sixth'],
         ['screen', 'double-octave']
-    ]
+    ];
 
-    state = this.fetchStateFrom({results: []})
+    state = this.fetchStateFrom({results: []});
 
     componentWillReceiveProps(props) {
         this.setState(this.fetchStateFrom(props));

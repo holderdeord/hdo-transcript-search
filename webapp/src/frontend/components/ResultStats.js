@@ -13,19 +13,19 @@ export default class ResultStats extends Component {
     static propTypes = {
         unit: PropTypes.string.isRequired,
         orientation: PropTypes.string.isRequired
-    }
+    };
 
     state = {
         parties: [],
         people: {},
         query: ''
-    }
+    };
 
     bigNumberStyle = {
         fontSize: '4rem',
         padding: '10px',
         verticalAlign: '-0.55rem'
-    }
+    };
 
     componentWillReceiveProps(props) {
         let results = props.results || [];

@@ -12,7 +12,7 @@ export default class Search extends Component {
     static contextTypes = {
         router: PropTypes.object,
         store: PropTypes.object,
-    }
+    };
 
     static propTypes = {
         params: PropTypes.shape({
@@ -20,7 +20,7 @@ export default class Search extends Component {
             unit: PropTypes.string,
             queries: PropTypes.string,
         })
-    }
+    };
 
     state = {
         title: document.body.getAttribute('data-title'),
@@ -29,7 +29,7 @@ export default class Search extends Component {
         showDevPanel: false,
         orientation: 'vertical',
         interval: Intervals.YEAR
-    }
+    };
 
     componentDidMount() {
         this.registerKeyBindings();

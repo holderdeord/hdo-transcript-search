@@ -10,9 +10,9 @@ export default class Speech extends Component {
         speech: PropTypes.object.isRequired,
         showTime: PropTypes.bool,
         showContextLink: PropTypes.bool
-    }
+    };
 
-    state = { useFallbackImage: false }
+    state = { useFallbackImage: false };
 
     render() {
         let speech    = this.props.speech;

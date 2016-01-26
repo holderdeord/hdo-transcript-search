@@ -15,11 +15,11 @@ export default class App extends Component {
         children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
         joinedQuery: PropTypes.string.isRequired,
         params: PropTypes.object.isRequired,
-    }
+    };
 
     static contextTypes = {
         store: PropTypes.object.isRequired
-    }
+    };
 
     constructor(props, context) {
         super(props, context);

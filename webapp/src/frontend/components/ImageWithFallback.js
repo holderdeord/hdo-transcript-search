@@ -12,9 +12,9 @@ export default class ImageWithFallback extends Component {
 
     static contextTypes = {
         store: PropTypes.object.isRequired
-    }
+    };
 
-    state = { useFallbackImage: false }
+    state = { useFallbackImage: false };
 
     render() {
         return (

@@ -8,11 +8,11 @@ import { moreHits } from '../actions/SearchActions';
 export default class SearchResults extends Component {
     static contextTypes = {
         store: PropTypes.object.isRequired
-    }
+    };
 
-    static propTypes = {}
+    static propTypes = {};
 
-    state = { loaded: true }
+    state = { loaded: true };
 
     componentWillReceiveProps(newProps) {
         let oldHits = this.getFocusedHitSet();
