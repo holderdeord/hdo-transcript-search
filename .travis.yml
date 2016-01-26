@@ -6,6 +6,8 @@ script:
 - 'cd webapp && npm install && npm test && npm run build && cd -'
 after_success:
 - '[[ "$TRAVIS_BRANCH" = "master" ]] && scripts/deploy'
+addons:
+  ssh_known_hosts: hdo02.holderdeord.no
 notifications:
   email:
     - jari@holderdeord.no
