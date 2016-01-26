@@ -7,7 +7,7 @@ script:
 after_success:
 - '[[ "$TRAVIS_BRANCH" = "master" ]] && scripts/deploy'
 addons:
-  ssh_known_hosts: hdo02.holderdeord.no
+  ssh_known_hosts: tale.holderdeord.no
 notifications:
   email:
     - jari@holderdeord.no
