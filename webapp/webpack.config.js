@@ -16,7 +16,7 @@ module.exports = {
 
     module: {
         loaders: [
-            { test: /\.css$/,   loader: ExtractTextPlugin.extract('style-loader', 'css-loader', 'postcss-loader') },
+            { test: /\.css$/,   loader: ExtractTextPlugin.extract('style-loader', 'css-loader') },
             { test: /\.jsx?$/,  loader: "babel-loader", exclude: /node_modules/ },
             { test: /\.less$/,  loader: "style-loader!css-loader!postcss-loader!less-loader" },
             { test: /\.(ttf|eot|otf|svg|woff|woff2)(\?.+)?$/, loader: "url-loader?limit=10000" },
