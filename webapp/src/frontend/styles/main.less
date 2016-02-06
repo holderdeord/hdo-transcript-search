@@ -310,3 +310,36 @@ footer {
   pointer-events: none;
   z-index: 1;
 }
+
+.related-services {
+  a {
+    text-decoration: none;
+  }
+
+  .service {
+    filter: grayscale(0.4);
+    transition: all 0.3s ease;
+
+    .img {
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 200px;
+      background-position: 50% 50%;
+    }
+
+    &:hover {
+      filter: none;
+      background-color: lighten(#b8bfcc, 15%);
+    }
+  }
+}
+
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+.row.no-gutters > [class^="col-"],
+.row.no-gutters > [class*=" col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}

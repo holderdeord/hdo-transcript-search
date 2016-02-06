@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import Header from './Header';
 import SharingLinks from './SharingLinks';
 import Footer from './Footer';
+import RelatedServices from './RelatedServices';
 import titleSuffix from '../constants/titleSuffix';
 import * as SearchActions from '../actions/SearchActions';
 import { connect } from 'react-redux';
@@ -52,6 +53,7 @@ export default class App extends Component {
 
                 {this.props.children}
 
+                <RelatedServices />
                 <Footer/>
             </div>
         );

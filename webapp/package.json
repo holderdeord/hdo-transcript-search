@@ -17,6 +17,7 @@
   "author": "jari@holderdeord.no",
   "license": "BSD",
   "dependencies": {
+    "autoprefixer": "^6.3.1",
     "babel": "^5.6.14",
     "bluebird": "^2.9.27",
     "compression": "^1.5.0",
@@ -32,6 +33,9 @@
     "morgan": "^1.5.0",
     "nconf": "^0.6.9",
     "node-sass": "^3.3.3",
+    "postcss": "^5.0.14",
+    "postcss-loader": "^0.8.0",
+    "precss": "^1.4.0",
     "react": "^0.13.3",
     "react-fa": "^3.3.1",
     "react-redux": "^0.2.1",
