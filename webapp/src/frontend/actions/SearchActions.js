@@ -4,7 +4,8 @@ import {
     HITS,
     MORE_HITS,
     SPEECH_CONTEXT,
-    RESET
+    RESET,
+    SERVICES
 } from '../constants/ActionTypes';
 
 export function summary(queries, interval = 'year') {
@@ -47,14 +48,22 @@ export function speechContext(transcriptId, order) {
             );
 }
 
+export function services() {
+    return dispatch =>
+        facade.services().then(
+            success(dispatch, SERVICES),
+            error(dispatch, SERVICES),
+        );
+}
+
 export function reset() {
     return { type: RESET };
 }
 
 function success(dispatch, type) {
-    return (payload) => dispatch({type: type, payload: payload });
+    return (payload) => dispatch({ type: type, payload: payload });
 }
 
 function error(dispatch, type) {
-    return (payload) => dispatch({type: type, error: true, payload: payload });
+    return (payload) => dispatch({ type: type, error: true, payload: payload });
 }

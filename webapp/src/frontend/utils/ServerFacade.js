@@ -27,6 +27,10 @@ export default class ServerFacade {
         return reqwest(path);
     }
 
+    services() {
+        return reqwest('https://files.holderdeord.no/data/hdo/services.json');
+    }
+
     _summaryPathFor(query, interval) {
         return `/api/search/summary?interval=${interval}&query=${query}`;
     }

@@ -36,6 +36,7 @@ export default class App extends Component {
 
     componentWillMount() {
         this.update();
+        this.actions.services();
     }
 
     componentDidUpdate(prevProps) {
