@@ -9,7 +9,7 @@ nconf
     .argv()
     .env()
     .defaults({
-        PORT: 7575,
+        HTTP_PORT: 7575,
         NODE_ENV: 'dev',
         elasticsearch: elasticsearch
     });
