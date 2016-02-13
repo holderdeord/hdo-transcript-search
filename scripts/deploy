@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEPLOY_COMMAND="cd /webapps/hdo-transcript-search && git pull origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
+DEPLOY_COMMAND="cd /webapps/hdo-transcript-search && git pull --ff-only origin master && cd webapp && npm run build && sudo restart hdo-transcript-search"
 
 if [[ -n "$HIPCHAT_API_TOKEN" ]]; then
   curl "https://api.hipchat.com/v1/rooms/message?format=json&auth_token=$HIPCHAT_API_TOKEN" \
