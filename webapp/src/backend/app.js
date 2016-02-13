@@ -16,7 +16,7 @@ let app = express();
 // config
 app.use(logger('short'));
 app.use(compression());
-app.set('port', +config.get('PORT'));
+app.set('port', +config.get('HTTP_PORT'));
 app.disable('x-powered-by');
 app.engine('hbs', hbs.express4());
 app.set('view engine', 'hbs');
