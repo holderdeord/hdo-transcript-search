@@ -77,53 +77,55 @@ export default class ResultStats extends Component {
         this.state.parties.sort((a, b) => a[this.props.unit] - b[this.props.unit]);
         let topParty = this.state.topParties[this.props.unit];
 
-        if (topParty) {
-            let topPartyName = Parties.names[topParty.key];
-            let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + '%' : topParty.count;
-            let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+        if (!topParty) {
+            return null;
+        }
 
-            return (
-                <div className="row result-box">
-                    <div className="col-md-5">
-                        <div className="text-center">
+        let topPartyName = Parties.names[topParty.key];
+        let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + '%' : topParty.count;
+        let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+
+        return (
+            <div className="row result-box">
+                <div className="col-md-5">
+                    <div className="text-center">
+                        <div>
+                            <img
+                                src={ImageUtils.partyLogoFor(topParty.key)}
+                                alt={`${topPartyName}s logo`}
+                                className="party-logo"
+                            />
+
+                            <h2 className="selectable">
+                                {topPartyName}
+                            </h2>
+                        </div>
+
+                        <div className="lead selectable">
                             <div>
-                                <img
-                                    src={ImageUtils.partyLogoFor(topParty.key)}
-                                    alt={`${topPartyName}s logo`}
-                                    className="party-logo"
-                                />
-
-                                <h2 className="selectable">
-                                    {topPartyName}
-                                </h2>
+                                har nevnt <strong>{this.state.query}</strong> i
                             </div>
 
-                            <div className="lead selectable">
-                                <div>
-                                    har nevnt <strong>{this.state.query}</strong> i
-                                </div>
+                            <span style={this.bigNumberStyle}>
+                                {num}
+                            </span>
 
-                                <span style={this.bigNumberStyle}>
-                                    {num}
-                                </span>
-
-                                {unitText}
-                            </div>
+                            {unitText}
                         </div>
                     </div>
-
-                    <div className={"col-md-7"}>
-                        <TopListChart
-                            className={this.state.labelClassName}
-                            subtitle="Partier"
-                            orientation={this.props.orientation}
-                            unit={this.props.unit}
-                            counts={this.state.parties}
-                        />
-                    </div>
                 </div>
-            );
-        }
+
+                <div className={"col-md-7"}>
+                    <TopListChart
+                        className={this.state.labelClassName}
+                        subtitle="Partier"
+                        orientation={this.props.orientation}
+                        unit={this.props.unit}
+                        counts={this.state.parties}
+                    />
+                </div>
+            </div>
+        );
     }
 
     renderPeopleStats() {
@@ -172,7 +174,7 @@ export default class ResultStats extends Component {
                         <div className="col-md-7">
                             <TopListChart
                                 className={this.state.labelClassName}
-                                subtitle={`Personer`}
+                                subtitle="Personer"
                                 star={isPct}
                                 unit={this.props.unit}
                                 orientation={this.props.orientation}

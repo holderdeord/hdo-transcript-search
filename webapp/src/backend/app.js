@@ -62,7 +62,7 @@ app.use(express.static(path.resolve(__dirname, '../../public')));
 
 app.use((req, res, next) => {
     app.locals.baseUrl = `${req.protocol}://${req.get('host')}`;
-    app.locals.absoluteUrl = app.locals.baseUrl + req.originalUrl;
+    app.locals.absoluteUrl = (app.locals.baseUrl + req.originalUrl).replace(/http:/, 'https:');
 
     if (req.path.indexOf('analytics') !== -1) {
         res.setHeader('Cache-Control', 'public, max-age=5');

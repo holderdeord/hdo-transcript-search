@@ -162,7 +162,9 @@ class SearchAPI {
             this._parseAggregation(aggResponse.aggregations.people)
         );
 
-        people.forEach(d => d.meta = personMap[d.key]);
+        people.forEach(d => {
+            d.meta = personMap[d.key];
+        });
 
         let timeline = this._calculatePercentages(
             this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
