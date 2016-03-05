@@ -118,7 +118,7 @@ export default class BaseChart extends Component {
     }
 
     _drawChart(props) {
-        let {data, options, responsiveOptions} = props;
+        let { data, options, responsiveOptions } = props;
         options = options || {};
         responsiveOptions = responsiveOptions || {};
 

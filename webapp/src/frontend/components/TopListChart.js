@@ -89,7 +89,7 @@ export default class TopListChart extends Component {
 
     formatValue(value) {
         if (typeof value === 'number') {
-            return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
+            return this.props.unit === 'pct' ? `${value.toFixed(2).replace('.', ',')}%` : value;
         } else {
             return value;
         }

@@ -82,7 +82,7 @@ export default class ResultStats extends Component {
         }
 
         let topPartyName = Parties.names[topParty.key];
-        let num          = this.props.unit === 'pct' ? topParty.pct.toFixed(2) + '%' : topParty.count;
+        let num          = this.props.unit === 'pct' ? `${topParty.pct.toFixed(2).replace('.', ',')}%` : topParty.count;
         let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
 
         return (
@@ -136,7 +136,7 @@ export default class ResultStats extends Component {
 
         if (people.length) {
             let topPerson      = people[0];
-            let num            = isPct ? `${topPerson.pct.toFixed(2)}%` : topPerson.count;
+            let num            = isPct ? `${topPerson.pct.toFixed(2).replace('.', ',')}%` : topPerson.count;
             let unitText       = isPct ? 'av sine innlegg' : 'innlegg';
             // let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
             let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';

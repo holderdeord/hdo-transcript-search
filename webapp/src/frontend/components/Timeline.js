@@ -16,7 +16,7 @@ export default class Timeline extends Component {
     };
 
     chartOptions = {
-        chartPadding: { left: 10, top: 35 },
+        chartPadding: { left: 20, top: 35 },
         low: 0,
         fullWidth: false,
         axisX: {
@@ -191,6 +191,6 @@ export default class Timeline extends Component {
     }
 
     formatValue(value) {
-        return this.props.unit === 'pct' ? `${value.toFixed(2)}%` : value;
+        return this.props.unit === 'pct' ? `${value.toFixed(2).replace('.', ',')}%` : value;
     }
 }
