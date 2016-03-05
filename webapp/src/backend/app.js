@@ -22,6 +22,7 @@ app.engine('hbs', hbs.express4());
 app.set('view engine', 'hbs');
 app.set('views', path.resolve(__dirname, '../../views'));
 app.set('analytics', app.get('env') === 'production');
+app.set('etag', false);
 
 app.locals.appTitle       = 'Sagt i salen';
 app.locals.appDescription = 'En visualisering av språkbruk på Stortinget fra Holder de ord';
