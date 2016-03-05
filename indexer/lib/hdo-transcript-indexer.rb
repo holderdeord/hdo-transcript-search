@@ -92,7 +92,7 @@ module Hdo
 
         Mail.deliver do
           from     'noreply@holderdeord.no'
-          to       'intern@holderdeord.no'
+          to       ['jari@holderdeord.no']
           subject  "#{count} nye referater"
           body     content
         end
