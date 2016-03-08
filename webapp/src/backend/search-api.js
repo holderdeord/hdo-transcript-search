@@ -280,7 +280,8 @@ class SearchAPI {
                 date_histogram: {
                     field: 'time',
                     interval: opts.interval,
-                    time_zone: 2,
+                    time_zone: 'Europe/Oslo',
+                    format: 'yyyy-MM-dd',
                     min_doc_count: 0
                 }
             },
