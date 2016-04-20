@@ -150,7 +150,7 @@ app.get('/api/search/hits', (req, res) => {
 });
 
 app.get('/api/export', (req, res) => {
-    if (validQuery(req.query.query)) {
+    if (req.query.force || validQuery(req.query.query)) {
         let format = req.query.format || 'tsv';
 
         res.type(format);
