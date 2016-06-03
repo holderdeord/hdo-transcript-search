@@ -10,6 +10,7 @@ require 'pry'
 require 'forwardable'
 require 'mail'
 
+require 'hdo-transcript-indexer/text_utils'
 require 'hdo-transcript-indexer/converter'
 require 'hdo-transcript-indexer/cache'
 require 'hdo-transcript-indexer/index'
@@ -31,6 +32,7 @@ module Hdo
         @extras       = JSON.parse(File.read(File.expand_path("../hdo-transcript-indexer/extras.json", __FILE__)))
         @ner          = options.fetch(:ner)
         @mail         = options.fetch(:mail)
+        @lix          = options.fetch(:lix)
 
         @errors       = []
         @new_transcripts = []
@@ -242,7 +244,8 @@ module Hdo
             input_file.to_s,
             cache: @party_cache,
             names: @extras.fetch('names'),
-            ner: @ner
+            ner: @ner,
+            lix: @lix
           ).to_json
 
 

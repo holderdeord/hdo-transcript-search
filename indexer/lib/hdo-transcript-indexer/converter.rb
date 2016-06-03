@@ -5,6 +5,7 @@ require 'hashie/mash'
 require 'hdo/storting_importer'
 require 'childprocess'
 
+
 ChildProcess.posix_spawn = true
 
 module Hdo
@@ -40,6 +41,7 @@ module Hdo
         @name_to_party    = options[:cache] || {}
         @name_corrections = options[:names] || {}
         @ner              = !!options[:ner]
+        @lix              = !!options[:lix]
         @errors           = Set.new
 
         session = Hdo::StortingImporter::Util.session_for_date(@time.to_date)
@@ -112,6 +114,10 @@ module Hdo
 
           if @ner
             section[:entities] = extract_entities(section)
+          end
+
+          if @lix
+            section[:lix] = calculate_lix(section[:text])
           end
         end
 
@@ -384,7 +390,11 @@ module Hdo
       end
 
       def word_count(str)
-        str.to_s.scan(/\S+/).size
+        TextUtils.word_count(str)
+      end
+
+      def calculate_lix(str)
+        TextUtils.lix(str)
       end
     end
 

@@ -29,7 +29,8 @@ options = {
   create_index: false,
   force: false,
   ner: false,
-  mail: false
+  mail: false,
+  lix: false
 }
 
 parser = OptionParser.new do |opt|
@@ -40,6 +41,7 @@ parser = OptionParser.new do |opt|
   opt.on('-f', '--force', "Force re-download of transcripts") { options[:force] = true }
   opt.on('-s', '--sessions SESSIONS', "Comma-separated list of sessions, default: #{options[:sessions].join(',')}") { |sessions| options[:sessions] = sessions.split(',') }
   opt.on('-n', '--ner', 'Enable named entity extraction using Polyglot.') { options[:ner] = true }
+  opt.on('-l', '--lix', 'Calculate LIX readability scores.') { options[:lix] = true }
   opt.on('-m', '--mail', 'Enable mail notifications when new transcripts are added.') { options[:mail] = true }
   opt.on('-h', '--help', "You're looking at it.") { puts opt; exit 0; }
 end
