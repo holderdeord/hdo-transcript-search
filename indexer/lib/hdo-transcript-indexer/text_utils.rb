@@ -11,7 +11,7 @@ module Hdo
       SENTENCE_EXP = /[.:!?]/
 
       def self.lix(str)
-        str = str.to_s
+        str = str.to_s.gsub(/f\.\s*eks\s*\./, 'for eksempel').gsub(/bl\.\s*a\s*./, 'blant annet')
         words = words(str)
 
         a = words.size
@@ -49,4 +49,8 @@ module Hdo
       end
     end
   end
+end
+
+if __FILE__ == $0
+  p Hdo::Transcript::TextUtils.lix(STDIN.read)
 end
