@@ -31,6 +31,10 @@ export default class ServerFacade {
         return reqwest('https://files.holderdeord.no/data/hdo/services.json?service=transcripts');
     }
 
+    lixStats() {
+        return reqwest('/api/stats/lix');
+    }
+
     _summaryPathFor(query, interval) {
         return `/api/search/summary?interval=${interval}&query=${query}`;
     }

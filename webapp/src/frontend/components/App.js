@@ -16,6 +16,7 @@ export default class App extends Component {
         children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
         joinedQuery: PropTypes.string.isRequired,
         params: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired
     };
 
     static contextTypes = {
@@ -40,7 +41,11 @@ export default class App extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!shallowEqualScalar(this.props.params, prevProps.params)) {
+        if (
+            !shallowEqualScalar(this.props.params, prevProps.params)
+            ||
+            this.props.location.pathname !== prevProps.location.pathname
+        ) {
             this.update();
         }
     }
@@ -61,12 +66,17 @@ export default class App extends Component {
     }
 
     update() {
-        const { params } = this.props;
+        const {
+            params,
+            location: { pathname }
+        } = this.props;
 
         if (params.queries && params.queries.length) {
             this.executeSearch(params.queries.split('.'));
         } else if (params.transcript && params.order) {
             this.executeSpeechContext(params.transcript, +params.order);
+        } else if (pathname === '/backstage/lix') {
+            this.actions.lixStats();
         } else {
             this.executeReset();
         }

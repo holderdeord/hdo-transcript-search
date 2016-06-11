@@ -136,6 +136,7 @@ export default class Timeline extends Component {
                             <div className="col-md-12 col-xs-12">
                                 <BaseChart
                                     type="Line"
+                                    animate
                                     aspectRatios={this.aspectRatios}
                                     tooltipSuffix={this.props.unit === 'pct' ? '%' : null}
                                     data={this.state.data[this.props.unit]}

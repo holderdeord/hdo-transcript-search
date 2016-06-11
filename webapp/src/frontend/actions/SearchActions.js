@@ -5,7 +5,8 @@ import {
     MORE_HITS,
     SPEECH_CONTEXT,
     RESET,
-    SERVICES
+    SERVICES,
+    LIX_STATS
 } from '../constants/ActionTypes';
 
 export function summary(queries, interval = 'year') {
@@ -58,6 +59,16 @@ export function services() {
 
 export function reset() {
     return { type: RESET };
+}
+
+export function lixStats() {
+    return dispatch =>
+        facade
+            .lixStats()
+            .then(
+                success(dispatch, LIX_STATS),
+                error(dispatch, LIX_STATS)
+            );
 }
 
 function success(dispatch, type) {

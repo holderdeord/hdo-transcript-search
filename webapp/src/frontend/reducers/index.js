@@ -3,6 +3,7 @@ import summary from './summary';
 import hits from './hits';
 import speech from './speech';
 import services from './services';
+import stats from './stats';
 
 export default {
     summary,
@@ -10,5 +11,6 @@ export default {
     speech,
     analytics,
     services,
+    stats
 };
 

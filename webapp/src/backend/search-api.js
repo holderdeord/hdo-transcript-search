@@ -114,6 +114,124 @@ class SearchAPI {
             });
     }
 
+    getLixStats() {
+        return es.search({
+            index: INDEX_NAME,
+            type: INDEX_TYPE,
+            body: {
+                size: 0,
+                aggs: {
+                    scoreStats: {
+                        stats: {
+                            field: 'lix.score'
+                        }
+                    },
+
+                    parties: {
+                        terms: {
+                            field: 'party',
+                            size: 20
+                        },
+
+                        aggs: {
+                            scoreStats: {
+                                stats: {
+                                    field: 'lix.score'
+                                }
+                            },
+
+                            timeline: {
+                                date_histogram: {
+                                    field: 'time',
+                                    interval: 'year',
+                                    time_zone: 'Europe/Oslo',
+                                    format: 'yyyy-MM-dd',
+                                    min_doc_count: 0
+                                },
+
+                                aggs: {
+                                    scoreStats: {
+                                        stats: {
+                                            field: 'lix.score'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+
+                    topRepresentatives: {
+                        terms: {
+                            field: 'name',
+                            size: 20,
+                            order: { avgLixScore: 'desc' },
+                            min_doc_count: MIN_SPEECH_COUNT
+                        },
+
+                        aggs: {
+                            avgLixScore: {
+                                avg: {
+                                    field: 'lix.score'
+                                }
+                            },
+
+                            person: {
+                                top_hits: { // eslint-disable-line
+                                    size: 1,
+                                    _source: { include: ['external_id', 'party'] }
+                                }
+                            }
+                        }
+                    },
+
+                    bottomRepresentatives: {
+                        terms: {
+                            field: 'name',
+                            size: 20,
+                            order: { avgLixScore: 'asc' },
+                            min_doc_count: MIN_SPEECH_COUNT
+                        },
+
+                        aggs: {
+                            avgLixScore: {
+                                avg: {
+                                    field: 'lix.score'
+                                }
+                            },
+
+                            person: {
+                                top_hits: { // eslint-disable-line
+                                    size: 1,
+                                    _source: { include: ['external_id', 'party'] }
+                                }
+                            }
+                        }
+                    },
+
+                    timeline: {
+                        date_histogram: {
+                            field: 'time',
+                            interval: 'year',
+                            time_zone: 'Europe/Oslo',
+                            format: 'yyyy-MM-dd',
+                            min_doc_count: 0
+                        },
+
+                        aggs: {
+                            scoreStats: {
+                                stats: {
+                                    field: 'lix.score'
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        })
+        .then(res => res.aggregations);
+    }
+
     _cacheResponse(key, value) {
         this.cache.set(key, value);
         return value;

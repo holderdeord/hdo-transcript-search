@@ -95,6 +95,12 @@ app.get('/search', (req, res) => {
     });
 });
 
+app.get('/backstage/*', (req, res) => {
+    res.render('index', {
+        title: 'Backstage'
+    });
+});
+
 app.get('/feed', (req, res) => {
     if (validQuery(req.query.query)) {
         let query = Object.assign({}, req.query, {highlight: false, sort: 'time.desc'});
@@ -170,6 +176,12 @@ app.get('/api/context/:transcript/:start/:end', (req, res) => {
     var {transcript, start, end} = req.params;
 
     api.getContext(transcript, +start, +end)
+        .then(d => res.json(d))
+        .catch(errorHandler.bind(res));
+});
+
+app.get('/api/stats/lix', (req, res) => {
+    api.getLixStats()
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
 });

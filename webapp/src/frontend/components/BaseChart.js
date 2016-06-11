@@ -118,7 +118,7 @@ export default class BaseChart extends Component {
     }
 
     _drawChart(props) {
-        let { data, options, responsiveOptions } = props;
+        let { data, options, responsiveOptions, animate } = props;
         options = options || {};
         responsiveOptions = responsiveOptions || {};
 
@@ -132,7 +132,9 @@ export default class BaseChart extends Component {
                 responsiveOptions
             );
 
-            this._setupAnimation();
+            if (animate) {
+                this._setupAnimation();
+            }
         }
     }
 
