@@ -11,7 +11,7 @@ module Hdo
       SENTENCE_EXP = /[.:!?]/
 
       def self.lix(str)
-        str = str.to_s.gsub(/f\.\s*eks\s*\./, 'for eksempel').gsub(/bl\.\s*a\s*./, 'blant annet')
+        str = str.to_s.gsub(/f\.\s*eks\s*\./, 'for eksempel').gsub(/bl\.\s*a\s*\./, 'blant annet').gsub(/\bnr\./, 'nummer')
         words = words(str)
 
         a = words.size
