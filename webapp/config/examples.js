@@ -13,7 +13,7 @@ module.exports = [
     ['frihet', 'likhet'],
     ['intercity', 'bompenger'],
     ['barnehage', 'kontantstøtte'],
-    ['facebook', 'twitter'],
+    ['facebook', 'twitter', 'snapchat'],
     ['søndagsåpne butikker'],
     ['nasjonale prøver', 'karakterer'],
     ['jernbanereform', 'kommunereform', 'bompengereform'],
