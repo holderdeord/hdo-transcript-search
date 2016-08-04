@@ -6,6 +6,11 @@ import Intervals from '../constants/Intervals';
 import minSpeechCount from '../../shared/minSpeechCount';
 import Parties from '../../shared/Parties';
 
+const LANGS = {
+    nn: 'Nynorsk',
+    nb: 'Bokmål'
+};
+
 @connect(({stats: {lix}}) => ({stats: lix}))
 export default class Lix extends Component {
     static propTypes = {
@@ -39,7 +44,8 @@ export default class Lix extends Component {
             parties,
             timeline,
             topRepresentatives,
-            bottomRepresentatives
+            bottomRepresentatives,
+            languages
         } = this.props.stats;
         const cardStyle = {margin: '1rem', padding: '1rem'};
 
@@ -132,7 +138,20 @@ export default class Lix extends Component {
 
                         </div>
                     </div>
+                </div>
 
+                <div className="card" style={cardStyle}>
+                    <h2>Målform</h2>
+
+                    <div className="row">
+                        {languages.buckets.map(b => (
+                            <div className="col-md-6" key={b.key}>
+                                <h3>{LANGS[b.key]}</h3>
+
+                                {this.renderStat(b.scoreStats)}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         );

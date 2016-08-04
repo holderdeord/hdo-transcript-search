@@ -3,7 +3,8 @@ import { LIX_STATS } from '../constants/ActionTypes';
 const initialState = {
     lix: {
         scoreStats: null,
-        parties: { buckets: [] }
+        parties: { buckets: [] },
+        languages: { buckets: [] }
     }
 };
 

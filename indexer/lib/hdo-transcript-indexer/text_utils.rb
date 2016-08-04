@@ -47,10 +47,34 @@ module Hdo
       def self.word_count(str)
         words(str).size
       end
+
+      NN_MARKERS = %w[ein eit dei ikkje]
+      NB_MARKERS = %w[en et de ikke]
+
+      def self.language_for(str)
+        nn_count = 0
+        nb_count = 0
+
+        words(str).each do |word|
+          word = word.downcase
+
+          if NN_MARKERS.include?(word)
+            nn_count += 1
+          elsif NB_MARKERS.include?(word)
+            nb_count += 1
+          end
+        end
+
+        if nn_count > nb_count
+          'nn'
+        else
+          'nb'
+        end
+      end
     end
   end
 end
 
 if __FILE__ == $0
-  p Hdo::Transcript::TextUtils.lix(STDIN.read)
+  p Hdo::Transcript::TextUtils.language_for(STDIN.read)
 end

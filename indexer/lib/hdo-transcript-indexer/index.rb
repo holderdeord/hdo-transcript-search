@@ -114,6 +114,7 @@ module Hdo
             external_id: { type: 'string',  index: 'not_analyzed' },
             transcript:  { type: 'string',  index: 'not_analyzed' },
             session:     { type: 'string',  index: 'not_analyzed' },
+            language:    { type: 'string',  index: 'not_analyzed' },
             order:       { type: 'integer', index: 'not_analyzed' }
           }
         }

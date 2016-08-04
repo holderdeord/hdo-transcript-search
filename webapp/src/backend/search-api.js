@@ -127,6 +127,20 @@ class SearchAPI {
                         }
                     },
 
+                    languages: {
+                        terms: {
+                            field: 'language'
+                        },
+
+                        aggs: {
+                            scoreStats: {
+                                stats: {
+                                    field: 'lix.score'
+                                }
+                            }
+                        }
+                    },
+
                     parties: {
                         terms: {
                             field: 'party',

@@ -111,6 +111,7 @@ module Hdo
 
         if section
           section[:word_count] = word_count(section[:text])
+          section[:language] = language_for(section[:text])
 
           if @ner
             section[:entities] = extract_entities(section)
@@ -391,6 +392,10 @@ module Hdo
 
       def word_count(str)
         TextUtils.word_count(str)
+      end
+
+      def language_for(str)
+        TextUtils.language_for(str)
       end
 
       def calculate_lix(str)
