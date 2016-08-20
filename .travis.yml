@@ -3,17 +3,19 @@ language: node_js
 node_js:
 - '0.12'
 script:
-- 'cd webapp && npm install && npm test && npm run build && cd -'
+- cd webapp && npm install && npm test && npm run build && cd -
 after_success:
 - '[[ "$TRAVIS_BRANCH" = "master" ]] && scripts/deploy'
 addons:
   ssh_known_hosts: tale.holderdeord.no
 notifications:
   email:
-    - jari@holderdeord.no
+  - jari@holderdeord.no
   hipchat:
     rooms:
       secure: KtzDTt1HzBZSWIHiEYspGF7TdXPSwyOuyxSn4DZA+E/4c/tVCYOw7N+egBzwkHLU6B/1tTlaXEkv8deOVsiG63fM+f7xvIbbRhQ/flJfZzDBGfySVnuPCg0QafcedKoizBujc0rXolG52Rcs7pVGqK4NEPHGv8BbLo7g7esTrY8=
+  slack:
+    secure: NmQl8muVV7rPi2jethd0sFjpGvbhk7cYrLhHXXDlyPKcQpt4B+3ozcIYy4vEedm3isuhto7Qr7sezmrENqNDf3pxBwz5U2YiJEISnrTA2a6MLTaKDCqd+JolpKUDbiVXyJeElimx5GTgdlMTT53CaEt+7QSc55h1xVTbu7+Qy1U=
 env:
   global:
     secure: YTaSgDcEWrn/D12qiQvpb4IyFmFOcCrJnxG1mCUOTPJnU7j2ILkO7cKIjAteBemvauVM1a78+DKDUb+F8xZN+vnKcUrgTFxT4rhgmyV0+biHVI5+AOX1hJ0/QZkGPTQKGC84ohz98Zpgky4AIjdNnLqCDGNw+1PTBmLmB8T0UOA=
