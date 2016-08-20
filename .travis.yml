@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-- '0.12'
+- '6'
 script:
 - cd webapp && npm install && npm test && npm run build && cd -
 after_success:
