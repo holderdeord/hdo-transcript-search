@@ -17,7 +17,9 @@ require 'hdo-transcript-indexer/index'
 
 Faraday.default_adapter = :patron
 Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
-Faraday.default_connection_options.headers = {'User-Agent' => 'hdo-transcript-downloader | https://www.holderdeord.no/'}
+Faraday.default_connection_options.headers = {
+  'User-Agent' => 'hdo-transcript-downloader | https://www.holderdeord.no/'
+}
 
 module Hdo
   module Transcript
@@ -101,18 +103,15 @@ module Hdo
       end
 
       def index_docs
-        json_transcripts.each do |input|
-          index_file(input)
-          @logger.info "indexed #{input}"
-        end
+        json_transcripts.each { |input| index_file(input) }
       end
 
       def xml_transcripts
-        files_matching '[sS]*.xml'
+        files_matching '{[sS]*,refs-*}.xml'
       end
 
       def json_transcripts
-        files_matching '[sS]*.json'
+        files_matching '{[sS]*,refs-*}.json'
       end
 
       def files_matching(glob)
@@ -127,26 +126,26 @@ module Hdo
       end
 
       def build_party_cache
-          return unless @party_cache.empty?
+        return unless @party_cache.empty?
 
-          @logger.info "building name -> party cache, this could take a while"
+        @logger.info "building name -> party cache, this could take a while"
 
-          xml_transcripts.each do |input_file|
-            Converter.parse(input_file).sections.each do |section|
-              n = section[:name]
-              p = section[:party]
+        xml_transcripts.each do |input_file|
+          Converter.parse(input_file.to_s).sections.each do |section|
+            n = section[:name]
+            p = section[:party]
 
-              if n && p
-                @party_cache[n] ||= p
-              end
+            if n && p
+              @party_cache[n] ||= p
             end
           end
+        end
 
-          # manually maintained list of people we can't infer from the transcript data
-          @party_cache.merge!(@extras.fetch('parties'))
-          @party_cache.save
+        # manually maintained list of people we can't infer from the transcript data
+        @party_cache.merge!(@extras.fetch('parties'))
+        @party_cache.save
 
-          json_transcripts.each { |t| t.delete }
+        json_transcripts.each { |t| t.delete }
       end
 
       def build_slug_cache
@@ -259,6 +258,10 @@ module Hdo
         presidents    = data['presidents'].map { |e| {name: e, external_id: @slug_cache[e]} }
         session       = data['session']
 
+        unless @sessions.include?(session)
+          return
+        end
+
         @stats[session][:transcripts] += 1
 
         docs = data['sections'].map.with_index do |section, idx|
@@ -284,6 +287,8 @@ module Hdo
             @logger.error err.inspect
           end
         end
+
+        @logger.info "indexed #{file}"
       end
 
       def create_index

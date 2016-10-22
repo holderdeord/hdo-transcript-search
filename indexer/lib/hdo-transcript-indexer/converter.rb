@@ -4,27 +4,45 @@ require 'set'
 require 'hashie/mash'
 require 'hdo/storting_importer'
 require 'childprocess'
-
-
 ChildProcess.posix_spawn = true
 
 module Hdo
   module Transcript
     class Converter
-
       class << self
         def parse(file, options = {})
-          if file.to_s =~ /s(\d{2})(\d{2})(\d{2}).*\.xml$/i
+          case file
+          when /s(\d{2})(\d{2})(\d{2}).*\.xml$/i
             short_year = $1
             month      = $2.to_i
             day        = $3.to_i
             year       = (short_year.to_i > 50 ? "19#{short_year}" : "20#{short_year}").to_i
-            doc        = Nokogiri::XML.parse(File.read(file))
 
-            new(doc, Time.new(year, month, day), options)
+            new(read(file), Time.new(year, month, day), options)
+          when /refs-(\d{4})(\d{2})-(\d{2})-(\d{2})\.xml$/
+            session_start_year = $1
+            session_end_year   = $2
+            month              = $3
+            day                = $4
+            century            = session_start_year[/^\d{2}/]
+            session_end_year   = "#{century}#{session_end_year}"
+
+            if month.to_i <= 7
+              year = session_end_year
+            else
+              year = session_start_year
+            end
+
+            new(read(file), Time.new(year, month, day), options)
           else
-            raise "could not parse date from #{file}"
+            raise "could not parse date from file name: #{file}"
           end
+        end
+
+        private
+
+        def read(file)
+          Nokogiri::XML.parse(File.read(file))
         end
       end
 
@@ -49,7 +67,7 @@ module Hdo
       end
 
       def sections
-        @doc.css('presinnl, innlegg').
+        @doc.css('presinnl, innlegg, Presinnlegg, Hovedinnlegg').
           map { |node| @last_section = parse_section(node) }.
           compact.
           reject { |e| e[:text].empty? }.
@@ -57,7 +75,12 @@ module Hdo
       end
 
       def president_names
-        @president_name ||= @doc.css('president').text.gsub(/president:?\s*/i, '').split(/\r?\n/).map(&:strip).uniq
+        @president_name ||= @doc.css('president, President').text.
+          gsub(/president:?\s*/i, '').
+          split(/\r?\n/).
+          map(&:strip).
+          uniq.
+          select { |e| e.length > 0 }
       end
 
       def as_json(opts = nil)
@@ -102,10 +125,10 @@ module Hdo
       def parse_section(node)
         @current_node = node
 
-        section = case node.name
-                  when 'innlegg'
+        section = case node.name.downcase
+                  when 'innlegg', 'hovedinnlegg', 'replikk'
                     parse_speech(node)
-                  when 'presinnl'
+                  when 'presinnl', 'presinnlegg'
                     parse_president_speech(node)
                   end
 
@@ -129,19 +152,19 @@ module Hdo
         text = []
 
         node.elements.each do |element|
-          case element.name
+          case element.name.downcase
           when 'a', 'merknad'
             text << element.text.gsub("\n", ' ').strip
           when 'navn', 'merknad'
             # ignored
-          when 'blokksitat'
+          when 'blokksitat', 'sitat'
             text << text_from(element)
           when 'liste'
-            text += element.css('pkt').map { |e| e.text.gsub("\n", ' ').strip }
+            text += element.css('pkt, Pkt').map { |e| e.text.gsub("\n", ' ').strip }
           when 'table'
-            text += element.css('row').map { |e| e.text.gsub("\n", ' ').strip }
+            text += element.css('row, Row').map { |e| e.text.gsub("\n", ' ').strip }
           else
-            raise "unknown element: #{element}"
+            raise "unknown element of: #{element}"
           end
         end
 
@@ -149,7 +172,7 @@ module Hdo
       end
 
       def parse_speech(node)
-        name_str = node.css('navn').text
+        name_str = node.css('navn, Navn').text
         text     = clean_text(text_from(node))
 
         return if IGNORED_NAMES.include?(name_str)
@@ -158,7 +181,7 @@ module Hdo
 
         # sometimes the name is entered as a separate but empty speech
         if parsed.name.nil? && parsed.party.nil?
-          if @last_section[:name] && @last_section[:text].empty?
+          if @last_section[:name]
             parsed.name = @last_section[:name]
             parsed.party = @last_section[:party]
             parsed.title ||= @last_section[:title]
@@ -173,11 +196,13 @@ module Hdo
         parsed.party = normalize_party(parsed.party)
         parsed.title = normalize_title(parsed.title)
 
+        full_text = "#{parsed.text}#{text}".sub(clean_text(name_str).gsub(/\n/, ' '), '').strip
+
         {
           :name  => parsed.name ? parsed.name.strip : parsed.name,
           :party => parsed.party,
           :time  => parsed.time ? parsed.time.iso8601 : @time.iso8601,
-          :text  => "#{parsed.text}#{text}",
+          :text  => full_text,
           :title => parsed.title || (parsed.party ? 'Representant' : nil)
         }
       end
@@ -186,7 +211,7 @@ module Hdo
         {
           :name  => "Presidenten",
           :party => nil,
-          :text  => clean_text(node.text),
+          :text  => clean_text(node.text).sub(/^President(en)?:/, ''),
           :time  => @time.iso8601,
           :title => "President"
         }
