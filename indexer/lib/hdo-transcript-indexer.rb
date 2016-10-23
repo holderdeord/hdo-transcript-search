@@ -180,6 +180,8 @@ module Hdo
           @slug_cache[full_name] = rep['id']
         end
 
+        # manually maintained list of people we can't infer from the transcript data
+        @slug_cache.merge!(@extras.fetch('slugs'))
         @slug_cache.save
       end
 
