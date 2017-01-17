@@ -3,7 +3,7 @@ module Hdo
     class Cache
 
       extend Forwardable
-      def_delegators :@cache, :[], :[]=, :size, :merge!, :fetch, :empty?, :any?
+      def_delegators :@cache, :[], :[]=, :size, :merge!, :fetch, :empty?, :any?, :keys
 
       def initialize(path)
         @path  = path.to_s

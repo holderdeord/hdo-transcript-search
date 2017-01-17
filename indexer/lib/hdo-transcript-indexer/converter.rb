@@ -4,6 +4,7 @@ require 'set'
 require 'hashie/mash'
 require 'hdo/storting_importer'
 require 'childprocess'
+require 'pry'
 ChildProcess.posix_spawn = true
 
 module Hdo
@@ -228,6 +229,7 @@ module Hdo
       def clean_name_string(str)
         str.
           gsub("[ [", "[").
+          gsub("( [", "[").
           gsub("[[", "[").
           gsub("]]", "]").
           gsub(/[\[\(]?\s*(\d{2}):(\d{2}):_?(\d{2})\s*[\]\)]?/, '[\1:\2:\3]').
@@ -243,6 +245,7 @@ module Hdo
           gsub(/\.$/, ':').
           gsub(/\s*…\s*$/, '').
           gsub(/\r?\n/, ' ').
+          gsub(/^(\w)\s(\w)/, '\1\2').
           strip
       end
 
