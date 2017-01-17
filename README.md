@@ -31,10 +31,6 @@ Re-create the index. This is necessary when a mapping is changed:
 
     $ bundle exec ruby -Ilib bin/hdo-transcript-indexer --create-index
 
-Re-build everything:
-
-    $ rm -rf ../data/* && bundle exec ruby -Ilib bin/hdo-transcript-indexer --create-index
-
 Convert a single XML transcript to indexable JSON:
 
     $ bundle exec ruby -Ilib bin/hdo-transcript-converter transcript.xml
