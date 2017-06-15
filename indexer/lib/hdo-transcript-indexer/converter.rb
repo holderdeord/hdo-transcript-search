@@ -224,6 +224,8 @@ module Hdo
           gsub(/\s{2,}/, ' ').
           gsub("­", '').
           strip
+      rescue ArgumentError => e
+        clean_text(str.encode('UTF-8', invalid: :replace, undef: :replace, replace: ''))
       end
 
       def clean_name_string(str)
