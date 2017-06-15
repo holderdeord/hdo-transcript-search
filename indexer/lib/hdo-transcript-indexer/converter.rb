@@ -68,7 +68,7 @@ module Hdo
       end
 
       def sections
-        @doc.css('presinnl, innlegg, Presinnlegg, Hovedinnlegg').
+        @doc.css('presinnl, innlegg, Presinnlegg, Hovedinnlegg, replikk, Replikk').
           map { |node| @last_section = parse_section(node) }.
           compact.
           reject { |e| e[:text].empty? }.
