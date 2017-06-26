@@ -242,6 +242,7 @@ module Hdo
           gsub("(komiteens leder)", "").
           gsub(" SV:", " (SV):").
           gsub(/\xC2\xA0|\xC2\xAD/, "").
+          gsub(/^(\w)\så/, '\1å').
           gsub(/\(V$/, '(V)').
           gsub(/\($/, '').
           gsub(/\.$/, ':').
