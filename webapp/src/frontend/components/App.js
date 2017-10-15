@@ -10,10 +10,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import shallowEqualScalar from 'react-redux/lib/utils/shallowEqualScalar';
 
-@connect(({summary: {joinedQuery}}) => ({joinedQuery}))
+@connect(({ summary: { joinedQuery } }) => ({ joinedQuery }))
 export default class App extends Component {
     static propTypes = {
-        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+            .isRequired,
         joinedQuery: PropTypes.string.isRequired,
         params: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired
@@ -26,7 +27,10 @@ export default class App extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.actions = bindActionCreators(SearchActions, context.store.dispatch);
+        this.actions = bindActionCreators(
+            SearchActions,
+            context.store.dispatch
+        );
 
         this.state = {
             title: document.body.getAttribute('data-title'),
@@ -42,8 +46,7 @@ export default class App extends Component {
 
     componentDidUpdate(prevProps) {
         if (
-            !shallowEqualScalar(this.props.params, prevProps.params)
-            ||
+            !shallowEqualScalar(this.props.params, prevProps.params) ||
             this.props.location.pathname !== prevProps.location.pathname
         ) {
             this.update();
@@ -60,16 +63,13 @@ export default class App extends Component {
                 {this.props.children}
 
                 <RelatedServices />
-                <Footer/>
+                <Footer />
             </div>
         );
     }
 
     update() {
-        const {
-            params,
-            location: { pathname }
-        } = this.props;
+        const { params, location: { pathname } } = this.props;
 
         if (params.queries && params.queries.length) {
             this.executeSearch(params.queries.split('.'));
@@ -99,11 +99,8 @@ export default class App extends Component {
     }
 
     executeSpeechContext(transcript, order) {
-        this.actions.speechContext(transcript, order)
-            .then(() => {
-                document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
-            });
+        this.actions.speechContext(transcript, order).then(() => {
+            document.title = `Innlegg ${transcript} / ${order} · ${titleSuffix}`;
+        });
     }
-
 }
-

@@ -1,24 +1,24 @@
 import React, { PropTypes, Component } from 'react';
 
-import Intervals     from '../constants/Intervals';
-import key           from 'keymaster';
-import SearchForm    from './SearchForm';
-import Timeline      from './Timeline';
-import DevPanel      from './DevPanel';
-import ResultStats   from './ResultStats';
+import Intervals from '../constants/Intervals';
+import key from 'keymaster';
+import SearchForm from './SearchForm';
+import Timeline from './Timeline';
+import DevPanel from './DevPanel';
+import ResultStats from './ResultStats';
 import SearchResults from './SearchResults';
 
 export default class Search extends Component {
     static contextTypes = {
         router: PropTypes.object,
-        store: PropTypes.object,
+        store: PropTypes.object
     };
 
     static propTypes = {
         params: PropTypes.shape({
             focused: PropTypes.string,
             unit: PropTypes.string,
-            queries: PropTypes.string,
+            queries: PropTypes.string
         })
     };
 
@@ -64,13 +64,12 @@ export default class Search extends Component {
                         focusedIndex={focusedIndex}
                     />
 
-                    <SearchResults focusedIndex={focusedIndex}/>
+                    <SearchResults focusedIndex={focusedIndex} />
 
                     <DevPanel
                         visible={this.state.showDevPanel}
                         orientation={this.state.orientation}
                         interval={this.state.interval}
-
                         onOrientationChange={::this.handleOrientationChange}
                         onIntervalChange={::this.handleIntervalChange}
                     />
@@ -80,23 +79,25 @@ export default class Search extends Component {
     }
 
     handleOrientationChange(event) {
-        this.setState({orientation: event.target.value});
+        this.setState({ orientation: event.target.value });
     }
 
     handleIntervalChange(event) {
-        this.setState({interval: event.target.value});
+        this.setState({ interval: event.target.value });
     }
 
     handleUnitChange(event) {
         let newUnit = event.target.value === 'Prosent' ? 'pct' : 'count';
         let { queries, focused } = this.props.params;
 
-        this.context.router.transitionTo(`/search/${newUnit}/${queries}/${focused}`);
+        this.context.router.transitionTo(
+            `/search/${newUnit}/${queries}/${focused}`
+        );
     }
 
     registerKeyBindings() {
         // make sure key bindings work also inside the search field
-        key.filter = (event) => {
+        key.filter = event => {
             var el = event.target || event.srcElement;
 
             var nonInput = !(
@@ -110,7 +111,7 @@ export default class Search extends Component {
 
         // set up key bindings
         key('ctrl+`', () => {
-            this.setState({showDevPanel: !this.state.showDevPanel});
+            this.setState({ showDevPanel: !this.state.showDevPanel });
         });
 
         // TODO: use keymaster to provide some instructions on '?'

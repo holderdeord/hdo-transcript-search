@@ -1,5 +1,5 @@
 import Intervals from '../constants/Intervals';
-import moment    from 'moment';
+import moment from 'moment';
 
 moment.locale('nb');
 

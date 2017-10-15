@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
 export default class SharingLinks extends Component {
-
     static propTypes = {
         facebookAppId: PropTypes.string.isRequired,
         joinedQuery: PropTypes.string
@@ -43,7 +42,8 @@ export default class SharingLinks extends Component {
         let text;
 
         if (this.props.joinedQuery && this.props.joinedQuery.length) {
-            text = `Hvem snakker mest om «${this.props.joinedQuery}» på Stortinget?`;
+            text = `Hvem snakker mest om «${this.props
+                .joinedQuery}» på Stortinget?`;
         } else {
             text = 'Hva snakker politikerne om på Stortinget?';
         }
@@ -57,13 +57,17 @@ export default class SharingLinks extends Component {
     }
 
     open(url, title) {
-        let w       = 600;
-        let h       = 400;
+        let w = 600;
+        let h = 400;
 
-        let left = (window.screen.width / 2) - (w / 2);
-        let top = (window.screen.height / 2) - (h / 2);
+        let left = window.screen.width / 2 - w / 2;
+        let top = window.screen.height / 2 - h / 2;
 
-        window.open(url, title, `width=${w},height=${h},left=${left},top=${top},toolbar=0,menubar=0`);
+        window.open(
+            url,
+            title,
+            `width=${w},height=${h},left=${left},top=${top},toolbar=0,menubar=0`
+        );
     }
 
     getUrl() {

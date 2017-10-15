@@ -20,7 +20,13 @@ export default class ImageWithFallback extends Component {
         return (
             <img
                 className={this.props.className}
-                src={this.state.useFallbackImage ? this.props.fallbackSrc : this.props.src}
+                src={
+                    this.state.useFallbackImage ? (
+                        this.props.fallbackSrc
+                    ) : (
+                        this.props.src
+                    )
+                }
                 alt={this.props.alt}
                 height={this.props.height}
                 onError={::this.handleImageError}
@@ -31,7 +37,7 @@ export default class ImageWithFallback extends Component {
     handleImageError() {
         if (!this.state.useFallbackImage) {
             ga('send', 'event', 'image-error', this.props.src);
-            this.setState({useFallbackImage: true});
+            this.setState({ useFallbackImage: true });
         }
     }
 }

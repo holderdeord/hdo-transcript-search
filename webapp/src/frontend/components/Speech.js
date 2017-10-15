@@ -1,11 +1,10 @@
 import React, { PropTypes, Component } from 'react';
-import TimeUtils         from '../utils/TimeUtils';
-import ImageUtils        from '../utils/ImageUtils';
-import { Link }          from 'react-router';
+import TimeUtils from '../utils/TimeUtils';
+import ImageUtils from '../utils/ImageUtils';
+import { Link } from 'react-router';
 import ImageWithFallback from './ImageWithFallback';
 
 export default class Speech extends Component {
-
     static propTypes = {
         speech: PropTypes.object.isRequired,
         showTime: PropTypes.bool,
@@ -15,9 +14,9 @@ export default class Speech extends Component {
     state = { useFallbackImage: false };
 
     render() {
-        let speech    = this.props.speech;
+        let speech = this.props.speech;
         let timestamp = TimeUtils.timestampForHit(speech);
-        let title     = speech.title;
+        let title = speech.title;
 
         if (speech.party) {
             title = `${title}, ${speech.party}`;
@@ -28,9 +27,9 @@ export default class Speech extends Component {
         }
 
         if (speech.name === 'Presidenten' && speech.presidents.length === 1) {
-            var president      = speech.presidents[0];
+            var president = speech.presidents[0];
 
-            speech.name        = president.name;
+            speech.name = president.name;
             speech.external_id = president.external_id; // eslint-disable-line
         }
 
@@ -44,13 +43,17 @@ export default class Speech extends Component {
                             </div>
 
                             <div className="col-xs-8">
-                                <Link to={`/speeches/${speech.transcript}/${speech.order}`}>
-                                    <span className="text-muted">{timestamp}</span>
+                                <Link
+                                    to={`/speeches/${speech.transcript}/${speech.order}`}
+                                >
+                                    <span className="text-muted">
+                                        {timestamp}
+                                    </span>
                                 </Link>
                             </div>
                         </div>
 
-                        <div className="row" style={{paddingTop: '0.8rem'}}>
+                        <div className="row" style={{ paddingTop: '0.8rem' }}>
                             <div className="col-xs-1">
                                 <i className="fa fa-user" />
                             </div>
@@ -61,12 +64,9 @@ export default class Speech extends Component {
                         </div>
 
                         <div className="row">
-                            <div className="col-xs-1">
-                            </div>
+                            <div className="col-xs-1" />
 
-                            <div className="col-xs-8">
-                                {title}
-                            </div>
+                            <div className="col-xs-8">{title}</div>
                         </div>
                     </div>
 
@@ -81,13 +81,13 @@ export default class Speech extends Component {
                     </div>
 
                     <div className="col-xs-12 col-md-7">
-                        <div className="speech-text">{this.paragraphsFrom(speech)}</div>
+                        <div className="speech-text">
+                            {this.paragraphsFrom(speech)}
+                        </div>
                     </div>
                 </div>
 
-                <div className="row">
-                    {this.renderContextLinkIfNecessary()}
-                </div>
+                <div className="row">{this.renderContextLinkIfNecessary()}</div>
             </div>
         );
     }
@@ -102,8 +102,7 @@ export default class Speech extends Component {
                 <div className="context-link">
                     <Link to={`/speeches/${transcript}/${order}`}>
                         Se innlegget i kontekst
-
-                        <span style={{paddingLeft: '.5rem'}}>
+                        <span style={{ paddingLeft: '.5rem' }}>
                             <i className="fa fa-comments fa-lg" />
                         </span>
                     </Link>
@@ -113,13 +112,14 @@ export default class Speech extends Component {
     }
 
     paragraphsFrom(speech) {
-        let text = speech.highlight ? speech.highlight.text.join('\n') : speech.text;
+        let text = speech.highlight
+            ? speech.highlight.text.join('\n')
+            : speech.text;
 
         return text.split('\n').map((fragment, i) => {
             fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');
 
-            return (<p key={i} dangerouslySetInnerHTML={{__html: fragment}} />);
+            return <p key={i} dangerouslySetInnerHTML={{ __html: fragment }} />;
         });
     }
 }
-

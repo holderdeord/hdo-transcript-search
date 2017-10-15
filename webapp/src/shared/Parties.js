@@ -13,9 +13,7 @@ let names = {
     V: 'Venstre'
 };
 
-let current = [
-    'A', 'FrP', 'H', 'KrF', 'MDG', 'Sp', 'SV', 'V'
-];
+let current = ['A', 'FrP', 'H', 'KrF', 'MDG', 'Sp', 'SV', 'V'];
 
 module.exports = {
     names: names,

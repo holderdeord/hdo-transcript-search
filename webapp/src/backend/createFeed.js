@@ -3,8 +3,8 @@ import UrlUtils from '../shared/UrlUtils';
 import url from 'url';
 
 function newUrl(current, query) {
-    let newQuery  = Object.assign({}, current.query, query);
-    let resultUrl = Object.assign({}, current, {query: newQuery});
+    let newQuery = Object.assign({}, current.query, query);
+    let resultUrl = Object.assign({}, current, { query: newQuery });
 
     delete resultUrl.search;
 
@@ -12,7 +12,7 @@ function newUrl(current, query) {
 }
 
 export default function createFeed(opts) {
-    let {baseUrl, imageUrl, absoluteUrl, results, query } = opts;
+    let { baseUrl, imageUrl, absoluteUrl, results, query } = opts;
     let links = {};
 
     let start = +(query.start || 0);
@@ -20,11 +20,13 @@ export default function createFeed(opts) {
     let hitCount = results.hits.length;
     let totalCount = results.counts.total;
 
-    links.first = newUrl(currentUrl, {start: 0});
-    links.last = newUrl(currentUrl, {start: totalCount - (totalCount % hitCount)});
+    links.first = newUrl(currentUrl, { start: 0 });
+    links.last = newUrl(currentUrl, {
+        start: totalCount - totalCount % hitCount
+    });
 
-    if (totalCount > (hitCount + start)) {
-        links.next = newUrl(currentUrl, {start: start + hitCount});
+    if (totalCount > hitCount + start) {
+        links.next = newUrl(currentUrl, { start: start + hitCount });
     }
 
     /* eslint-disable */
@@ -44,7 +46,11 @@ export default function createFeed(opts) {
         custom_elements: Object.keys(links).map(rel => {
             return {
                 'atom:link': {
-                    _attr: { href: links[rel], rel: rel, type: 'application/rss+xml' }
+                    _attr: {
+                        href: links[rel],
+                        rel: rel,
+                        type: 'application/rss+xml'
+                    }
                 }
             };
         })
@@ -65,9 +71,9 @@ export default function createFeed(opts) {
             description: speech.text,
             url: `${baseUrl}${UrlUtils.speechPathFor(speech)}`,
             author: speech.name,
-            date: speech.time,
+            date: speech.time
         });
     });
 
-    return feed.xml({indent: true});
+    return feed.xml({ indent: true });
 }

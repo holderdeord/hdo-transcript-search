@@ -1,6 +1,6 @@
 var nconf = require('nconf');
 
-var elasticsearch = 'localhost:9200';
+var elasticsearch = 'localhost:19200';
 if (process.env.BOXEN_ELASTICSEARCH_HOST && process.env.BOXEN_ELASTICSEARCH_PORT) {
     elasticsearch = [process.env.BOXEN_ELASTICSEARCH_HOST, process.env.BOXEN_ELASTICSEARCH_PORT].join(':');
 }

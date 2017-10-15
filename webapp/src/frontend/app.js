@@ -2,7 +2,7 @@ import './styles/main.less';
 import './styles/chartist.scss';
 import 'font-awesome/css/font-awesome.css';
 
-import React  from 'react';
+import React from 'react';
 import { Router } from 'react-router';
 import { history } from 'react-router/lib/BrowserHistory';
 import routes from './routes';
