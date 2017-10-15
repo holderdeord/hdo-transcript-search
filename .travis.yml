@@ -3,7 +3,7 @@ language: node_js
 node_js:
 - '6'
 script:
-- cd webapp && npm install && npm test && npm run build && cd -
+- cd webapp && npm install && npm run build && cd -
 after_success:
 - '[[ "$TRAVIS_BRANCH" = "master" ]] && scripts/deploy'
 addons:
