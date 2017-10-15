@@ -79,7 +79,7 @@ class SearchAPI {
             if (scrollId) {
                 return es.scroll(
                     {
-                        scrollId: scrollId,
+                        scroll_id: scrollId,
                         scroll: '30s'
                     },
                     callback
@@ -88,7 +88,8 @@ class SearchAPI {
 
             const q = this._buildHitsQuery(
                 Object.assign({}, opts, {
-                    highlight: false
+                    highlight: false,
+                    scroll: '30s'
                 })
             );
 
