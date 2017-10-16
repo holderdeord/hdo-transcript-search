@@ -88,12 +88,13 @@ class SearchAPI {
 
             const q = this._buildHitsQuery(
                 Object.assign({}, opts, {
-                    highlight: false,
-                    scroll: '30s'
+                    highlight: false
                 })
             );
 
-            es.search(q, function(e, resp) {
+            q.scroll = '30s';
+
+            es.search(q, (e, resp) => {
                 scrollId = resp._scroll_id;
                 callback(e, resp);
             });
