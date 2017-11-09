@@ -47,7 +47,7 @@ module Hdo
         end
       end
 
-      PARTIES    = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "TF", "V", "uav", "uavh"]
+      PARTIES    = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "SP", "TF", "V", "uav", "uavh", "R"]
       DATE_EXP   = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
       PARTY_EXP  = /\s*[\( ]\s*(#{PARTIES.join('|')})\s*[\) ]\s*?/
       NER_SCRIPT = File.expand_path('../extract_entities.py', __FILE__)
@@ -261,6 +261,8 @@ module Hdo
           'A'
         when 'uav', 'uavh'
           'Uavhengig'
+        when 'SP'
+          'Sp'
         else
           str
         end
