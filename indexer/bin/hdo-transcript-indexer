@@ -24,7 +24,8 @@ options = {
     '2013-2014',
     '2014-2015',
     '2015-2016',
-    '2016-2017'
+    '2016-2017',
+    '2017-2018'
   ],
   index_name: 'hdo-transcripts',
   create_index: false,
