@@ -24,7 +24,7 @@
     "elasticsearch": "^10.1.3",
     "elasticsearch-streams": "0.0.9",
     "express": "^4.11.2",
-    "express-hbs": "^0.8.1",
+    "express-hbs": "^1.0.4",
     "googleapis": "^2.0.5",
     "lru-cache": "^2.5.0",
     "moment": "^2.11.2",
