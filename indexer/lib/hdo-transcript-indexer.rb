@@ -36,6 +36,7 @@ module Hdo
         @mail         = options.fetch(:mail)
         @lix          = options.fetch(:lix)
 
+        @finished_cache = {}
         @errors       = []
         @new_transcripts = []
 
@@ -222,7 +223,7 @@ module Hdo
         id   = t['id']
         dest = @data_dir.join("#{id}.xml")
 
-        if dest.exist? && !@force
+        if dest.exist? && !@force && finished_transcript?(dest)
           @logger.info "download cached: #{dest}"
         else
           @new_transcripts << id
@@ -236,7 +237,7 @@ module Hdo
       def convert_to_json(input_file)
         dest = Pathname.new(input_file.to_s.sub(input_file.extname, '.json'))
 
-        if dest.exist? && !@force
+        if dest.exist? && !@force && finished_transcript?(input_file)
           @logger.info "conversion cached: #{dest}"
         else
           @logger.info "converting: #{input_file} => #{dest}"
@@ -291,6 +292,21 @@ module Hdo
         end
 
         @logger.info "indexed #{file}"
+      end
+
+      def finished_transcript?(file)
+        if !@finished_cache.key?(file.to_s)
+          doc = Nokogiri::XML.parse(file.read)
+          node = doc.css('Forhandlinger')
+
+          @finished_cache[file.to_s] = !node || node.attr('Status').value == 'Komplett'
+        end
+
+        @finished_cache[file.to_s]
+      rescue => err
+        @logger.error err.inspect
+
+        false
       end
 
       def create_index
