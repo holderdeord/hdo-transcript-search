@@ -299,7 +299,7 @@ module Hdo
           doc = Nokogiri::XML.parse(file.read)
           node = doc.css('Forhandlinger')
 
-          @finished_cache[file.to_s] = !node || node.attr('Status').value == 'Komplett'
+          @finished_cache[file.to_s] = node.nil? || (node.attr('Status').value == 'Komplett')
         end
 
         @finished_cache[file.to_s]
