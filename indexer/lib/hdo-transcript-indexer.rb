@@ -297,9 +297,9 @@ module Hdo
       def finished_transcript?(file)
         if !@finished_cache.key?(file.to_s)
           doc = Nokogiri::XML.parse(file.read)
-          node = doc.css('Forhandlinger')
+          node = doc.css('Forhandlinger').first
 
-          @finished_cache[file.to_s] = node.nil? || (node.attr('Status').value == 'Komplett')
+          @finished_cache[file.to_s] = node.nil? || (node.attr('Status') == 'Komplett')
         end
 
         @finished_cache[file.to_s]
