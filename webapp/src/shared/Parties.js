@@ -5,6 +5,7 @@ let names = {
     KrF: 'Kristelig Folkeparti',
     Kp: 'Kystpartiet',
     MDG: 'Miljøpartiet De Grønne',
+    R: 'Rødt',
     Sp: 'Senterpartiet',
     SV: 'Sosialistisk Venstreparti',
     TF: 'Tverrpolitisk Folkevalgte (Kystpartiet)',
@@ -13,7 +14,7 @@ let names = {
     V: 'Venstre'
 };
 
-let current = ['A', 'FrP', 'H', 'KrF', 'MDG', 'Sp', 'SV', 'V'];
+let current = ['A', 'FrP', 'H', 'KrF', 'MDG', 'Sp', 'SV', 'V', 'R'];
 
 module.exports = {
     names: names,

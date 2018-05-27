@@ -32,12 +32,12 @@ export default class Timeline extends Component {
 
     responsiveOptions = [
         [
-            'screen and (max-width: 599px)',
+            'screen and (max-width: 710px)',
             {
-                chartPadding: { left: 5 },
+                chartPadding: { left: 10 },
                 fullWidth: true,
                 axisX: {
-                    labelOffset: { x: 0, y: 0 },
+                    labelOffset: { x: -5, y: 0 },
                     labelInterpolationFnc: d => d.slice(2, 4)
                 }
             }

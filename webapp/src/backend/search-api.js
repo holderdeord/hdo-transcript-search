@@ -12,7 +12,7 @@ import Parties from '../shared/Parties';
 var debugCache = debug('cache');
 
 const INDEX_NAME = 'hdo-transcripts';
-const INDEX_TYPE = 'speech';
+const INDEX_TYPE = null;
 const ALLOWED_INTERVALS = ['month', '12w', '24w', 'year'];
 const TSV_HEADERS = [
     'transcript',
