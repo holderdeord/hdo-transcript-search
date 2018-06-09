@@ -11,7 +11,7 @@ let names = {
     TF: 'Tverrpolitisk Folkevalgte (Kystpartiet)',
     Uav: 'Uavhengig',
     Uavhengig: 'Uavhengig',
-    V: 'Venstre'
+    V: 'Venstre',
 };
 
 let current = ['A', 'FrP', 'H', 'KrF', 'MDG', 'Sp', 'SV', 'V', 'R'];
@@ -20,5 +20,5 @@ module.exports = {
     names: names,
     nameFor: key => names[key] || key,
     isCurrent: key => current.indexOf(key) !== -1,
-    order: key => Object.keys(names).indexOf(key)
+    order: key => Object.keys(names).indexOf(key),
 };

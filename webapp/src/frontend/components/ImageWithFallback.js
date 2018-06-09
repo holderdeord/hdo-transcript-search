@@ -7,11 +7,11 @@ export default class ImageWithFallback extends Component {
         alt: PropTypes.string.isRequired,
         fallbackSrc: PropTypes.string.isRequired,
         height: PropTypes.number,
-        className: PropTypes.string
+        className: PropTypes.string,
     };
 
     static contextTypes = {
-        store: PropTypes.object.isRequired
+        store: PropTypes.object.isRequired,
     };
 
     state = { useFallbackImage: false };
@@ -21,11 +21,9 @@ export default class ImageWithFallback extends Component {
             <img
                 className={this.props.className}
                 src={
-                    this.state.useFallbackImage ? (
-                        this.props.fallbackSrc
-                    ) : (
-                        this.props.src
-                    )
+                    this.state.useFallbackImage
+                        ? this.props.fallbackSrc
+                        : this.props.src
                 }
                 alt={this.props.alt}
                 height={this.props.height}

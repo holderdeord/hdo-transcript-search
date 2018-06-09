@@ -16,9 +16,7 @@ function getAnalytics() {
         jwt = new google.auth.JWT();
         jwt.fromJSON(require(AUTH_PATH));
         jwt = Promise.promisifyAll(
-            jwt.createScoped(
-                'https://www.googleapis.com/auth/analytics.readonly'
-            )
+            jwt.createScoped('https://www.googleapis.com/auth/analytics.readonly')
         );
         analytics = google.analytics({ version: 'v3', auth: jwt });
 
@@ -40,7 +38,7 @@ function topSearches(params) {
                 metrics: 'ga:totalEvents',
                 dimensions: 'ga:eventAction',
                 sort: '-ga:totalEvents',
-                filters: 'ga:eventCategory==hits'
+                filters: 'ga:eventCategory==hits',
             });
         })
         .spread(data => {
@@ -84,7 +82,7 @@ function imageErrors() {
                 metrics: 'ga:totalEvents',
                 dimensions: 'ga:eventAction',
                 sort: '-ga:totalEvents',
-                filters: 'ga:eventCategory==image-error'
+                filters: 'ga:eventCategory==image-error',
             })
             .spread(data => {
                 return { imageErrors: parseResponse(data) };
@@ -102,7 +100,7 @@ function sources(opts) {
                 'max-results': 500,
                 dimensions: 'ga:fullReferrer,ga:source,ga:socialNetwork',
                 metrics: 'ga:users,ga:sessions,ga:pageviews',
-                sort: '-ga:users'
+                sort: '-ga:users',
             })
             .spread(data => {
                 return { sources: parseResponse(data) };
@@ -120,7 +118,7 @@ function browsers(opts) {
                 'max-results': 500,
                 dimensions: 'ga:browser,ga:operatingSystem',
                 metrics: 'ga:sessions',
-                sort: '-ga:sessions'
+                sort: '-ga:sessions',
             })
             .spread(data => {
                 return { browsers: parseResponse(data) };
@@ -134,7 +132,7 @@ function active() {
             .getAsync({
                 ids: GA_ID,
                 dimensions: 'rt:medium,rt:city',
-                metrics: 'rt:activeUsers'
+                metrics: 'rt:activeUsers',
             })
             .spread(data => {
                 return { active: parseResponse(data) };
@@ -169,7 +167,7 @@ function checkEnabled(func, ...rest) {
         return func(...rest);
     } else {
         return Promise.resolve({
-            error: { message: 'analytics not available' }
+            error: { message: 'analytics not available' },
         });
     }
 }
@@ -179,5 +177,5 @@ export default {
     imageErrors: checkEnabled.bind(null, imageErrors),
     sources: checkEnabled.bind(null, sources),
     active: checkEnabled.bind(null, active),
-    browsers: checkEnabled.bind(null, browsers)
+    browsers: checkEnabled.bind(null, browsers),
 };

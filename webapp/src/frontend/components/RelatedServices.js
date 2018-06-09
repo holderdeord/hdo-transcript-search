@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 @connect(({ services }) => ({ services }))
 export default class RelatedServices extends Component {
     static propTypes = {
-        services: PropTypes.array.isRequired
+        services: PropTypes.array.isRequired,
     };
 
     render() {
@@ -29,16 +29,15 @@ export default class RelatedServices extends Component {
 
                     <div className="row result-box no-gutters text-center">
                         {services.filter(s => s.enabled).map(service => (
-                            <div
-                                className="col-md-6 service"
-                                key={service.title}
-                            >
+                            <div className="col-md-6 service" key={service.title}>
                                 <a href={service.url}>
                                     <div
                                         className="img"
                                         style={
                                             service.style || {
-                                                backgroundImage: `url(${service.img})`
+                                                backgroundImage: `url(${
+                                                    service.img
+                                                })`,
                                             }
                                         }
                                     />
@@ -46,9 +45,7 @@ export default class RelatedServices extends Component {
                                     <div style={{ margin: '2rem' }}>
                                         <h4>{service.title}</h4>
 
-                                        <p className="lead">
-                                            {service.description}
-                                        </p>
+                                        <p className="lead">{service.description}</p>
                                     </div>
                                 </a>
                             </div>

@@ -3,5 +3,5 @@ import config from '../../config';
 
 module.exports = new es.Client({
     host: config.get('elasticsearch'),
-    log: 'info'
+    log: 'info',
 });

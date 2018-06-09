@@ -6,7 +6,7 @@ import {
     SPEECH_CONTEXT,
     RESET,
     SERVICES,
-    LIX_STATS
+    LIX_STATS,
 } from '../constants/ActionTypes';
 
 export function summary(queries, interval = 'year') {
@@ -18,9 +18,7 @@ export function summary(queries, interval = 'year') {
 
 export function hits(queries) {
     return dispatch =>
-        facade
-            .hits(queries)
-            .then(success(dispatch, HITS), error(dispatch, HITS));
+        facade.hits(queries).then(success(dispatch, HITS), error(dispatch, HITS));
 }
 
 export function moreHits(query, start) {

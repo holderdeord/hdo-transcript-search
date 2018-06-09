@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react';
 export default class SharingLinks extends Component {
     static propTypes = {
         facebookAppId: PropTypes.string.isRequired,
-        joinedQuery: PropTypes.string
+        joinedQuery: PropTypes.string,
     };
 
     render() {
@@ -42,8 +42,7 @@ export default class SharingLinks extends Component {
         let text;
 
         if (this.props.joinedQuery && this.props.joinedQuery.length) {
-            text = `Hvem snakker mest om «${this.props
-                .joinedQuery}» på Stortinget?`;
+            text = `Hvem snakker mest om «${this.props.joinedQuery}» på Stortinget?`;
         } else {
             text = 'Hva snakker politikerne om på Stortinget?';
         }

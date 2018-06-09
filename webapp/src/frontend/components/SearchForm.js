@@ -9,25 +9,25 @@ export default class SearchForm extends Component {
     static propTypes = {
         joinedQuery: PropTypes.string,
         params: PropTypes.shape({
-            unit: PropTypes.string
-        })
+            unit: PropTypes.string,
+        }),
     };
 
     static contextTypes = {
-        router: PropTypes.object
+        router: PropTypes.object,
     };
 
     state = {
         query: this.props.joinedQuery,
         lastReceivedQuery: null,
-        focused: true
+        focused: true,
     };
 
     componentWillReceiveProps(props) {
         if (props.joinedQuery !== this.state.lastReceivedQuery) {
             this.setState({
                 query: props.joinedQuery,
-                lastReceivedQuery: props.joinedQuery
+                lastReceivedQuery: props.joinedQuery,
             });
         }
     }
@@ -42,17 +42,12 @@ export default class SearchForm extends Component {
 
     render() {
         return (
-            <form
-                className="row"
-                id="search-form"
-                onSubmit={::this.handleSearch}
-            >
+            <form className="row" id="search-form" onSubmit={::this.handleSearch}>
                 <div className="col-md-6 col-md-offset-3">
                     <div
-                        className={`input-group ${this.state.focused
-                            ? 'focused'
-                            : ''}`}
-                    >
+                        className={`input-group ${
+                            this.state.focused ? 'focused' : ''
+                        }`}>
                         <input
                             type="search"
                             className="form-control"

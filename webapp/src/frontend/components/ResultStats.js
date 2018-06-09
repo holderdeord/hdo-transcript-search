@@ -12,19 +12,19 @@ const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 export default class ResultStats extends Component {
     static propTypes = {
         unit: PropTypes.string.isRequired,
-        orientation: PropTypes.string.isRequired
+        orientation: PropTypes.string.isRequired,
     };
 
     state = {
         parties: [],
         people: {},
-        query: ''
+        query: '',
     };
 
     bigNumberStyle = {
         fontSize: '4rem',
         padding: '10px',
-        verticalAlign: '-0.55rem'
+        verticalAlign: '-0.55rem',
     };
 
     componentWillReceiveProps(props) {
@@ -47,7 +47,7 @@ export default class ResultStats extends Component {
             parties: parties,
             people: people,
             topParties: this.topParties(parties),
-            labelClassName: Colors.colorAt(focusedIndex)
+            labelClassName: Colors.colorAt(focusedIndex),
         });
     }
 
@@ -74,9 +74,7 @@ export default class ResultStats extends Component {
     }
 
     renderPartyStats() {
-        this.state.parties.sort(
-            (a, b) => a[this.props.unit] - b[this.props.unit]
-        );
+        this.state.parties.sort((a, b) => a[this.props.unit] - b[this.props.unit]);
         let topParty = this.state.topParties[this.props.unit];
 
         if (!topParty) {
@@ -88,8 +86,7 @@ export default class ResultStats extends Component {
             this.props.unit === 'pct'
                 ? `${topParty.pct.toFixed(2).replace('.', ',')}%`
                 : topParty.count;
-        let unitText =
-            this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+        let unitText = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
 
         return (
             <div className="row result-box">
@@ -143,9 +140,7 @@ export default class ResultStats extends Component {
                 : topPerson.count;
             let unitText = isPct ? 'av sine innlegg' : 'innlegg';
             // let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
-            let partyText = topPerson.meta.party
-                ? `(${topPerson.meta.party})`
-                : '';
+            let partyText = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
                 <div>
@@ -167,13 +162,11 @@ export default class ResultStats extends Component {
 
                                 <div className="lead selectable">
                                     <div>
-                                        har nevnt{' '}
-                                        <strong>{this.state.query}</strong> i
+                                        har nevnt <strong>{this.state.query}</strong>{' '}
+                                        i
                                     </div>
 
-                                    <span style={this.bigNumberStyle}>
-                                        {num}
-                                    </span>
+                                    <span style={this.bigNumberStyle}>{num}</span>
 
                                     {unitText}
                                 </div>
@@ -208,8 +201,7 @@ export default class ResultStats extends Component {
                     <div className="col-md-12">
                         <div
                             className="text-muted text-center pull-right"
-                            style={{ padding: '1rem 2rem' }}
-                        >
+                            style={{ padding: '1rem 2rem' }}>
                             <small>
                                 * Ekskludert personer med færre enn{' '}
                                 {MIN_SPEECH_COUNT} innlegg totalt.
@@ -224,7 +216,7 @@ export default class ResultStats extends Component {
     topParties(parties) {
         return {
             pct: parties.slice(0).sort((a, b) => b.pct - a.pct)[0],
-            count: parties.slice(0).sort((a, b) => b.count - a.count)[0]
+            count: parties.slice(0).sort((a, b) => b.count - a.count)[0],
         };
     }
 }

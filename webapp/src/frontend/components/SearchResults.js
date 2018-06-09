@@ -7,7 +7,7 @@ import { moreHits } from '../actions/SearchActions';
 @connect(state => ({ hits: state.hits.hits }))
 export default class SearchResults extends Component {
     static contextTypes = {
-        store: PropTypes.object.isRequired
+        store: PropTypes.object.isRequired,
     };
 
     static propTypes = {};
@@ -44,7 +44,7 @@ export default class SearchResults extends Component {
 
                 {result.hits.map((h, i) => [
                     <Speech speech={h} key={h.id} index={i} />,
-                    <div className="divider" />
+                    <div className="divider" />,
                 ])}
 
                 <div className="row" style={{ padding: '1rem' }}>
@@ -54,8 +54,7 @@ export default class SearchResults extends Component {
                         <div className="text-center">
                             <small
                                 className="text-muted"
-                                style={{ marginLeft: '1rem' }}
-                            >
+                                style={{ marginLeft: '1rem' }}>
                                 Viser {result.hits.length} av totalt{' '}
                                 {result.counts.total} treff på{' '}
                                 <strong>{result.query}</strong>
@@ -66,13 +65,8 @@ export default class SearchResults extends Component {
                     <div className="col-md-4">
                         <div className="export-links">
                             <div>
-                                <a
-                                    href={UrlUtils.csvPathForQuery(
-                                        result.query
-                                    )}
-                                >
-                                    Last ned{' '}
-                                    <strong>{result.counts.total}</strong>{' '}
+                                <a href={UrlUtils.csvPathForQuery(result.query)}>
+                                    Last ned <strong>{result.counts.total}</strong>{' '}
                                     innlegg som CSV
                                     <span style={{ paddingLeft: '.5rem' }}>
                                         <i className="fa fa-download" />
@@ -81,11 +75,7 @@ export default class SearchResults extends Component {
                             </div>
 
                             <div>
-                                <a
-                                    href={UrlUtils.rssPathForQuery(
-                                        result.query
-                                    )}
-                                >
+                                <a href={UrlUtils.rssPathForQuery(result.query)}>
                                     RSS for dette søket
                                     <span style={{ paddingLeft: '.5rem' }}>
                                         <i className="fa fa-rss" />
@@ -104,10 +94,7 @@ export default class SearchResults extends Component {
 
         if (this.state.loaded) {
             el = (
-                <button
-                    className="btn btn-primary"
-                    onClick={::this.handleLoadMore}
-                >
+                <button className="btn btn-primary" onClick={::this.handleLoadMore}>
                     Vis flere innlegg
                 </button>
             );

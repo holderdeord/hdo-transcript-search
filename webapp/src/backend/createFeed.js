@@ -22,7 +22,7 @@ export default function createFeed(opts) {
 
     links.first = newUrl(currentUrl, { start: 0 });
     links.last = newUrl(currentUrl, {
-        start: totalCount - totalCount % hitCount
+        start: totalCount - (totalCount % hitCount),
     });
 
     if (totalCount > hitCount + start) {
@@ -49,11 +49,11 @@ export default function createFeed(opts) {
                     _attr: {
                         href: links[rel],
                         rel: rel,
-                        type: 'application/rss+xml'
-                    }
-                }
+                        type: 'application/rss+xml',
+                    },
+                },
             };
-        })
+        }),
     });
     /* eslint-enable */
 
@@ -71,7 +71,7 @@ export default function createFeed(opts) {
             description: speech.text,
             url: `${baseUrl}${UrlUtils.speechPathFor(speech)}`,
             author: speech.name,
-            date: speech.time
+            date: speech.time,
         });
     });
 

@@ -1,7 +1,7 @@
 import { SPEECH_CONTEXT, RESET } from '../constants/ActionTypes';
 
 const initialState = {
-    speeches: []
+    speeches: [],
 };
 
 export default function(state = initialState, action) {

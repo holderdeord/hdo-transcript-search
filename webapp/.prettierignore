@@ -1,0 +1,7 @@
+.coverage
+.next
+static
+styles
+*.json
+*.snap
+node_modules

@@ -22,7 +22,7 @@ const TSV_HEADERS = [
     'title',
     'name',
     'party',
-    'text'
+    'text',
 ];
 
 const MIN_SPEECH_COUNT = require('../shared/minSpeechCount');
@@ -49,8 +49,8 @@ class SearchAPI {
                     query: opts.query,
                     hits: response.hits.hits.map(h => this._buildHit(h)),
                     counts: {
-                        total: response.hits.total
-                    }
+                        total: response.hits.total,
+                    },
                 };
             });
         });
@@ -80,7 +80,7 @@ class SearchAPI {
                 return es.scroll(
                     {
                         scroll_id: scrollId,
-                        scroll: '30s'
+                        scroll: '30s',
                     },
                     callback
                 );
@@ -88,7 +88,7 @@ class SearchAPI {
 
             const q = this._buildHitsQuery(
                 Object.assign({}, opts, {
-                    highlight: false
+                    highlight: false,
                 })
             );
 
@@ -105,10 +105,7 @@ class SearchAPI {
         return rs
             .pipe(
                 csv.transform(record => {
-                    record._source.text = record._source.text.replace(
-                        /\n/g,
-                        ' '
-                    );
+                    record._source.text = record._source.text.replace(/\n/g, ' ');
                     return TSV_HEADERS.map(k => record._source[k]);
                 })
             )
@@ -116,7 +113,7 @@ class SearchAPI {
                 csv.stringify({
                     delimiter: delimiter,
                     header: true,
-                    columns: TSV_HEADERS
+                    columns: TSV_HEADERS,
                 })
             );
     }
@@ -133,12 +130,12 @@ class SearchAPI {
                 and: {
                     filters: [
                         { term: { transcript: id } },
-                        { range: { order: { gte: start, lte: end } } }
-                    ]
-                }
+                        { range: { order: { gte: start, lte: end } } },
+                    ],
+                },
             },
             size: end - start + 1,
-            sort: 'order'
+            sort: 'order',
         };
 
         return es
@@ -164,35 +161,35 @@ class SearchAPI {
                     aggs: {
                         scoreStats: {
                             stats: {
-                                field: 'lix.score'
-                            }
+                                field: 'lix.score',
+                            },
                         },
 
                         languages: {
                             terms: {
-                                field: 'language'
+                                field: 'language',
                             },
 
                             aggs: {
                                 scoreStats: {
                                     stats: {
-                                        field: 'lix.score'
-                                    }
-                                }
-                            }
+                                        field: 'lix.score',
+                                    },
+                                },
+                            },
                         },
 
                         parties: {
                             terms: {
                                 field: 'party',
-                                size: 20
+                                size: 20,
                             },
 
                             aggs: {
                                 scoreStats: {
                                     stats: {
-                                        field: 'lix.score'
-                                    }
+                                        field: 'lix.score',
+                                    },
                                 },
 
                                 timeline: {
@@ -201,18 +198,18 @@ class SearchAPI {
                                         interval: 'year',
                                         time_zone: 'Europe/Oslo',
                                         format: 'yyyy-MM-dd',
-                                        min_doc_count: 0
+                                        min_doc_count: 0,
                                     },
 
                                     aggs: {
                                         scoreStats: {
                                             stats: {
-                                                field: 'lix.score'
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                                                field: 'lix.score',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                         },
 
                         topRepresentatives: {
@@ -220,14 +217,14 @@ class SearchAPI {
                                 field: 'name',
                                 size: 20,
                                 order: { avgLixScore: 'desc' },
-                                min_doc_count: MIN_SPEECH_COUNT
+                                min_doc_count: MIN_SPEECH_COUNT,
                             },
 
                             aggs: {
                                 avgLixScore: {
                                     avg: {
-                                        field: 'lix.score'
-                                    }
+                                        field: 'lix.score',
+                                    },
                                 },
 
                                 person: {
@@ -235,11 +232,11 @@ class SearchAPI {
                                         // eslint-disable-line
                                         size: 1,
                                         _source: {
-                                            include: ['external_id', 'party']
-                                        }
-                                    }
-                                }
-                            }
+                                            include: ['external_id', 'party'],
+                                        },
+                                    },
+                                },
+                            },
                         },
 
                         bottomRepresentatives: {
@@ -247,14 +244,14 @@ class SearchAPI {
                                 field: 'name',
                                 size: 20,
                                 order: { avgLixScore: 'asc' },
-                                min_doc_count: MIN_SPEECH_COUNT
+                                min_doc_count: MIN_SPEECH_COUNT,
                             },
 
                             aggs: {
                                 avgLixScore: {
                                     avg: {
-                                        field: 'lix.score'
-                                    }
+                                        field: 'lix.score',
+                                    },
                                 },
 
                                 person: {
@@ -262,11 +259,11 @@ class SearchAPI {
                                         // eslint-disable-line
                                         size: 1,
                                         _source: {
-                                            include: ['external_id', 'party']
-                                        }
-                                    }
-                                }
-                            }
+                                            include: ['external_id', 'party'],
+                                        },
+                                    },
+                                },
+                            },
                         },
 
                         timeline: {
@@ -275,19 +272,19 @@ class SearchAPI {
                                 interval: 'year',
                                 time_zone: 'Europe/Oslo',
                                 format: 'yyyy-MM-dd',
-                                min_doc_count: 0
+                                min_doc_count: 0,
                             },
 
                             aggs: {
                                 scoreStats: {
                                     stats: {
-                                        field: 'lix.score'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                        field: 'lix.score',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             })
             .then(res => res.aggregations);
     }
@@ -317,7 +314,7 @@ class SearchAPI {
                 key: key,
                 count: val,
                 total: total,
-                pct: total === 0 ? 0 : val / total * 100
+                pct: total === 0 ? 0 : (val / total) * 100,
             };
         });
     }
@@ -338,9 +335,7 @@ class SearchAPI {
         );
 
         let people = this._calculatePercentages(
-            this._parseAggregation(
-                aggResponse.aggregations.filteredPeople.people
-            ),
+            this._parseAggregation(aggResponse.aggregations.filteredPeople.people),
             this._parseAggregation(aggResponse.aggregations.people)
         );
 
@@ -366,15 +361,13 @@ class SearchAPI {
         timeline = timeline.slice(1, -1);
 
         let parties = this._calculatePercentages(
-            this._parseAggregation(
-                aggResponse.aggregations.filteredParties.parties
-            ),
+            this._parseAggregation(aggResponse.aggregations.filteredParties.parties),
             this._parseAggregation(aggResponse.aggregations.parties)
         ).filter(e => Parties.isCurrent(e.key));
 
         return {
             counts: {
-                total: aggResponse.hits.total
+                total: aggResponse.hits.total,
             },
             timeline: timeline,
             parties: parties,
@@ -383,8 +376,8 @@ class SearchAPI {
                 pct: people
                     .filter(d => d.total > MIN_SPEECH_COUNT)
                     .sort((a, b) => b.pct - a.pct)
-                    .slice(0, 20)
-            }
+                    .slice(0, 20),
+            },
         };
     }
 
@@ -393,7 +386,7 @@ class SearchAPI {
             {
                 id: hit._id,
                 score: hit._score,
-                highlight: hit.highlight
+                highlight: hit.highlight,
             },
             hit._source
         );
@@ -417,7 +410,7 @@ class SearchAPI {
 
             size: +(opts.size || 10),
             from: +(opts.start || 0),
-            sort: this._parseSortOption(opts.sort)
+            sort: this._parseSortOption(opts.sort),
         };
 
         if (opts.highlight !== false) {
@@ -427,9 +420,9 @@ class SearchAPI {
                 post_tags: ['</mark>'],
                 fields: {
                     text: {
-                        number_of_fragments: +(opts.fragments || 0)
-                    }
-                }
+                        number_of_fragments: +(opts.fragments || 0),
+                    },
+                },
                 /*eslint-enable*/
             };
         }
@@ -437,7 +430,7 @@ class SearchAPI {
         return {
             index: INDEX_NAME,
             type: INDEX_TYPE,
-            body: body
+            body: body,
         };
     }
 
@@ -466,34 +459,34 @@ class SearchAPI {
                     interval: opts.interval,
                     time_zone: 'Europe/Oslo',
                     format: 'yyyy-MM-dd',
-                    min_doc_count: 0
-                }
+                    min_doc_count: 0,
+                },
             },
 
             parties: {
                 terms: {
                     field: 'party',
-                    size: 0
-                }
+                    size: 0,
+                },
             },
 
             people: {
                 terms: {
                     field: 'name',
-                    size: 0
-                }
-            }
+                    size: 0,
+                },
+            },
         };
 
         Object.assign(aggregations, {
             filteredTimeline: {
                 filter: { query: query },
-                aggregations: { timeline: aggregations.timeline }
+                aggregations: { timeline: aggregations.timeline },
             },
 
             filteredParties: {
                 filter: { query: query },
-                aggs: { parties: aggregations.parties }
+                aggs: { parties: aggregations.parties },
             },
 
             filteredPeople: {
@@ -502,7 +495,7 @@ class SearchAPI {
                     people: {
                         terms: {
                             field: 'name',
-                            size: 0
+                            size: 0,
                         },
                         aggs: {
                             person: {
@@ -510,25 +503,25 @@ class SearchAPI {
                                     // eslint-disable-line
                                     size: 1,
                                     _source: {
-                                        include: ['external_id', 'party']
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                        include: ['external_id', 'party'],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
 
         var body = {
             aggregations: aggregations,
-            size: 0
+            size: 0,
         };
 
         return {
             index: INDEX_NAME,
             type: INDEX_TYPE,
-            body: body
+            body: body,
         };
     }
 
@@ -538,8 +531,8 @@ class SearchAPI {
             query_string: {
                 query: str,
                 default_operator: 'AND',
-                default_field: 'text'
-            }
+                default_field: 'text',
+            },
         };
         /*eslint-enable*/
     }
@@ -551,9 +544,9 @@ class SearchAPI {
             return {
                 not: {
                     filter: {
-                        term: { name: 'Presidenten' }
-                    }
-                }
+                        term: { name: 'Presidenten' },
+                    },
+                },
             };
         }
     }

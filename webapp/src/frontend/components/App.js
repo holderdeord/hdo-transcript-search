@@ -17,25 +17,22 @@ export default class App extends Component {
             .isRequired,
         joinedQuery: PropTypes.string.isRequired,
         params: PropTypes.object.isRequired,
-        location: PropTypes.object.isRequired
+        location: PropTypes.object.isRequired,
     };
 
     static contextTypes = {
-        store: PropTypes.object.isRequired
+        store: PropTypes.object.isRequired,
     };
 
     constructor(props, context) {
         super(props, context);
 
-        this.actions = bindActionCreators(
-            SearchActions,
-            context.store.dispatch
-        );
+        this.actions = bindActionCreators(SearchActions, context.store.dispatch);
 
         this.state = {
             title: document.body.getAttribute('data-title'),
             desc: document.body.getAttribute('data-description'),
-            fbId: document.body.getAttribute('data-facebook-app-id')
+            fbId: document.body.getAttribute('data-facebook-app-id'),
         };
     }
 
@@ -69,7 +66,10 @@ export default class App extends Component {
     }
 
     update() {
-        const { params, location: { pathname } } = this.props;
+        const {
+            params,
+            location: { pathname },
+        } = this.props;
 
         if (params.queries && params.queries.length) {
             this.executeSearch(params.queries.split('.'));

@@ -11,15 +11,15 @@ import SearchResults from './SearchResults';
 export default class Search extends Component {
     static contextTypes = {
         router: PropTypes.object,
-        store: PropTypes.object
+        store: PropTypes.object,
     };
 
     static propTypes = {
         params: PropTypes.shape({
             focused: PropTypes.string,
             unit: PropTypes.string,
-            queries: PropTypes.string
-        })
+            queries: PropTypes.string,
+        }),
     };
 
     state = {
@@ -28,7 +28,7 @@ export default class Search extends Component {
         fbId: document.body.getAttribute('data-facebook-app-id'),
         showDevPanel: false,
         orientation: 'vertical',
-        interval: Intervals.YEAR
+        interval: Intervals.YEAR,
     };
 
     componentDidMount() {
@@ -90,9 +90,7 @@ export default class Search extends Component {
         let newUnit = event.target.value === 'Prosent' ? 'pct' : 'count';
         let { queries, focused } = this.props.params;
 
-        this.context.router.transitionTo(
-            `/search/${newUnit}/${queries}/${focused}`
-        );
+        this.context.router.transitionTo(`/search/${newUnit}/${queries}/${focused}`);
     }
 
     registerKeyBindings() {

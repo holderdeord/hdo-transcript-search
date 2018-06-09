@@ -4,7 +4,7 @@ export default class Header extends React.Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
-        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+        children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     };
 
     render() {

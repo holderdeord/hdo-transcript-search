@@ -89,19 +89,19 @@ app.get('/', (req, res) => {
 
 app.get('/speeches/:transcript/:order', (req, res) => {
     res.render('index', {
-        title: `Innlegg ${req.params.transcript} / ${req.params.order}`
+        title: `Innlegg ${req.params.transcript} / ${req.params.order}`,
     });
 });
 
 app.get('/search', (req, res) => {
     res.render('index', {
-        title: 'Stortingssøk'
+        title: 'Stortingssøk',
     });
 });
 
 app.get('/backstage/*', (req, res) => {
     res.render('index', {
-        title: 'Backstage'
+        title: 'Backstage',
     });
 });
 
@@ -109,15 +109,14 @@ app.get('/feed', (req, res) => {
     if (validQuery(req.query.query)) {
         let query = Object.assign({}, req.query, {
             highlight: false,
-            sort: 'time.desc'
+            sort: 'time.desc',
         });
 
-        api
-            .hits(query)
+        api.hits(query)
             .then(results => {
                 let feedOpts = Object.assign({}, app.locals, {
                     results: results,
-                    query: req.query
+                    query: req.query,
                 });
 
                 res.type('rss');
@@ -125,9 +124,9 @@ app.get('/feed', (req, res) => {
             })
             .catch(errorHandler.bind(res));
     } else {
-        res
-            .status(400)
-            .json({ error: { message: 'missing or invalid query param' } });
+        res.status(400).json({
+            error: { message: 'missing or invalid query param' },
+        });
     }
 });
 
@@ -141,7 +140,7 @@ app.get('/search/:unit/:query/:focused', (req, res) => {
         feedUrl: focused
             ? `${app.locals.baseUrl}${UrlUtils.rssPathForQuery(focused)}`
             : null,
-        focused: focused
+        focused: focused,
     });
 });
 
@@ -152,8 +151,7 @@ app.get('/opensearch', (req, res) => {
 
 app.get('/api/search/summary', (req, res) => {
     if (validQuery(req.query.query)) {
-        api
-            .summary(req.query)
+        api.summary(req.query)
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
@@ -163,14 +161,13 @@ app.get('/api/search/summary', (req, res) => {
 
 app.get('/api/search/hits', (req, res) => {
     if (validQuery(req.query.query)) {
-        api
-            .hits(req.query)
+        api.hits(req.query)
             .then(results => res.json(results))
             .catch(errorHandler.bind(res));
     } else {
-        res
-            .status(400)
-            .json({ error: { message: 'missing or invalid query param' } });
+        res.status(400).json({
+            error: { message: 'missing or invalid query param' },
+        });
     }
 });
 
@@ -181,15 +178,14 @@ app.get('/api/export', (req, res) => {
         res.type(format);
         api.getHitStream(req.query).pipe(res);
     } else {
-        res
-            .status(400)
-            .json({ error: { message: 'missing or invalid query param' } });
+        res.status(400).json({
+            error: { message: 'missing or invalid query param' },
+        });
     }
 });
 
 app.get('/api/speeches/:id', (req, res) => {
-    api
-        .getSpeech(req.params.id)
+    api.getSpeech(req.params.id)
         .then(results => res.json(results))
         .catch(errorHandler.bind(res));
 });
@@ -197,15 +193,13 @@ app.get('/api/speeches/:id', (req, res) => {
 app.get('/api/context/:transcript/:start/:end', (req, res) => {
     var { transcript, start, end } = req.params;
 
-    api
-        .getContext(transcript, +start, +end)
+    api.getContext(transcript, +start, +end)
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
 });
 
 app.get('/api/stats/lix', (req, res) => {
-    api
-        .getLixStats()
+    api.getLixStats()
         .then(d => res.json(d))
         .catch(errorHandler.bind(res));
 });
@@ -215,7 +209,7 @@ app.get('/api/analytics/top-searches/:days?', (req, res) => {
         days: req.params.days || 30,
         limit: req.query.limit || 200,
         examples: req.query.examples !== 'false',
-        summary: req.query.summary
+        summary: req.query.summary,
     };
 
     analytics
@@ -260,8 +254,8 @@ function errorHandler(err) {
     return this.status(500).json({
         error: {
             message: err.toString(),
-            stack: err.stack.split('\n')
-        }
+            stack: err.stack.split('\n'),
+        },
     });
 }
 

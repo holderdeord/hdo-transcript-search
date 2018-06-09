@@ -3,7 +3,7 @@ import { SUMMARY, RESET } from '../constants/ActionTypes';
 const initialState = {
     results: [],
     queries: [],
-    joinedQuery: ''
+    joinedQuery: '',
 };
 
 export default function(state = initialState, action) {
@@ -14,7 +14,7 @@ export default function(state = initialState, action) {
             return {
                 results: action.payload,
                 queries: queries,
-                joinedQuery: queries.join(', ')
+                joinedQuery: queries.join(', '),
             };
         case RESET:
             return initialState;

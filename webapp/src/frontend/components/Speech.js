@@ -8,7 +8,7 @@ export default class Speech extends Component {
     static propTypes = {
         speech: PropTypes.object.isRequired,
         showTime: PropTypes.bool,
-        showContextLink: PropTypes.bool
+        showContextLink: PropTypes.bool,
     };
 
     state = { useFallbackImage: false };
@@ -44,11 +44,10 @@ export default class Speech extends Component {
 
                             <div className="col-xs-8">
                                 <Link
-                                    to={`/speeches/${speech.transcript}/${speech.order}`}
-                                >
-                                    <span className="text-muted">
-                                        {timestamp}
-                                    </span>
+                                    to={`/speeches/${speech.transcript}/${
+                                        speech.order
+                                    }`}>
+                                    <span className="text-muted">{timestamp}</span>
                                 </Link>
                             </div>
                         </div>
@@ -112,9 +111,7 @@ export default class Speech extends Component {
     }
 
     paragraphsFrom(speech) {
-        let text = speech.highlight
-            ? speech.highlight.text.join('\n')
-            : speech.text;
+        let text = speech.highlight ? speech.highlight.text.join('\n') : speech.text;
 
         return text.split('\n').map((fragment, i) => {
             fragment = fragment.replace(/<\/mark>(\s*)<mark>/g, '$1');

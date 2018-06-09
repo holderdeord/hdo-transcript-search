@@ -1,7 +1,7 @@
 import { HITS, MORE_HITS, RESET } from '../constants/ActionTypes';
 
 const initialState = {
-    hits: null
+    hits: null,
 };
 
 export default function(state = initialState, action) {
@@ -15,7 +15,7 @@ export default function(state = initialState, action) {
                 if (hit.query === response.query) {
                     return {
                         ...hit,
-                        hits: [...hit.hits, ...response.hits]
+                        hits: [...hit.hits, ...response.hits],
                     };
                 } else {
                     return hit;

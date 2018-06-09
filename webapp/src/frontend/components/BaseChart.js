@@ -7,14 +7,14 @@ export default class BaseChart extends Component {
         data: PropTypes.object.isRequired,
         options: PropTypes.object,
         aspectRatios: PropTypes.array,
-        tooltipSuffix: PropTypes.string
+        tooltipSuffix: PropTypes.string,
     };
 
     groups = this._blankGroups();
 
     state = {
         tooltip: null,
-        aspectRatio: ''
+        aspectRatio: '',
     };
 
     render() {
@@ -94,9 +94,7 @@ export default class BaseChart extends Component {
         if (val) {
             val = +val;
 
-            let text = (Math.floor(val) === val
-                ? val
-                : val.toFixed(2)).toString();
+            let text = (Math.floor(val) === val ? val : val.toFixed(2)).toString();
 
             if (this.props.tooltipSuffix) {
                 text += this.props.tooltipSuffix;
@@ -107,9 +105,9 @@ export default class BaseChart extends Component {
                     text: text,
                     style: {
                         left: (e.offsetX || e.originalEvent.layerX) - 15,
-                        top: (e.offsetY || e.originalEvent.layerY) - 38
-                    }
-                }
+                        top: (e.offsetY || e.originalEvent.layerY) - 38,
+                    },
+                },
             });
         }
     }
@@ -184,7 +182,7 @@ export default class BaseChart extends Component {
                             // The value where the animation should start
                             from: 0,
                             // The value where it should end
-                            to: 1
+                            to: 1,
                         },
                         x1: {
                             begin: data.index * 80,
@@ -193,8 +191,8 @@ export default class BaseChart extends Component {
                             to: data.x,
                             // You can specify an easing function name or use easing
                             // functions from Chartist.Svg.Easing directly
-                            easing: Chartist.Svg.Easing.easeOutQuart
-                        }
+                            easing: Chartist.Svg.Easing.easeOutQuart,
+                        },
                     });
 
                     state.set(groupKey, seq);
@@ -216,8 +214,8 @@ export default class BaseChart extends Component {
                             // The value where the animation should start
                             from: 0,
                             // The value where it should end
-                            to: 1
-                        }
+                            to: 1,
+                        },
                     });
 
                     state.set(groupKey, seq);

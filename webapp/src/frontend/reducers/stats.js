@@ -4,8 +4,8 @@ const initialState = {
     lix: {
         scoreStats: null,
         parties: { buckets: [] },
-        languages: { buckets: [] }
-    }
+        languages: { buckets: [] },
+    },
 };
 
 export default function(state = initialState, action) {

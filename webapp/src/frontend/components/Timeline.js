@@ -12,7 +12,7 @@ export default class Timeline extends Component {
         unit: PropTypes.string.isRequired,
         interval: PropTypes.string.isRequired,
         onUnitChange: PropTypes.func,
-        focusedIndex: PropTypes.number.isRequired
+        focusedIndex: PropTypes.number.isRequired,
     };
 
     chartOptions = {
@@ -21,13 +21,13 @@ export default class Timeline extends Component {
         fullWidth: false,
         axisX: {
             showGrid: false,
-            labelOffset: { x: -15, y: 8 }
+            labelOffset: { x: -15, y: 8 },
         },
         axisY: {
             labelOffset: { x: -5, y: 6 },
             showGrid: true,
-            labelInterpolationFnc: ::this.formatValue
-        }
+            labelInterpolationFnc: ::this.formatValue,
+        },
     };
 
     responsiveOptions = [
@@ -38,15 +38,15 @@ export default class Timeline extends Component {
                 fullWidth: true,
                 axisX: {
                     labelOffset: { x: -5, y: 0 },
-                    labelInterpolationFnc: d => d.slice(2, 4)
-                }
-            }
-        ]
+                    labelInterpolationFnc: d => d.slice(2, 4),
+                },
+            },
+        ],
     ];
 
     aspectRatios = [
         ['screen and (max-width: 992px)', 'minor-sixth'],
-        ['screen', 'double-octave']
+        ['screen', 'double-octave'],
     ];
 
     state = this.fetchStateFrom({ results: [] });
@@ -90,7 +90,7 @@ export default class Timeline extends Component {
             }
 
             series.pct.push({
-                data: result.timeline.map(e => e.pct.toFixed(2))
+                data: result.timeline.map(e => e.pct.toFixed(2)),
             });
             series.count.push({ data: result.timeline.map(e => e.count) });
         });
@@ -100,8 +100,8 @@ export default class Timeline extends Component {
 
             data: {
                 pct: { labels: labels, series: series.pct },
-                count: { labels: labels, series: series.count }
-            }
+                count: { labels: labels, series: series.count },
+            },
         };
     }
 
@@ -114,22 +114,25 @@ export default class Timeline extends Component {
                     <div className="controls">
                         <div
                             className="btn-group btn-toggle"
-                            onClick={this.props.onUnitChange}
-                        >
+                            onClick={this.props.onUnitChange}>
                             <input
                                 type="button"
                                 value="Prosent"
-                                className={`btn ${this.props.unit === 'pct'
-                                    ? 'btn-primary'
-                                    : 'btn-default'}`}
+                                className={`btn ${
+                                    this.props.unit === 'pct'
+                                        ? 'btn-primary'
+                                        : 'btn-default'
+                                }`}
                             />
 
                             <input
                                 type="button"
                                 value="Absolutt"
-                                className={`btn ${this.props.unit === 'count'
-                                    ? 'btn-primary'
-                                    : 'btn-default'}`}
+                                className={`btn ${
+                                    this.props.unit === 'count'
+                                        ? 'btn-primary'
+                                        : 'btn-default'
+                                }`}
                             />
                         </div>
                     </div>

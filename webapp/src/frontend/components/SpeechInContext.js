@@ -51,9 +51,7 @@ class SpeechBrowser extends Component {
             <div className="container">
                 <div className="row navigation-links">
                     <div className="col-xs-6 col-md-6">{prevLink}</div>
-                    <div className="col-xs-6 col-md-6 text-right">
-                        {nextLink}
-                    </div>
+                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
 
                 <div className="row card" style={{ margin: '1rem 0' }}>
@@ -69,9 +67,7 @@ class SpeechBrowser extends Component {
 
                 <div className="row navigation-links">
                     <div className="col-xs-6 col-md-6">{prevLink}</div>
-                    <div className="col-xs-6 col-md-6 text-right">
-                        {nextLink}
-                    </div>
+                    <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
             </div>
         );

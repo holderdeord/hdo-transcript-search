@@ -10,7 +10,7 @@ export default class TopListChart extends Component {
         orientation: PropTypes.string.isRequired,
         star: PropTypes.bool,
         className: PropTypes.string,
-        sort: PropTypes.bool
+        sort: PropTypes.bool,
     };
 
     render() {
@@ -25,12 +25,9 @@ export default class TopListChart extends Component {
 
         let data = {
             labels: counts.map(
-                e =>
-                    e.meta && e.meta.party
-                        ? `${e.key} (${e.meta.party})`
-                        : e.key
+                e => (e.meta && e.meta.party ? `${e.key} (${e.meta.party})` : e.key)
             ),
-            series: counts.length ? [counts.map(e => e[unit])] : []
+            series: counts.length ? [counts.map(e => e[unit])] : [],
         };
 
         let isHorizontal = this.props.orientation === 'horizontal';
@@ -42,15 +39,15 @@ export default class TopListChart extends Component {
             axisX: {
                 showGrid: isHorizontal,
                 labelInterpolationFnc: ::this.formatValue,
-                offset: 60
+                offset: 60,
             },
             axisY: {
                 labelOffset: { x: 0, y: 6 },
                 showGrid: !isHorizontal,
                 labelInterpolationFnc: ::this.formatValue,
                 offset: 50,
-                onlyInteger: this.props.unit === 'count'
-            }
+                onlyInteger: this.props.unit === 'count',
+            },
         };
 
         let responsiveOptions = [
@@ -65,10 +62,10 @@ export default class TopListChart extends Component {
                             return parts.length < 2
                                 ? d
                                 : parts.slice(parts.length - 2).join(' ');
-                        }
-                    }
-                }
-            ]
+                        },
+                    },
+                },
+            ],
         ];
 
         let aspectRatios = [['screen', 'minor-sixth']];

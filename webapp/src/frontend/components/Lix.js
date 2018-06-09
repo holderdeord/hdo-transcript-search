@@ -8,17 +8,17 @@ import Parties from '../../shared/Parties';
 
 const LANGS = {
     nn: 'Nynorsk',
-    nb: 'Bokmål'
+    nb: 'Bokmål',
 };
 
 @connect(({ stats: { lix } }) => ({ stats: lix }))
 export default class Lix extends Component {
     static propTypes = {
-        stats: PropTypes.object.isRequired
+        stats: PropTypes.object.isRequired,
     };
 
     state = {
-        adjustYAxis: true
+        adjustYAxis: true,
     };
 
     renderTimeline(timeline) {
@@ -26,7 +26,7 @@ export default class Lix extends Component {
             labels: timeline.buckets.map(d =>
                 TimeUtils.formatIntervalLabel(d.key, Intervals.YEAR)
             ),
-            series: [{ data: timeline.buckets.map(e => e.scoreStats.avg) }]
+            series: [{ data: timeline.buckets.map(e => e.scoreStats.avg) }],
         };
 
         return (
@@ -45,7 +45,7 @@ export default class Lix extends Component {
             timeline,
             topRepresentatives,
             bottomRepresentatives,
-            languages
+            languages,
         } = this.props.stats;
         const cardStyle = { margin: '1rem', padding: '1rem' };
 
@@ -61,8 +61,9 @@ export default class Lix extends Component {
                                 checked={this.state.adjustYAxis}
                                 onChange={() =>
                                     this.setState({
-                                        adjustYAxis: !this.state.adjustYAxis
-                                    })}
+                                        adjustYAxis: !this.state.adjustYAxis,
+                                    })
+                                }
                             />
                             Tilpass Y-akser
                         </label>
@@ -91,20 +92,18 @@ export default class Lix extends Component {
                         </div>
                     </div>
 
-                    {parties.buckets.map(
-                        ({ key, scoreStats: ss, timeline: tl }) => (
-                            <div className="row" key={key}>
-                                <div className="col-md-4">
-                                    <h3>{Parties.nameFor(key)}</h3>
-                                    {ss ? this.renderStat(ss) : null}
-                                </div>
-
-                                <div className="col-md-8">
-                                    {tl ? this.renderTimeline(tl) : null}
-                                </div>
+                    {parties.buckets.map(({ key, scoreStats: ss, timeline: tl }) => (
+                        <div className="row" key={key}>
+                            <div className="col-md-4">
+                                <h3>{Parties.nameFor(key)}</h3>
+                                {ss ? this.renderStat(ss) : null}
                             </div>
-                        )
-                    )}
+
+                            <div className="col-md-8">
+                                {tl ? this.renderTimeline(tl) : null}
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
                 <div className="card" style={cardStyle}>
@@ -114,8 +113,8 @@ export default class Lix extends Component {
                                 <h2>Representanter</h2>
 
                                 <p>
-                                    Representanter med færre enn{' '}
-                                    {minSpeechCount} innlegg er ekskludert.
+                                    Representanter med færre enn {minSpeechCount}{' '}
+                                    innlegg er ekskludert.
                                 </p>
                             </div>
                         </div>
@@ -128,13 +127,17 @@ export default class Lix extends Component {
                             <ol>
                                 {(topRepresentatives
                                     ? topRepresentatives.buckets
-                                    : []).map(tr => (
+                                    : []
+                                ).map(tr => (
                                     <li key={tr.key}>
                                         <strong>
-                                            {tr.key} ({tr.person.hits.hits[0]._source.party}):
+                                            {tr.key} ({
+                                                tr.person.hits.hits[0]._source.party
+                                            }):
                                         </strong>{' '}
-                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(tr.avgLixScore.value)}),{' '}
-                                        {tr.doc_count} innlegg
+                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(
+                                            tr.avgLixScore.value
+                                        )}), {tr.doc_count} innlegg
                                     </li>
                                 ))}
                             </ol>
@@ -146,13 +149,17 @@ export default class Lix extends Component {
                             <ol>
                                 {(bottomRepresentatives
                                     ? bottomRepresentatives.buckets
-                                    : []).map(tr => (
+                                    : []
+                                ).map(tr => (
                                     <li key={tr.key}>
                                         <strong>
-                                            {tr.key} ({tr.person.hits.hits[0]._source.party}):
+                                            {tr.key} ({
+                                                tr.person.hits.hits[0]._source.party
+                                            }):
                                         </strong>{' '}
-                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(tr.avgLixScore.value)}),{' '}
-                                        {tr.doc_count} innlegg
+                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(
+                                            tr.avgLixScore.value
+                                        )}), {tr.doc_count} innlegg
                                     </li>
                                 ))}
                             </ol>
@@ -181,7 +188,9 @@ export default class Lix extends Component {
         return (
             <div>
                 <p>
-                    Snitt LIX-score: <strong>{stat.avg.toFixed()}</strong> ({this.getDescription(stat.avg)})
+                    Snitt LIX-score: <strong>{stat.avg.toFixed()}</strong> ({this.getDescription(
+                        stat.avg
+                    )})
                 </p>
                 <p>Antall innlegg: {stat.count}</p>
             </div>

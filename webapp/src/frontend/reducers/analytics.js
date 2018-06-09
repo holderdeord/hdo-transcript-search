@@ -29,12 +29,7 @@ export default function analytics(state = null, action) {
             );
             break;
         case SPEECH_CONTEXT:
-            ga(
-                'send',
-                'event',
-                'speech',
-                action.payload.map(r => r.id).join(',')
-            );
+            ga('send', 'event', 'speech', action.payload.map(r => r.id).join(','));
             break;
         case RESET:
             ga('send', 'event', 'reset');

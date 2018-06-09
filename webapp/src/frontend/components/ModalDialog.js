@@ -6,7 +6,7 @@ export default class ModalDialog extends Component {
         title: PropTypes.string.isRequired,
         visible: PropTypes.bool.isRequired,
         onClose: PropTypes.func.isRequired,
-        children: PropTypes.array
+        children: PropTypes.array,
     };
 
     componentDidMount() {
@@ -28,8 +28,7 @@ export default class ModalDialog extends Component {
                             <button
                                 type="button"
                                 className="close"
-                                onClick={this.props.onClose}
-                            >
+                                onClick={this.props.onClose}>
                                 &#xD7;
                             </button>
                             <h4 className="modal-title">{this.props.title}</h4>

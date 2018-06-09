@@ -46,8 +46,7 @@ class Footer extends React.Component {
                     &nbsp;&middot;&nbsp;
                     <a
                         href="https://twitter.com/holderdeord/"
-                        alt="Holder de ord på Twitter"
-                    >
+                        alt="Holder de ord på Twitter">
                         @holderdeord
                     </a>
                 </p>

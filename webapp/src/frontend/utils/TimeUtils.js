@@ -7,7 +7,7 @@ const DATE_FORMATS = {
     [Intervals.MONTH]: 'MMM YYYY',
     [Intervals.THREE_MONTHS]: 'MMM YYYY',
     [Intervals.SIX_MONTHS]: 'MMM YYYY',
-    [Intervals.YEAR]: 'YYYY'
+    [Intervals.YEAR]: 'YYYY',
 };
 
 export default class TimeUtils {
