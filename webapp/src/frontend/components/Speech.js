@@ -67,6 +67,42 @@ export default class Speech extends Component {
 
                             <div className="col-xs-8">{title}</div>
                         </div>
+
+                        <div
+                            className="row context-links"
+                            style={{ paddingTop: '0.8rem', fontSize: '80%' }}>
+                            <div className="col-xs-1">
+                                <i className="fa fa-external-link fa-lg" />
+                            </div>
+
+                            <div className="col-xs-8">
+                                <Link
+                                    to={`https://stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/${
+                                        speech.session
+                                    }/${speech.transcript}/`}>
+                                    Referatet hos Stortinget
+                                </Link>
+                            </div>
+                        </div>
+
+                        {this.props.showContextLink !== false && (
+                            <div
+                                className="row context-links"
+                                style={{ paddingTop: '0.8rem', fontSize: '80%' }}>
+                                <div className="col-xs-1">
+                                    <i className="fa fa-comments fa-lg" />
+                                </div>
+
+                                <div className="col-xs-8">
+                                    <Link
+                                        to={`/speeches/${speech.transcript}/${
+                                            speech.order
+                                        }`}>
+                                        Innlegget i kontekst
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="col-xs-6 col-md-2">
@@ -85,29 +121,8 @@ export default class Speech extends Component {
                         </div>
                     </div>
                 </div>
-
-                <div className="row">{this.renderContextLinkIfNecessary()}</div>
             </div>
         );
-    }
-
-    renderContextLinkIfNecessary() {
-        if (this.props.showContextLink === false) {
-            return null;
-        } else {
-            const { transcript, order } = this.props.speech;
-
-            return (
-                <div className="context-link">
-                    <Link to={`/speeches/${transcript}/${order}`}>
-                        Se innlegget i kontekst
-                        <span style={{ paddingLeft: '.5rem' }}>
-                            <i className="fa fa-comments fa-lg" />
-                        </span>
-                    </Link>
-                </div>
-            );
-        }
     }
 
     paragraphsFrom(speech) {
