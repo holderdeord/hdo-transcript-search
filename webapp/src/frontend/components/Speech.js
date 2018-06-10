@@ -76,12 +76,12 @@ export default class Speech extends Component {
                             </div>
 
                             <div className="col-xs-8">
-                                <Link
-                                    to={`https://stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/${
+                                <a
+                                    href={`https://stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/${
                                         speech.session
                                     }/${speech.transcript}/`}>
                                     Referat hos Stortinget
-                                </Link>
+                                </a>
                             </div>
                         </div>
 
