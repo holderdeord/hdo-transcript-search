@@ -80,7 +80,7 @@ export default class Speech extends Component {
                                     to={`https://stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/${
                                         speech.session
                                     }/${speech.transcript}/`}>
-                                    Referatet hos Stortinget
+                                    Referat hos Stortinget
                                 </Link>
                             </div>
                         </div>
