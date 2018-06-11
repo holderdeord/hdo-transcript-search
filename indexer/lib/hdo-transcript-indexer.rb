@@ -108,11 +108,11 @@ module Hdo
       end
 
       def xml_transcripts
-        files_matching '{[sS]*,refs-*}.xml'
+        files_matching '{[sS]*,ref*-*}.xml'
       end
 
       def json_transcripts
-        files_matching '{[sS]*,refs-*}.json'
+        files_matching '{[sS]*,ref*-*}.json'
       end
 
       def files_matching(glob)
