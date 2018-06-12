@@ -20,7 +20,7 @@ module Hdo
             year       = (short_year.to_i > 50 ? "19#{short_year}" : "20#{short_year}").to_i
 
             new(read(file), Time.new(year, month, day), options)
-          when /refs-(\d{4})(\d{2})-(\d{2})-(\d{2})\.xml$/
+          when /ref.+-(\d{4})(\d{2})-(\d{2})-(\d{2})\.xml$/
             session_start_year = $1
             session_end_year   = $2
             month              = $3
