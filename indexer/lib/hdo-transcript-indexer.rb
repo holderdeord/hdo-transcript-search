@@ -36,8 +36,8 @@ module Hdo
         @mail         = options.fetch(:mail)
         @lix          = options.fetch(:lix)
 
-        @finished_cache = {}
-        @errors       = []
+        @finished_cache  = {}
+        @errors          = []
         @new_transcripts = []
 
         if @ner && !system("which polyglot 2>&1 >/dev/null")
@@ -55,6 +55,9 @@ module Hdo
 
         @slug_cache = Cache.new(cache_path('name-to-slug'))
         @slug_cache.load_if_exists
+
+        @slug_to_person_cache = Cache.new(cache_path('slug-to-person'))
+        @slug_to_person_cache.load_if_exists
 
         @stats = Hash.new { |hash, session| hash[session] = Hash.new(0) }
       end
@@ -76,8 +79,8 @@ module Hdo
       end
 
       def convert
+        build_slug_caches
         build_party_cache
-        build_slug_cache
 
         xml_transcripts.each { |input| convert_to_json(input) }
       end
@@ -132,7 +135,10 @@ module Hdo
         @logger.info "building name -> party cache, this could take a while"
 
         xml_transcripts.each do |input_file|
-          Converter.parse(input_file.to_s).sections.each do |section|
+          Converter.parse(
+            input_file.to_s,
+            slugs: @slug_to_person
+          ).sections.each do |section|
             n = section[:name]
             p = section[:party]
 
@@ -149,8 +155,8 @@ module Hdo
         json_transcripts.each { |t| t.delete }
       end
 
-      def build_slug_cache
-        return unless @slug_cache.empty?
+      def build_slug_caches
+        return unless @slug_cache.empty? or @slug_to_person_cache.empty?
 
         @logger.info "building name -> slug cache"
 
@@ -171,6 +177,11 @@ module Hdo
           data['representanter_liste'].each do |rep|
             full_name = rep.values_at('fornavn', 'etternavn').join(' ')
             @slug_cache[full_name] = rep['id']
+
+            @slug_to_person_cache[rep['id']] = {
+              name: full_name,
+              party: rep['parti']['id']
+            }
           end
         end
 
@@ -179,11 +190,18 @@ module Hdo
         data['dagensrepresentanter_liste'].each do |rep|
           full_name = rep.values_at('fornavn', 'etternavn').join(' ')
           @slug_cache[full_name] = rep['id']
+
+          @slug_to_person_cache[rep['id']] = {
+            name: full_name,
+            party: rep['parti']['id']
+          }
         end
 
-        # manually maintained list of people we can't infer from the transcript data
+        # manually maintained list of people we can't get from the api
         @slug_cache.merge!(@extras.fetch('slugs'))
+
         @slug_cache.save
+        @slug_to_person_cache.save
       end
 
       def data_dir_from(options)
@@ -246,6 +264,7 @@ module Hdo
             input_file.to_s,
             cache: @party_cache,
             names: @extras.fetch('names'),
+            slugs: @slug_to_person,
             ner: @ner,
             lix: @lix
           ).to_json

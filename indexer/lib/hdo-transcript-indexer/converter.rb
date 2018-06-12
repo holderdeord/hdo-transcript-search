@@ -59,6 +59,7 @@ module Hdo
         @last_section     = {}
         @name_to_party    = options[:cache] || {}
         @name_corrections = options[:names] || {}
+        @slug_to_person   = options[:slugs] || {}
         @ner              = !!options[:ner]
         @lix              = !!options[:lix]
         @errors           = Set.new
@@ -173,12 +174,19 @@ module Hdo
       end
 
       def parse_speech(node)
-        name_str = node.css('navn, Navn').text
+        name_node = node.css('navn, Navn')
+        name_str = name_node.text
         text     = clean_text(text_from(node))
 
         return if IGNORED_NAMES.include?(name_str)
 
-        parsed = parse_name_string(name_str)
+        slug = name_node.first.attr('personID')
+
+        if slug && @slug_to_person[slug]
+          parsed = Hashie::Mash.new(@slug_to_person[slug])
+        else
+          parsed = parse_name_string(name_str)
+        end
 
         # sometimes the name is entered as a separate but empty speech
         if parsed.name.nil? && parsed.party.nil?
@@ -248,6 +256,8 @@ module Hdo
           gsub(/\s*…\s*$/, '').
           gsub(/\r?\n/, ' ').
           gsub(/^(\w)\s(\w)/, '\1\2').
+          gsub(/\((#{PARTIES.join('|')}):$/u, '(\1)').
+          gsub(/^([[[:word:]]\s]+) \((#{PARTIES.join('|')})\)\]:$/u, '\1 (\2)').
           strip
       end
 
@@ -331,7 +341,7 @@ module Hdo
         when /^\s*presidenten:?\s*$/i
           result.name  = "Presidenten"
           result.title = "President"
-        when /^([\w.æåøÆÅØ\- ]+?):?$/
+        when /^([[[:word:]].\- ]+?):?$/u
           result.name = $1.strip
         else
           if str =~ /^#{PARTY_EXP}:?$/ && @last_section[:text].empty?
