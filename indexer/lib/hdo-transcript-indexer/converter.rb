@@ -298,6 +298,9 @@ module Hdo
         case str
         when "", ":"
           # ignored
+        when /Fung(erende|\.|:) leder:?/
+          result.name = "Fungerende leder"
+          result.party = nil
         when /^(Representanten|Statsminister|Statsministerer|Statsråd|Statsråd|Stastråd|Stasråd|Satsråd|Statstråd|.+minister|.+president)(?:en)? (.+?)(?:#{DATE_EXP})?:?$/
           result.name  = $2.strip
           result.party = nil
