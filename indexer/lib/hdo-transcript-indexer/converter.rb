@@ -20,7 +20,7 @@ module Hdo
             year       = (short_year.to_i > 50 ? "19#{short_year}" : "20#{short_year}").to_i
 
             new(read(file), Time.new(year, month, day), options)
-          when /refs-(\d{4})(\d{2})-(\d{2})-(\d{2})\.xml$/
+          when /ref.+-(\d{4})(\d{2})-(\d{2})-(\d{2})\.xml$/
             session_start_year = $1
             session_end_year   = $2
             month              = $3
@@ -47,7 +47,7 @@ module Hdo
         end
       end
 
-      PARTIES    = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "TF", "V", "uav", "uavh"]
+      PARTIES    = ["A", "Ap", "FrP", "Frp", "H", "Kp", "KrF", "Krf", "MDG", "SV", "Sp", "SP", "TF", "V", "uav", "uavh", "R"]
       DATE_EXP   = /:? ?[\[\(] *(\d{2}) *[:.] *(\d{2}) *[:.] *(\d{2}) *:?[\]\)].*?/
       PARTY_EXP  = /\s*[\( ]\s*(#{PARTIES.join('|')})\s*[\) ]\s*?/
       NER_SCRIPT = File.expand_path('../extract_entities.py', __FILE__)
@@ -262,6 +262,8 @@ module Hdo
           'A'
         when 'uav', 'uavh'
           'Uavhengig'
+        when 'SP'
+          'Sp'
         else
           str
         end
@@ -297,6 +299,9 @@ module Hdo
         case str
         when "", ":"
           # ignored
+        when /Fung(erende|\.|:) leder:?/
+          result.name = "Fungerende leder"
+          result.party = nil
         when /^(Representanten|Statsminister|Statsministerer|Statsråd|Statsråd|Stastråd|Stasråd|Satsråd|Statstråd|.+minister|.+president)(?:en)? (.+?)(?:#{DATE_EXP})?:?$/
           result.name  = $2.strip
           result.party = nil

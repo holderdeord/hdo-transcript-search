@@ -1,25 +1,34 @@
 /* eslint-disable camelcase */
 
-import Promise            from 'bluebird';
-import LRU                from 'lru-cache';
-import es                 from './es-client';
-import debug              from 'debug';
-import moment             from 'moment';
+import Promise from 'bluebird';
+import LRU from 'lru-cache';
+import es from './es-client';
+import debug from 'debug';
+import moment from 'moment';
 import { ReadableSearch } from 'elasticsearch-streams';
-import csv                from 'csv';
-import Parties            from '../shared/Parties';
+import csv from 'csv';
+import Parties from '../shared/Parties';
 
 var debugCache = debug('cache');
 
-const INDEX_NAME        = 'hdo-transcripts';
-const INDEX_TYPE        = 'speech';
+const INDEX_NAME = 'hdo-transcripts';
+const INDEX_TYPE = null;
 const ALLOWED_INTERVALS = ['month', '12w', '24w', 'year'];
-const TSV_HEADERS       = ['transcript', 'order', 'session', 'time', 'title', 'name', 'party', 'text'];
+const TSV_HEADERS = [
+    'transcript',
+    'order',
+    'session',
+    'time',
+    'title',
+    'name',
+    'party',
+    'text',
+];
 
 const MIN_SPEECH_COUNT = require('../shared/minSpeechCount');
 
 class SearchAPI {
-    cache = LRU({max: 500}); // eslint-disable-line
+    cache = LRU({ max: 500 }); // eslint-disable-line
 
     summary(opts) {
         opts.interval = this._intervalFrom(opts);
@@ -35,13 +44,13 @@ class SearchAPI {
         opts.interval = this._intervalFrom(opts);
 
         return this.cached('hits', opts, () => {
-            return es.search(this._buildHitsQuery(opts)).then((response) => {
+            return es.search(this._buildHitsQuery(opts)).then(response => {
                 return {
                     query: opts.query,
-                    hits: response.hits.hits.map((h) => this._buildHit(h)),
+                    hits: response.hits.hits.map(h => this._buildHit(h)),
                     counts: {
-                        total: response.hits.total
-                    }
+                        total: response.hits.total,
+                    },
                 };
             });
         });
@@ -49,7 +58,7 @@ class SearchAPI {
 
     cached(name, data, fetchFunc) {
         let cacheKey = name + ':' + JSON.stringify(data);
-        let hit      = this.cache.get(cacheKey);
+        let hit = this.cache.get(cacheKey);
 
         if (hit) {
             debugCache('cache hit');
@@ -58,34 +67,68 @@ class SearchAPI {
         } else {
             debugCache('cache miss');
 
-            return fetchFunc()
-                .then(this._cacheResponse.bind(this, cacheKey));
+            return fetchFunc().then(this._cacheResponse.bind(this, cacheKey));
         }
     }
 
     getHitStream(opts) {
         let delimiter = opts.format === 'csv' ? ',' : '\t';
+        let scrollId = null;
+        let tsvHeaders = TSV_HEADERS;
+        if (opts.extra_fields) {
+            const validFields = ['external_id'];
+            let extra = opts.extra_fields.split(',');
+            if (extra && extra.every((field) => validFields.includes(field))) {
+                tsvHeaders = tsvHeaders.concat(extra);
+            }
+        }
 
-        let rs = new ReadableSearch((start, callback) => {
-            let q = this._buildHitsQuery(Object.assign({}, opts, {start: start, highlight: false, size: 500}));
-            es.search(q, callback);
-        });
+        const scrollExec = (from, callback) => {
+            if (scrollId) {
+                return es.scroll(
+                    {
+                        scroll_id: scrollId,
+                        scroll: '30s',
+                    },
+                    callback
+                );
+            }
+
+            const q = this._buildHitsQuery(
+                Object.assign({}, opts, {
+                    highlight: false,
+                })
+            );
+
+            q.scroll = '30s';
+
+            es.search(q, (e, resp) => {
+                scrollId = resp._scroll_id;
+                callback(e, resp);
+            });
+        };
+
+        const rs = new ReadableSearch(scrollExec);
 
         return rs
-                .pipe(csv.transform(record => {
+            .pipe(
+                csv.transform(record => {
                     record._source.text = record._source.text.replace(/\n/g, ' ');
-                    return TSV_HEADERS.map(k => record._source[k]);
-                }))
-                .pipe(csv.stringify({
+                    return tsvHeaders.map(k => record._source[k]);
+                })
+            )
+            .pipe(
+                csv.stringify({
                     delimiter: delimiter,
                     header: true,
-                    columns: TSV_HEADERS
-                }));
+                    columns: tsvHeaders,
+                })
+            );
     }
 
     getSpeech(id) {
         return es
-            .get({index: INDEX_NAME, type: INDEX_TYPE, id: id})
+            .get({ index: INDEX_NAME, type: INDEX_TYPE, id: id })
             .then(response => response._source);
     }
 
@@ -94,20 +137,22 @@ class SearchAPI {
             filter: {
                 and: {
                     filters: [
-                        {term: {transcript: id}},
-                        {range: {order: {gte: start, lte: end}}}
-                    ]
-                }
+                        { term: { transcript: id } },
+                        { range: { order: { gte: start, lte: end } } },
+                    ],
+                },
             },
             size: end - start + 1,
-            sort: 'order'
+            sort: 'order',
         };
 
         return es
-            .search({index: INDEX_NAME, type: INDEX_TYPE, body: body})
+            .search({ index: INDEX_NAME, type: INDEX_TYPE, body: body })
             .then(response => {
                 if (response.hits.hits) {
-                    return response.hits.hits.map(h => Object.assign(h._source, {id: h._id}));
+                    return response.hits.hits.map(h =>
+                        Object.assign(h._source, { id: h._id })
+                    );
                 } else {
                     return [];
                 }
@@ -115,135 +160,141 @@ class SearchAPI {
     }
 
     getLixStats() {
-        return es.search({
-            index: INDEX_NAME,
-            type: INDEX_TYPE,
-            body: {
-                size: 0,
-                aggs: {
-                    scoreStats: {
-                        stats: {
-                            field: 'lix.score'
-                        }
-                    },
-
-                    languages: {
-                        terms: {
-                            field: 'language'
+        return es
+            .search({
+                index: INDEX_NAME,
+                type: INDEX_TYPE,
+                body: {
+                    size: 0,
+                    aggs: {
+                        scoreStats: {
+                            stats: {
+                                field: 'lix.score',
+                            },
                         },
 
-                        aggs: {
-                            scoreStats: {
-                                stats: {
-                                    field: 'lix.score'
-                                }
-                            }
-                        }
-                    },
-
-                    parties: {
-                        terms: {
-                            field: 'party',
-                            size: 20
-                        },
-
-                        aggs: {
-                            scoreStats: {
-                                stats: {
-                                    field: 'lix.score'
-                                }
+                        languages: {
+                            terms: {
+                                field: 'language',
                             },
 
-                            timeline: {
-                                date_histogram: {
-                                    field: 'time',
-                                    interval: 'year',
-                                    time_zone: 'Europe/Oslo',
-                                    format: 'yyyy-MM-dd',
-                                    min_doc_count: 0
+                            aggs: {
+                                scoreStats: {
+                                    stats: {
+                                        field: 'lix.score',
+                                    },
+                                },
+                            },
+                        },
+
+                        parties: {
+                            terms: {
+                                field: 'party',
+                                size: 20,
+                            },
+
+                            aggs: {
+                                scoreStats: {
+                                    stats: {
+                                        field: 'lix.score',
+                                    },
                                 },
 
-                                aggs: {
-                                    scoreStats: {
-                                        stats: {
-                                            field: 'lix.score'
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
+                                timeline: {
+                                    date_histogram: {
+                                        field: 'time',
+                                        interval: 'year',
+                                        time_zone: 'Europe/Oslo',
+                                        format: 'yyyy-MM-dd',
+                                        min_doc_count: 0,
+                                    },
 
-                    topRepresentatives: {
-                        terms: {
-                            field: 'name',
-                            size: 20,
-                            order: { avgLixScore: 'desc' },
-                            min_doc_count: MIN_SPEECH_COUNT
+                                    aggs: {
+                                        scoreStats: {
+                                            stats: {
+                                                field: 'lix.score',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                         },
 
-                        aggs: {
-                            avgLixScore: {
-                                avg: {
-                                    field: 'lix.score'
-                                }
+                        topRepresentatives: {
+                            terms: {
+                                field: 'name',
+                                size: 20,
+                                order: { avgLixScore: 'desc' },
+                                min_doc_count: MIN_SPEECH_COUNT,
                             },
 
-                            person: {
-                                top_hits: { // eslint-disable-line
-                                    size: 1,
-                                    _source: { include: ['external_id', 'party'] }
-                                }
-                            }
-                        }
-                    },
+                            aggs: {
+                                avgLixScore: {
+                                    avg: {
+                                        field: 'lix.score',
+                                    },
+                                },
 
-                    bottomRepresentatives: {
-                        terms: {
-                            field: 'name',
-                            size: 20,
-                            order: { avgLixScore: 'asc' },
-                            min_doc_count: MIN_SPEECH_COUNT
+                                person: {
+                                    top_hits: {
+                                        // eslint-disable-line
+                                        size: 1,
+                                        _source: {
+                                            include: ['external_id', 'party'],
+                                        },
+                                    },
+                                },
+                            },
                         },
 
-                        aggs: {
-                            avgLixScore: {
-                                avg: {
-                                    field: 'lix.score'
-                                }
+                        bottomRepresentatives: {
+                            terms: {
+                                field: 'name',
+                                size: 20,
+                                order: { avgLixScore: 'asc' },
+                                min_doc_count: MIN_SPEECH_COUNT,
                             },
 
-                            person: {
-                                top_hits: { // eslint-disable-line
-                                    size: 1,
-                                    _source: { include: ['external_id', 'party'] }
-                                }
-                            }
-                        }
-                    },
+                            aggs: {
+                                avgLixScore: {
+                                    avg: {
+                                        field: 'lix.score',
+                                    },
+                                },
 
-                    timeline: {
-                        date_histogram: {
-                            field: 'time',
-                            interval: 'year',
-                            time_zone: 'Europe/Oslo',
-                            format: 'yyyy-MM-dd',
-                            min_doc_count: 0
+                                person: {
+                                    top_hits: {
+                                        // eslint-disable-line
+                                        size: 1,
+                                        _source: {
+                                            include: ['external_id', 'party'],
+                                        },
+                                    },
+                                },
+                            },
                         },
 
-                        aggs: {
-                            scoreStats: {
-                                stats: {
-                                    field: 'lix.score'
-                                }
-                            }
-                        }
-                    }
+                        timeline: {
+                            date_histogram: {
+                                field: 'time',
+                                interval: 'year',
+                                time_zone: 'Europe/Oslo',
+                                format: 'yyyy-MM-dd',
+                                min_doc_count: 0,
+                            },
 
-                }
-            }
-        })
-        .then(res => res.aggregations);
+                            aggs: {
+                                scoreStats: {
+                                    stats: {
+                                        field: 'lix.score',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            })
+            .then(res => res.aggregations);
     }
 
     _cacheResponse(key, value) {
@@ -265,13 +316,13 @@ class SearchAPI {
 
         return keys.map(key => {
             let total = set[key] || 0.0;
-            let val   = subset[key] || 0.0;
+            let val = subset[key] || 0.0;
 
             return {
                 key: key,
                 count: val,
                 total: total,
-                pct: total === 0 ? 0 : (val / total) * 100
+                pct: total === 0 ? 0 : (val / total) * 100,
             };
         });
     }
@@ -287,7 +338,9 @@ class SearchAPI {
     }
 
     _buildResponse(aggResponse) {
-        let personMap = this._buildPersonMap(aggResponse.aggregations.filteredPeople.people);
+        let personMap = this._buildPersonMap(
+            aggResponse.aggregations.filteredPeople.people
+        );
 
         let people = this._calculatePercentages(
             this._parseAggregation(aggResponse.aggregations.filteredPeople.people),
@@ -299,9 +352,11 @@ class SearchAPI {
         });
 
         let timeline = this._calculatePercentages(
-            this._parseAggregation(aggResponse.aggregations.filteredTimeline.timeline),
+            this._parseAggregation(
+                aggResponse.aggregations.filteredTimeline.timeline
+            ),
             this._parseAggregation(aggResponse.aggregations.timeline),
-            {combineKeys: true}
+            { combineKeys: true }
         );
 
         timeline.sort((a, b) => {
@@ -320,35 +375,36 @@ class SearchAPI {
 
         return {
             counts: {
-                total: aggResponse.hits.total
+                total: aggResponse.hits.total,
             },
             timeline: timeline,
             parties: parties,
             people: {
-                count: people
-                    .sort((a, b) => b.count - a.count)
-                    .slice(0, 20),
+                count: people.sort((a, b) => b.count - a.count).slice(0, 20),
                 pct: people
                     .filter(d => d.total > MIN_SPEECH_COUNT)
                     .sort((a, b) => b.pct - a.pct)
-                    .slice(0, 20)
-            }
+                    .slice(0, 20),
+            },
         };
     }
 
     _buildHit(hit) {
-        return Object.assign({
-            id: hit._id,
-            score: hit._score,
-            highlight: hit.highlight
-        }, hit._source);
+        return Object.assign(
+            {
+                id: hit._id,
+                score: hit._score,
+                highlight: hit.highlight,
+            },
+            hit._source
+        );
     }
 
     _intervalFrom(opts) {
         let interval = opts.interval || 'month';
 
         // very small intervals can cause a performance hit (huge timeline)
-        if (ALLOWED_INTERVALS.indexOf(interval) === -1)  {
+        if (ALLOWED_INTERVALS.indexOf(interval) === -1) {
             throw new Error(`invalid interval: ${interval}`);
         }
 
@@ -362,7 +418,7 @@ class SearchAPI {
 
             size: +(opts.size || 10),
             from: +(opts.start || 0),
-            sort: this._parseSortOption(opts.sort)
+            sort: this._parseSortOption(opts.sort),
         };
 
         if (opts.highlight !== false) {
@@ -372,9 +428,9 @@ class SearchAPI {
                 post_tags: ['</mark>'],
                 fields: {
                     text: {
-                        number_of_fragments: +(opts.fragments || 0)
-                    }
-                }
+                        number_of_fragments: +(opts.fragments || 0),
+                    },
+                },
                 /*eslint-enable*/
             };
         }
@@ -382,7 +438,7 @@ class SearchAPI {
         return {
             index: INDEX_NAME,
             type: INDEX_TYPE,
-            body: body
+            body: body,
         };
     }
 
@@ -394,10 +450,7 @@ class SearchAPI {
         let m = str.match(/^(.+?)\.(asc|desc)$/);
 
         if (m) {
-            return [
-                {[m[1]]: m[2]},
-                '_score'
-            ];
+            return [{ [m[1]]: m[2] }, '_score'];
         } else {
             return str;
         }
@@ -414,34 +467,34 @@ class SearchAPI {
                     interval: opts.interval,
                     time_zone: 'Europe/Oslo',
                     format: 'yyyy-MM-dd',
-                    min_doc_count: 0
-                }
+                    min_doc_count: 0,
+                },
             },
 
             parties: {
                 terms: {
                     field: 'party',
-                    size: 0
-                }
+                    size: 0,
+                },
             },
 
             people: {
                 terms: {
                     field: 'name',
-                    size: 0
-                }
-            }
+                    size: 0,
+                },
+            },
         };
 
         Object.assign(aggregations, {
             filteredTimeline: {
                 filter: { query: query },
-                aggregations: { timeline: aggregations.timeline }
+                aggregations: { timeline: aggregations.timeline },
             },
 
             filteredParties: {
                 filter: { query: query },
-                aggs: { parties: aggregations.parties }
+                aggs: { parties: aggregations.parties },
             },
 
             filteredPeople: {
@@ -450,30 +503,33 @@ class SearchAPI {
                     people: {
                         terms: {
                             field: 'name',
-                            size: 0
+                            size: 0,
                         },
                         aggs: {
                             person: {
-                                top_hits: { // eslint-disable-line
+                                top_hits: {
+                                    // eslint-disable-line
                                     size: 1,
-                                    _source: { include: ['external_id', 'party'] }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                    _source: {
+                                        include: ['external_id', 'party'],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         });
 
         var body = {
             aggregations: aggregations,
-            size: 0
+            size: 0,
         };
 
         return {
             index: INDEX_NAME,
             type: INDEX_TYPE,
-            body: body
+            body: body,
         };
     }
 
@@ -483,8 +539,8 @@ class SearchAPI {
             query_string: {
                 query: str,
                 default_operator: 'AND',
-                default_field: 'text'
-            }
+                default_field: 'text',
+            },
         };
         /*eslint-enable*/
     }
@@ -496,9 +552,9 @@ class SearchAPI {
             return {
                 not: {
                     filter: {
-                        term: { name: 'Presidenten' }
-                    }
-                }
+                        term: { name: 'Presidenten' },
+                    },
+                },
             };
         }
     }
@@ -515,7 +571,6 @@ class SearchAPI {
 
         return counts;
     }
-
 }
 
 module.exports = new SearchAPI();

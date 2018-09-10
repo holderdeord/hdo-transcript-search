@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import Speech from './Speech';
 import UrlUtils from '../../shared/UrlUtils';
-import { connect }  from 'react-redux';
+import { connect } from 'react-redux';
 import { moreHits } from '../actions/SearchActions';
 
 @connect(state => ({ hits: state.hits.hits }))
 export default class SearchResults extends Component {
     static contextTypes = {
-        store: PropTypes.object.isRequired
+        store: PropTypes.object.isRequired,
     };
 
     static propTypes = {};
@@ -19,7 +19,7 @@ export default class SearchResults extends Component {
         let newHits = this.getFocusedHitSet(newProps);
 
         if (oldHits && newHits && newHits.hits.length >= oldHits.hits.length) {
-            this.setState({loaded: true});
+            this.setState({ loaded: true });
         }
     }
 
@@ -42,20 +42,22 @@ export default class SearchResults extends Component {
                     </div>
                 </div>
 
-                {
-                    result.hits.map((h, i) => [
-                        <Speech speech={h} key={h.id} index={i}/>,
-                        <div className="divider"/>
-                    ])
-                }
+                {result.hits.map((h, i) => [
+                    <Speech speech={h} key={h.id} index={i} />,
+                    <div className="divider" />,
+                ])}
 
-                <div className="row" style={{padding: '1rem'}}>
+                <div className="row" style={{ padding: '1rem' }}>
                     <div className="col-md-4 col-md-offset-4">
                         {hasMore && this.renderLoadMore()}
 
                         <div className="text-center">
-                            <small className="text-muted" style={{marginLeft: '1rem'}}>
-                                Viser {result.hits.length} av totalt {result.counts.total} treff på <strong>{result.query}</strong>
+                            <small
+                                className="text-muted"
+                                style={{ marginLeft: '1rem' }}>
+                                Viser {result.hits.length} av totalt{' '}
+                                {result.counts.total} treff på{' '}
+                                <strong>{result.query}</strong>
                             </small>
                         </div>
                     </div>
@@ -64,8 +66,9 @@ export default class SearchResults extends Component {
                         <div className="export-links">
                             <div>
                                 <a href={UrlUtils.csvPathForQuery(result.query)}>
-                                    Last ned <strong>{result.counts.total}</strong> innlegg som CSV
-                                    <span style={{paddingLeft: '.5rem'}}>
+                                    Last ned <strong>{result.counts.total}</strong>{' '}
+                                    innlegg som CSV
+                                    <span style={{ paddingLeft: '.5rem' }}>
                                         <i className="fa fa-download" />
                                     </span>
                                 </a>
@@ -74,7 +77,7 @@ export default class SearchResults extends Component {
                             <div>
                                 <a href={UrlUtils.rssPathForQuery(result.query)}>
                                     RSS for dette søket
-                                    <span style={{paddingLeft: '.5rem'}}>
+                                    <span style={{ paddingLeft: '.5rem' }}>
                                         <i className="fa fa-rss" />
                                     </span>
                                 </a>
@@ -91,30 +94,30 @@ export default class SearchResults extends Component {
 
         if (this.state.loaded) {
             el = (
-                <button className="btn btn-primary"
-                        onClick={::this.handleLoadMore}>
+                <button className="btn btn-primary" onClick={::this.handleLoadMore}>
                     Vis flere innlegg
                 </button>
             );
         } else {
             el = (
-                <i className="fa fa-refresh fa-spin" style={{margin: '1rem', fontSize: '2rem'}}/>
+                <i
+                    className="fa fa-refresh fa-spin"
+                    style={{ margin: '1rem', fontSize: '2rem' }}
+                />
             );
         }
 
-        return (
-            <div className="text-center">
-                {el}
-            </div>
-        );
+        return <div className="text-center">{el}</div>;
     }
 
     handleLoadMore() {
         let result = this.getFocusedHitSet();
 
         if (result) {
-            this.setState({loaded: false}, () => {
-                this.context.store.dispatch(moreHits(result.query, result.hits.length));
+            this.setState({ loaded: false }, () => {
+                this.context.store.dispatch(
+                    moreHits(result.query, result.hits.length)
+                );
             });
         }
     }

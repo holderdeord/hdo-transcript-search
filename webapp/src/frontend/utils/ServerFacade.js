@@ -4,8 +4,8 @@ import reqwest from 'reqwest';
 export default class ServerFacade {
     summary(queries, interval) {
         return Promise.map(queries, q => {
-            return reqwest(this._summaryPathFor(q, interval)).then((r) => {
-                return {query: q, result: r};
+            return reqwest(this._summaryPathFor(q, interval)).then(r => {
+                return { query: q, result: r };
             });
         });
     }
@@ -28,7 +28,9 @@ export default class ServerFacade {
     }
 
     services() {
-        return reqwest('https://files.holderdeord.no/data/hdo/services.json?service=transcripts');
+        return reqwest(
+            'https://files.holderdeord.no/data/hdo/services.json?service=transcripts'
+        );
     }
 
     lixStats() {

@@ -126,10 +126,9 @@ $ct-series-colors: (
   .ct-label.ct-horizontal {
     color: #333;
     font-weight: 600;
-    word-break: break-word;
   }
 
-  @media screen and (max-width: 599px) {
+  @media screen and (max-width: 610px) {
     .ct-label {
       font-size: .8rem;
     }

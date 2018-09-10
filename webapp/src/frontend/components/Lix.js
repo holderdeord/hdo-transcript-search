@@ -8,31 +8,31 @@ import Parties from '../../shared/Parties';
 
 const LANGS = {
     nn: 'Nynorsk',
-    nb: 'Bokmål'
+    nb: 'Bokmål',
 };
 
-@connect(({stats: {lix}}) => ({stats: lix}))
+@connect(({ stats: { lix } }) => ({ stats: lix }))
 export default class Lix extends Component {
     static propTypes = {
         stats: PropTypes.object.isRequired,
     };
 
     state = {
-        adjustYAxis: true
-    }
+        adjustYAxis: true,
+    };
 
     renderTimeline(timeline) {
         const data = {
-            labels: timeline.buckets.map(d => TimeUtils.formatIntervalLabel(d.key, Intervals.YEAR)),
-            series: [
-                {data: timeline.buckets.map(e => e.scoreStats.avg)}
-            ]
+            labels: timeline.buckets.map(d =>
+                TimeUtils.formatIntervalLabel(d.key, Intervals.YEAR)
+            ),
+            series: [{ data: timeline.buckets.map(e => e.scoreStats.avg) }],
         };
 
         return (
             <BaseChart
                 type="Line"
-                options={{low: this.state.adjustYAxis ? undefined : 0}} // eslint-disable-line
+                options={{ low: this.state.adjustYAxis ? undefined : 0 }} // eslint-disable-line
                 data={data}
             />
         );
@@ -45,9 +45,9 @@ export default class Lix extends Component {
             timeline,
             topRepresentatives,
             bottomRepresentatives,
-            languages
+            languages,
         } = this.props.stats;
-        const cardStyle = {margin: '1rem', padding: '1rem'};
+        const cardStyle = { margin: '1rem', padding: '1rem' };
 
         return (
             <div className="container">
@@ -59,7 +59,12 @@ export default class Lix extends Component {
                             <input
                                 type="checkbox"
                                 checked={this.state.adjustYAxis}
-                                onChange={() => this.setState({adjustYAxis: !this.state.adjustYAxis})}/>
+                                onChange={() =>
+                                    this.setState({
+                                        adjustYAxis: !this.state.adjustYAxis,
+                                    })
+                                }
+                            />
                             Tilpass Y-akser
                         </label>
                     </div>
@@ -87,7 +92,7 @@ export default class Lix extends Component {
                         </div>
                     </div>
 
-                    {parties.buckets.map(({key, scoreStats: ss, timeline: tl}) => (
+                    {parties.buckets.map(({ key, scoreStats: ss, timeline: tl }) => (
                         <div className="row" key={key}>
                             <div className="col-md-4">
                                 <h3>{Parties.nameFor(key)}</h3>
@@ -107,7 +112,10 @@ export default class Lix extends Component {
                             <div>
                                 <h2>Representanter</h2>
 
-                                <p>Representanter med færre enn {minSpeechCount} innlegg er ekskludert.</p>
+                                <p>
+                                    Representanter med færre enn {minSpeechCount}{' '}
+                                    innlegg er ekskludert.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -117,9 +125,19 @@ export default class Lix extends Component {
                             <h5>Topp 20, snitt LIX-score og antall innlegg</h5>
 
                             <ol>
-                                {(topRepresentatives ? topRepresentatives.buckets : []).map(tr => (
+                                {(topRepresentatives
+                                    ? topRepresentatives.buckets
+                                    : []
+                                ).map(tr => (
                                     <li key={tr.key}>
-                                        <strong>{tr.key} ({tr.person.hits.hits[0]._source.party}):</strong> {tr.avgLixScore.value.toFixed()} ({this.getDescription(tr.avgLixScore.value)}), {tr.doc_count} innlegg
+                                        <strong>
+                                            {tr.key} ({
+                                                tr.person.hits.hits[0]._source.party
+                                            }):
+                                        </strong>{' '}
+                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(
+                                            tr.avgLixScore.value
+                                        )}), {tr.doc_count} innlegg
                                     </li>
                                 ))}
                             </ol>
@@ -129,13 +147,22 @@ export default class Lix extends Component {
                             <h5>Bunn 20, snitt LIX-score og antall innlegg</h5>
 
                             <ol>
-                                {(bottomRepresentatives ? bottomRepresentatives.buckets : []).map(tr => (
+                                {(bottomRepresentatives
+                                    ? bottomRepresentatives.buckets
+                                    : []
+                                ).map(tr => (
                                     <li key={tr.key}>
-                                        <strong>{tr.key} ({tr.person.hits.hits[0]._source.party}):</strong> {tr.avgLixScore.value.toFixed()} ({this.getDescription(tr.avgLixScore.value)}), {tr.doc_count} innlegg
+                                        <strong>
+                                            {tr.key} ({
+                                                tr.person.hits.hits[0]._source.party
+                                            }):
+                                        </strong>{' '}
+                                        {tr.avgLixScore.value.toFixed()} ({this.getDescription(
+                                            tr.avgLixScore.value
+                                        )}), {tr.doc_count} innlegg
                                     </li>
                                 ))}
                             </ol>
-
                         </div>
                     </div>
                 </div>
@@ -160,7 +187,11 @@ export default class Lix extends Component {
     renderStat(stat) {
         return (
             <div>
-                <p>Snitt LIX-score: <strong>{stat.avg.toFixed()}</strong> ({this.getDescription(stat.avg)})</p>
+                <p>
+                    Snitt LIX-score: <strong>{stat.avg.toFixed()}</strong> ({this.getDescription(
+                        stat.avg
+                    )})
+                </p>
                 <p>Antall innlegg: {stat.count}</p>
             </div>
         );
@@ -184,4 +215,3 @@ export default class Lix extends Component {
         }
     }
 }
-

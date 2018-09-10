@@ -4,3 +4,5 @@ npm-debug.log
 /indexer/vendor/
 .tern-port
 .node-version
+/webapp/public/bundle*
+/indexer/data

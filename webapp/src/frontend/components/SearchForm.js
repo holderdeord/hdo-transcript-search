@@ -1,34 +1,33 @@
-import React, { PropTypes, Component }  from 'react';
-import key    from 'keymaster';
+import React, { PropTypes, Component } from 'react';
+import key from 'keymaster';
 import { connect } from 'react-redux';
 
 const INVALID_QUERY_CHARS = /[\.]/;
 
-@connect(({summary: {joinedQuery}}) => ({joinedQuery}))
+@connect(({ summary: { joinedQuery } }) => ({ joinedQuery }))
 export default class SearchForm extends Component {
-
     static propTypes = {
         joinedQuery: PropTypes.string,
         params: PropTypes.shape({
-            unit: PropTypes.string
-        })
+            unit: PropTypes.string,
+        }),
     };
 
     static contextTypes = {
-        router: PropTypes.object
+        router: PropTypes.object,
     };
 
     state = {
         query: this.props.joinedQuery,
         lastReceivedQuery: null,
-        focused: true
+        focused: true,
     };
 
     componentWillReceiveProps(props) {
         if (props.joinedQuery !== this.state.lastReceivedQuery) {
             this.setState({
                 query: props.joinedQuery,
-                lastReceivedQuery: props.joinedQuery
+                lastReceivedQuery: props.joinedQuery,
             });
         }
     }
@@ -45,7 +44,10 @@ export default class SearchForm extends Component {
         return (
             <form className="row" id="search-form" onSubmit={::this.handleSearch}>
                 <div className="col-md-6 col-md-offset-3">
-                    <div className={`input-group ${this.state.focused ? 'focused' : ''}`}>
+                    <div
+                        className={`input-group ${
+                            this.state.focused ? 'focused' : ''
+                        }`}>
                         <input
                             type="search"
                             className="form-control"
@@ -74,11 +76,11 @@ export default class SearchForm extends Component {
     }
 
     handleFocus() {
-        this.setState({focused: true});
+        this.setState({ focused: true });
     }
 
     handleBlur() {
-        this.setState({focused: false});
+        this.setState({ focused: false });
     }
 
     handleFocusKey(e) {
@@ -107,13 +109,13 @@ export default class SearchForm extends Component {
     }
 
     handleReset() {
-        this.setState({query: ''}, () => this.transitionToQueries([]));
+        this.setState({ query: '' }, () => this.transitionToQueries([]));
     }
 
     handleQueryChange(event) {
         let val = event.target.value;
 
-        this.setState({query: val}, () => {
+        this.setState({ query: val }, () => {
             if (!val.length) {
                 this.handleReset();
             }
@@ -126,7 +128,9 @@ export default class SearchForm extends Component {
 
         if (queries.length) {
             let queryPath = queries.join('.');
-            this.context.router.transitionTo(`/search/${unit}/${queryPath}/${focused}`);
+            this.context.router.transitionTo(
+                `/search/${unit}/${queryPath}/${focused}`
+            );
         } else {
             this.context.router.transitionTo('/search');
         }

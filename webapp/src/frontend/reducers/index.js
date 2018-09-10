@@ -11,6 +11,5 @@ export default {
     speech,
     analytics,
     services,
-    stats
+    stats,
 };
-

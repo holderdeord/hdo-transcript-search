@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 
-import Intervals     from '../constants/Intervals';
-import key           from 'keymaster';
-import SearchForm    from './SearchForm';
-import Timeline      from './Timeline';
-import DevPanel      from './DevPanel';
-import ResultStats   from './ResultStats';
+import Intervals from '../constants/Intervals';
+import key from 'keymaster';
+import SearchForm from './SearchForm';
+import Timeline from './Timeline';
+import DevPanel from './DevPanel';
+import ResultStats from './ResultStats';
 import SearchResults from './SearchResults';
 
 export default class Search extends Component {
@@ -19,7 +19,7 @@ export default class Search extends Component {
             focused: PropTypes.string,
             unit: PropTypes.string,
             queries: PropTypes.string,
-        })
+        }),
     };
 
     state = {
@@ -28,7 +28,7 @@ export default class Search extends Component {
         fbId: document.body.getAttribute('data-facebook-app-id'),
         showDevPanel: false,
         orientation: 'vertical',
-        interval: Intervals.YEAR
+        interval: Intervals.YEAR,
     };
 
     componentDidMount() {
@@ -64,13 +64,12 @@ export default class Search extends Component {
                         focusedIndex={focusedIndex}
                     />
 
-                    <SearchResults focusedIndex={focusedIndex}/>
+                    <SearchResults focusedIndex={focusedIndex} />
 
                     <DevPanel
                         visible={this.state.showDevPanel}
                         orientation={this.state.orientation}
                         interval={this.state.interval}
-
                         onOrientationChange={::this.handleOrientationChange}
                         onIntervalChange={::this.handleIntervalChange}
                     />
@@ -80,11 +79,11 @@ export default class Search extends Component {
     }
 
     handleOrientationChange(event) {
-        this.setState({orientation: event.target.value});
+        this.setState({ orientation: event.target.value });
     }
 
     handleIntervalChange(event) {
-        this.setState({interval: event.target.value});
+        this.setState({ interval: event.target.value });
     }
 
     handleUnitChange(event) {
@@ -96,7 +95,7 @@ export default class Search extends Component {
 
     registerKeyBindings() {
         // make sure key bindings work also inside the search field
-        key.filter = (event) => {
+        key.filter = event => {
             var el = event.target || event.srcElement;
 
             var nonInput = !(
@@ -110,7 +109,7 @@ export default class Search extends Component {
 
         // set up key bindings
         key('ctrl+`', () => {
-            this.setState({showDevPanel: !this.state.showDevPanel});
+            this.setState({ showDevPanel: !this.state.showDevPanel });
         });
 
         // TODO: use keymaster to provide some instructions on '?'

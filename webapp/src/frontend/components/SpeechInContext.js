@@ -3,7 +3,7 @@ import Speech from './Speech';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-@connect(({speech: {speeches}}) => ({speeches}))
+@connect(({ speech: { speeches } }) => ({ speeches }))
 class SpeechBrowser extends Component {
     static propTypes = { speeches: PropTypes.array };
 
@@ -16,12 +16,13 @@ class SpeechBrowser extends Component {
 
         let [first, focused, last] = speeches;
 
-        let prevLink = null, nextLink = null;
+        let prevLink = null,
+            nextLink = null;
 
         if (first && first.order > 0) {
             prevLink = (
                 <Link to={`/speeches/${first.transcript}/${first.order}`}>
-                    <i className="fa fa-chevron-left"/>
+                    <i className="fa fa-chevron-left" />
 
                     <strong>Forrige innlegg:</strong>
 
@@ -34,14 +35,14 @@ class SpeechBrowser extends Component {
 
         if (last) {
             nextLink = (
-                <Link to={`/speeches/${last.transcript}/${last.order}`} >
+                <Link to={`/speeches/${last.transcript}/${last.order}`}>
                     <strong>Neste innlegg:</strong>
 
                     <span>
                         {last.name} {last.party ? `(${last.party})` : ''}
                     </span>
 
-                    <i className="fa fa-chevron-right"/>
+                    <i className="fa fa-chevron-right" />
                 </Link>
             );
         }
@@ -53,9 +54,14 @@ class SpeechBrowser extends Component {
                     <div className="col-xs-6 col-md-6 text-right">{nextLink}</div>
                 </div>
 
-                <div className="row card" style={{margin: '1rem 0'}}>
+                <div className="row card" style={{ margin: '1rem 0' }}>
                     <div className="col-md-12">
-                        <Speech key={focused.id} speech={focused} showContextLink={false} showTime={true} />
+                        <Speech
+                            key={focused.id}
+                            speech={focused}
+                            showContextLink={false}
+                            showTime={true}
+                        />
                     </div>
                 </div>
 

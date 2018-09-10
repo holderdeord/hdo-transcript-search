@@ -2,8 +2,10 @@
 
 require 'optparse'
 
+elasticsearch_url = ENV['BOXEN_ELASTICSEARCH_URL'] or 'http://localhost:9200'
+
 options = {
-  elasticsearch_url: 'http://localhost:9200',
+  elasticsearch_url: elasticsearch_url,
   data_dir: File.expand_path('../data'),
   sessions: [
     '1998-1999',
@@ -24,7 +26,8 @@ options = {
     '2013-2014',
     '2014-2015',
     '2015-2016',
-    '2016-2017'
+    '2016-2017',
+    '2017-2018'
   ],
   index_name: 'hdo-transcripts',
   create_index: false,

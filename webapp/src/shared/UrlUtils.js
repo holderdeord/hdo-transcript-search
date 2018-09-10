@@ -8,6 +8,8 @@ export default class UrlUtils {
     }
 
     static csvPathForQuery(query) {
-        return `/api/export?query=${encodeURIComponent(query)}&format=csv&sort=time.desc`;
+        return `/api/export?query=${encodeURIComponent(
+            query
+        )}&format=csv&sort=time.desc`;
     }
 }

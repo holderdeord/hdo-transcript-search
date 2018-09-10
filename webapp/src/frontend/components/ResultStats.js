@@ -1,44 +1,44 @@
 import React, { Component, PropTypes } from 'react';
-import { connect }       from 'react-redux';
-import TopListChart      from './TopListChart';
-import Parties           from '../../shared/Parties';
-import ImageUtils        from '../utils/ImageUtils';
-import Colors            from '../utils/Colors';
+import { connect } from 'react-redux';
+import TopListChart from './TopListChart';
+import Parties from '../../shared/Parties';
+import ImageUtils from '../utils/ImageUtils';
+import Colors from '../utils/Colors';
 import ImageWithFallback from './ImageWithFallback';
 
 const MIN_SPEECH_COUNT = require('../../shared/minSpeechCount');
 
-@connect(({summary: {results}}) => ({results}))
+@connect(({ summary: { results } }) => ({ results }))
 export default class ResultStats extends Component {
     static propTypes = {
         unit: PropTypes.string.isRequired,
-        orientation: PropTypes.string.isRequired
+        orientation: PropTypes.string.isRequired,
     };
 
     state = {
         parties: [],
         people: {},
-        query: ''
+        query: '',
     };
 
     bigNumberStyle = {
         fontSize: '4rem',
         padding: '10px',
-        verticalAlign: '-0.55rem'
+        verticalAlign: '-0.55rem',
     };
 
     componentWillReceiveProps(props) {
         let results = props.results || [];
         let parties = [];
-        let people  = {};
-        let query   = '';
+        let people = {};
+        let query = '';
 
         let focusedIndex = props.focusedIndex || 0;
         let result = results[focusedIndex];
 
         if (result) {
-            query   = result.query;
-            people  = result.result.people;
+            query = result.query;
+            people = result.result.people;
             parties = result.result.parties;
         }
 
@@ -47,7 +47,7 @@ export default class ResultStats extends Component {
             parties: parties,
             people: people,
             topParties: this.topParties(parties),
-            labelClassName: Colors.colorAt(focusedIndex)
+            labelClassName: Colors.colorAt(focusedIndex),
         });
     }
 
@@ -82,8 +82,11 @@ export default class ResultStats extends Component {
         }
 
         let topPartyName = Parties.names[topParty.key];
-        let num          = this.props.unit === 'pct' ? `${topParty.pct.toFixed(2).replace('.', ',')}%` : topParty.count;
-        let unitText     = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
+        let num =
+            this.props.unit === 'pct'
+                ? `${topParty.pct.toFixed(2).replace('.', ',')}%`
+                : topParty.count;
+        let unitText = this.props.unit === 'pct' ? 'av sine innlegg' : 'innlegg';
 
         return (
             <div className="row result-box">
@@ -96,9 +99,7 @@ export default class ResultStats extends Component {
                                 className="party-logo"
                             />
 
-                            <h2 className="selectable">
-                                {topPartyName}
-                            </h2>
+                            <h2 className="selectable">{topPartyName}</h2>
                         </div>
 
                         <div className="lead selectable">
@@ -106,16 +107,14 @@ export default class ResultStats extends Component {
                                 har nevnt <strong>{this.state.query}</strong> i
                             </div>
 
-                            <span style={this.bigNumberStyle}>
-                                {num}
-                            </span>
+                            <span style={this.bigNumberStyle}>{num}</span>
 
                             {unitText}
                         </div>
                     </div>
                 </div>
 
-                <div className={"col-md-7"}>
+                <div className={'col-md-7'}>
                     <TopListChart
                         className={this.state.labelClassName}
                         subtitle="Partier"
@@ -129,17 +128,19 @@ export default class ResultStats extends Component {
     }
 
     renderPeopleStats() {
-        let people = (this.state.people[this.props.unit] || []);
+        let people = this.state.people[this.props.unit] || [];
         let isPct = this.props.unit === 'pct';
 
         people = people.slice(0, 8);
 
         if (people.length) {
-            let topPerson      = people[0];
-            let num            = isPct ? `${topPerson.pct.toFixed(2).replace('.', ',')}%` : topPerson.count;
-            let unitText       = isPct ? 'av sine innlegg' : 'innlegg';
+            let topPerson = people[0];
+            let num = isPct
+                ? `${topPerson.pct.toFixed(2).replace('.', ',')}%`
+                : topPerson.count;
+            let unitText = isPct ? 'av sine innlegg' : 'innlegg';
             // let partyClassName = topPerson.meta.party ? `hdo-party-${topPerson.meta.party.toLowerCase()}` : '';
-            let partyText      = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
+            let partyText = topPerson.meta.party ? `(${topPerson.meta.party})` : '';
 
             return (
                 <div>
@@ -147,7 +148,9 @@ export default class ResultStats extends Component {
                         <div className="col-md-5">
                             <div className="text-center">
                                 <ImageWithFallback
-                                    src={ImageUtils.personImageFor(topPerson.meta.external_id)}
+                                    src={ImageUtils.personImageFor(
+                                        topPerson.meta.external_id
+                                    )}
                                     alt={`Bilde av ${topPerson.key}`}
                                     height={200}
                                     fallbackSrc={ImageUtils.fallbackImage()}
@@ -159,12 +162,11 @@ export default class ResultStats extends Component {
 
                                 <div className="lead selectable">
                                     <div>
-                                        har nevnt <strong>{this.state.query}</strong> i
+                                        har nevnt <strong>{this.state.query}</strong>{' '}
+                                        i
                                     </div>
 
-                                    <span style={this.bigNumberStyle}>
-                                        {num}
-                                    </span>
+                                    <span style={this.bigNumberStyle}>{num}</span>
 
                                     {unitText}
                                 </div>
@@ -197,8 +199,13 @@ export default class ResultStats extends Component {
             <div>
                 <div className="row">
                     <div className="col-md-12">
-                        <div className="text-muted text-center pull-right" style={{padding: '1rem 2rem'}}>
-                            <small>* Ekskludert personer med færre enn {MIN_SPEECH_COUNT} innlegg totalt.</small>
+                        <div
+                            className="text-muted text-center pull-right"
+                            style={{ padding: '1rem 2rem' }}>
+                            <small>
+                                * Ekskludert personer med færre enn{' '}
+                                {MIN_SPEECH_COUNT} innlegg totalt.
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -209,7 +216,7 @@ export default class ResultStats extends Component {
     topParties(parties) {
         return {
             pct: parties.slice(0).sort((a, b) => b.pct - a.pct)[0],
-            count: parties.slice(0).sort((a, b) => b.count - a.count)[0]
+            count: parties.slice(0).sort((a, b) => b.count - a.count)[0],
         };
     }
 }
