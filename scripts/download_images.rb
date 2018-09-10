@@ -6,6 +6,7 @@ require 'pp'
 require 'fileutils'
 require 'json'
 require 'faraday_middleware'
+require 'uri'
 
 FD = Faraday.new { |b|
   b.use FaradayMiddleware::FollowRedirects
@@ -50,7 +51,8 @@ res = Hashie::Mash.new client.search({
 ids = res.aggregations.externalIds.buckets.map { |b| b['key'] }
 
 ids.each do |id|
-  url = "http://data.stortinget.no/eksport/personbilde?personid=#{id}&storrelse=stort"
+  rep_slug = URI::encode(id)
+  url = "http://data.stortinget.no/eksport/personbilde?personid=#{rep_slug}&storrelse=stort"
 
   save url, "#{out_dir}/#{id}.jpg"
 
