@@ -1,0 +1,35 @@
+version: '3'
+services:
+    es:
+        image: elasticsearch:2.2.1
+        ports:
+            - 9200:9200
+        environment:
+            - discovery.type=single-node
+    webapp:
+        build: ./webapp
+        volumes:
+            - ./webapp:/code
+        links:
+            - es
+        depends_on:
+            - es
+        ports:
+          - 7575:7575
+        environment:
+          - BOXEN_ELASTICSEARCH_PORT=9200
+          - BOXEN_ELASTICSEARCH_HOST=es
+
+    indexer:
+        build: ./indexer
+        command: "bundle exec ruby -Ilib bin/hdo-transcript-indexer -d ./data"
+        volumes:
+            - ./indexer:/code
+        links:
+            - es
+        depends_on:
+            - es
+        environment:
+          - BOXEN_ELASTICSEARCH_PORT=9200
+          - BOXEN_ELASTICSEARCH_HOST=es
+          - BOXEN_ELASTICSEARCH_URL=http://es:9200
