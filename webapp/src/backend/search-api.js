@@ -74,6 +74,14 @@ class SearchAPI {
     getHitStream(opts) {
         let delimiter = opts.format === 'csv' ? ',' : '\t';
         let scrollId = null;
+        let tsvHeaders = TSV_HEADERS;
+        if (opts.extra_fields) {
+            const validFields = ['external_id'];
+            let extra = opts.extra_fields.split(',');
+            if (extra && extra.every((field) => validFields.includes(field))) {
+                tsvHeaders = tsvHeaders.concat(extra);
+            }
+        }
 
         const scrollExec = (from, callback) => {
             if (scrollId) {
@@ -106,14 +114,14 @@ class SearchAPI {
             .pipe(
                 csv.transform(record => {
                     record._source.text = record._source.text.replace(/\n/g, ' ');
-                    return TSV_HEADERS.map(k => record._source[k]);
+                    return tsvHeaders.map(k => record._source[k]);
                 })
             )
             .pipe(
                 csv.stringify({
                     delimiter: delimiter,
                     header: true,
-                    columns: TSV_HEADERS,
+                    columns: tsvHeaders,
                 })
             );
     }
