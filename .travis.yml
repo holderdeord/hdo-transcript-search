@@ -5,7 +5,7 @@ node_js:
 script:
 - cd webapp && npm install && npm run build && cd -
 after_success:
-- '[[ "$TRAVIS_BRANCH" = "master" ]] && scripts/deploy'
+- '[[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && scripts/deploy'
 addons:
   ssh_known_hosts: tale.holderdeord.no
 notifications:
