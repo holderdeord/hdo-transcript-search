@@ -40,6 +40,13 @@ module Hdo
         @errors       = []
         @new_transcripts = []
 
+        if @sessions == ['all']
+          @sessions = Hdo::StortingImporter::ParsingDataSource.default.
+            parliament_sessions.
+            select { |e| e.start_date.year >= 1998 }.
+            map { |e| [e.start_date.year, e.end_date.year].join('-') }
+        end
+
         if @ner && !system("which polyglot 2>&1 >/dev/null")
           raise "polyglot not installed, please run `pip install polyglot && polyglot download embeddings2.no ner2.no`"
         end
