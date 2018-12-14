@@ -14,7 +14,6 @@ require 'hdo-transcript-indexer/text_utils'
 require 'hdo-transcript-indexer/converter'
 require 'hdo-transcript-indexer/cache'
 require 'hdo-transcript-indexer/index'
-require 'hdo-transcript-indexer/api_client'
 
 Faraday.default_adapter = :patron
 Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
