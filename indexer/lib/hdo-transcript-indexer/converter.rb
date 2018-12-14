@@ -379,7 +379,7 @@ module Hdo
         end
 
         if result.name =~ /\(|\)|\[|\]|#{DATE_EXP}|#{PARTY_EXP}/
-          if person && result.name.include?(person['name'])
+          if person && person['name'] && result.name.include?(person['name'])
             result.name = person['name']
             result.party = normalize_party(person['party'])
           else
