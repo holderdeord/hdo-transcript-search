@@ -14,6 +14,7 @@ require 'hdo-transcript-indexer/text_utils'
 require 'hdo-transcript-indexer/converter'
 require 'hdo-transcript-indexer/cache'
 require 'hdo-transcript-indexer/index'
+require 'hdo-transcript-indexer/api_client'
 
 Faraday.default_adapter = :patron
 Faraday.default_connection_options.request.timeout = 30 # we sometimes see hangs in the API
@@ -62,6 +63,9 @@ module Hdo
 
         @slug_cache = Cache.new(cache_path('name-to-slug'))
         @slug_cache.load_if_exists
+
+        @id_to_person = Cache.new(cache_path('id-to-person'))
+        @id_to_person.load_if_exists
 
         @stats = Hash.new { |hash, session| hash[session] = Hash.new(0) }
       end
@@ -157,7 +161,7 @@ module Hdo
       end
 
       def build_slug_cache
-        return unless @slug_cache.empty?
+        return unless @slug_cache.empty? || @id_to_person.empty?
 
         @logger.info "building name -> slug cache"
 
@@ -177,7 +181,13 @@ module Hdo
 
           data['representanter_liste'].each do |rep|
             full_name = rep.values_at('fornavn', 'etternavn').join(' ')
+
             @slug_cache[full_name] = rep['id']
+            @id_to_person[rep['id']] = {
+              id: rep['id'],
+              name: full_name,
+              party: rep['parti'] ? rep['parti']['id'] : nil
+            }
           end
         end
 
@@ -186,11 +196,19 @@ module Hdo
         data['dagensrepresentanter_liste'].each do |rep|
           full_name = rep.values_at('fornavn', 'etternavn').join(' ')
           @slug_cache[full_name] = rep['id']
+
+          @id_to_person[rep['id']] = {
+            id: rep['id'],
+            name: full_name,
+            party: rep['parti'] ? rep['parti']['id'] : nil
+          }
         end
 
         # manually maintained list of people we can't infer from the transcript data
         @slug_cache.merge!(@extras.fetch('slugs'))
+
         @slug_cache.save
+        @id_to_person.save
       end
 
       def data_dir_from(options)
@@ -252,6 +270,7 @@ module Hdo
           json = Converter.parse(
             input_file.to_s,
             cache: @party_cache,
+            id_to_person: @id_to_person,
             names: @extras.fetch('names'),
             ner: @ner,
             lix: @lix

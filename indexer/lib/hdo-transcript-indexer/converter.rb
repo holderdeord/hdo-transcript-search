@@ -60,6 +60,7 @@ module Hdo
         @last_section     = {}
         @name_to_party    = options[:cache] || {}
         @name_corrections = options[:names] || {}
+        @id_to_person     = options[:id_to_person] || {};
         @ner              = !!options[:ner]
         @lix              = !!options[:lix]
         @errors           = Set.new
@@ -174,12 +175,20 @@ module Hdo
       end
 
       def parse_speech(node)
-        name_str = node.css('navn, Navn').text
+        name_nodes = node.css('navn, Navn')
+        name_str = name_nodes.text
         text     = clean_text(text_from(node))
 
         return if IGNORED_NAMES.include?(name_str)
 
-        parsed = parse_name_string(name_str)
+        person = nil
+
+        if name_nodes.any? && name_nodes.first.attr('personID')
+          person_id = name_nodes.first.attr('personID')
+          person = @id_to_person[person_id]
+        end
+
+        parsed = parse_name_string(name_str, person)
 
         # sometimes the name is entered as a separate but empty speech
         if parsed.name.nil? && parsed.party.nil?
@@ -254,9 +263,9 @@ module Hdo
 
       def normalize_party(str)
         case str
-        when 'Frp'
+        when 'Frp', 'FRP'
           'FrP'
-        when 'Krf'
+        when 'Krf', 'KRF'
           'KrF'
         when 'Ap'
           'A'
@@ -291,7 +300,7 @@ module Hdo
         @name_corrections[name] || name
       end
 
-      def parse_name_string(str)
+      def parse_name_string(str, person)
         result = Hashie::Mash.new
         orig = str
         str = clean_name_string(str)
@@ -353,8 +362,29 @@ module Hdo
           end
         end
 
+        if person
+          if person['name'] != result.name
+            p "parsed name does not match personID: #{result.to_hash.inspect} <=> #{person.inspect}"
+          else
+            normalized_party = normalize_party(person['party'])
+
+            if result.party.nil? && person['party']
+              result.party = normalized_party
+            end
+
+            if normalized_party != normalize_party(result.party)
+              raise "parsed party (#{result.party}) does not match personID (#{normalized_party}): #{result.to_hash.inspect} <=> #{person.inspect}"
+            end
+          end
+        end
+
         if result.name =~ /\(|\)|\[|\]|#{DATE_EXP}|#{PARTY_EXP}/
-          raise ParseError.new("invalid name: #{result.to_hash.inspect}", @current_node)
+          if person && result.name.include?(person['name'])
+            result.name = person['name']
+            result.party = normalize_party(person['party'])
+          else
+            raise ParseError.new("invalid name: #{result.to_hash.inspect}", @current_node)
+          end
         end
 
         result.name  = normalize_name(result.name) if result.name
@@ -446,6 +476,9 @@ module Hdo
         @node = node
         super "could not parse name string from #{str.inspect} in #{node.to_s}"
       end
+    end
+
+    class TranscriptError < StandardError
     end
 
   end
