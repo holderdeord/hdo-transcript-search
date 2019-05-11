@@ -372,7 +372,7 @@ module Hdo
               result.party = normalized_party
             end
 
-            if normalized_party != normalize_party(result.party)
+            if normalized_party != normalize_party(result.party) && !['uavh', 'uav'].include?(normalized_party)
               raise "parsed party (#{result.party}) does not match personID (#{normalized_party}): #{result.to_hash.inspect} <=> #{person.inspect}"
             end
           end

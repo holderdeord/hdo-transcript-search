@@ -5,6 +5,8 @@ module Hdo
       extend Forwardable
       def_delegators :@cache, :[], :[]=, :size, :merge!, :fetch, :empty?, :any?, :keys
 
+      TTL_IN_DAYS = 30
+
       def initialize(path)
         @path  = path.to_s
         @cache = {}
@@ -15,7 +17,9 @@ module Hdo
       end
 
       def load_if_exists
-        load if File.exist?(@path)
+        if File.exist?(@path) && ((Time.now - File.mtime(@path)) / 60 / 60 / 24) <= TTL_IN_DAYS
+          load
+        end
       end
 
       def save
