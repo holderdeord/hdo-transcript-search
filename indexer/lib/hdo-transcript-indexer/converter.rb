@@ -188,6 +188,7 @@ module Hdo
           person = @id_to_person[person_id]
         end
 
+
         parsed = parse_name_string(name_str, person)
 
         # sometimes the name is entered as a separate but empty speech

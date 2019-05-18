@@ -57,13 +57,13 @@ module Hdo
           @logger
         )
 
-        @party_cache = Cache.new(cache_path('name-to-party'))
+        @party_cache = Cache.new(cache_path('name-to-party'), ttl_in_days: 30)
         @party_cache.load_if_exists
 
-        @slug_cache = Cache.new(cache_path('name-to-slug'))
+        @slug_cache = Cache.new(cache_path('name-to-slug'), ttl_in_days: 30)
         @slug_cache.load_if_exists
 
-        @id_to_person = Cache.new(cache_path('id-to-person'))
+        @id_to_person = Cache.new(cache_path('id-to-person'), ttl_in_days: 30)
         @id_to_person.load_if_exists
 
         @stats = Hash.new { |hash, session| hash[session] = Hash.new(0) }
@@ -86,8 +86,8 @@ module Hdo
       end
 
       def convert
-        build_party_cache
         build_slug_cache
+        build_party_cache
 
         xml_transcripts.each { |input| convert_to_json(input) }
       end
@@ -162,7 +162,7 @@ module Hdo
       def build_slug_cache
         return unless @slug_cache.empty? || @id_to_person.empty?
 
-        @logger.info "building name -> slug cache"
+        @logger.info "building name -> slug cache, id -> person cache"
 
         periods = JSON.parse(@faraday.get("http://data.stortinget.no/eksport/stortingsperioder?format=json").body).
           fetch('stortingsperioder_liste').

@@ -3,10 +3,17 @@
 require 'hdo-transcript-indexer'
 
 cache_path = File.expand_path("../../../data/cache/name-to-party.json", __FILE__)
-cache = nil
 
 cache = Hdo::Transcript::Cache.new(cache_path)
 cache.load_if_exists
 cache.merge!(JSON.parse(File.read(File.expand_path("../../lib/hdo-transcript-indexer/extras.json", __FILE__))).fetch('parties'))
 
-puts Hdo::Transcript::Converter.parse(ARGV.first, cache: cache).to_json
+id_to_person_path = File.expand_path("../../../data/cache/id-to-person.json", __FILE__)
+id_to_person = Hdo::Transcript::Cache.new(id_to_person_path)
+id_to_person.load_if_exists
+
+puts Hdo::Transcript::Converter.parse(
+	ARGV.first,
+	cache: cache,
+	id_to_person: id_to_person
+).to_json
