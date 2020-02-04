@@ -57,6 +57,16 @@ export default class App extends Component {
                     <SharingLinks facebookAppId={this.state.fbId} />
                 </Header>
 
+                <div className="container">
+                    <div className="m-t-1">
+                        <div className="alert alert-info">
+                            <strong>Holder de ord</strong> legges ned i løpet av
+                            2020. Denne tjenesten blir fortsatt oppdatert daglig frem
+                            til da.
+                        </div>
+                    </div>
+                </div>
+
                 {this.props.children}
 
                 <RelatedServices />
