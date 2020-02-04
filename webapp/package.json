@@ -47,7 +47,7 @@
   "devDependencies": {
     "babel-core": "^5.6.15",
     "babel-loader": "^5.3.0",
-    "bootstrap": "^3.3.2",
+    "bootstrap": "^3.4.1",
     "chartist": "^0.8.0",
     "css-loader": "^0.9.1",
     "errorhandler": "^1.2.2",
