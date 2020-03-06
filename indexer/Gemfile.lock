@@ -73,7 +73,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     ruby-ole (1.2.11.8)
-    rubyzip (1.2.2)
+    rubyzip (2.2.0)
     slop (3.6.0)
     spreadsheet (1.0.3)
       ruby-ole (>= 1.0)
