@@ -247,6 +247,7 @@ module Hdo
           gsub("]]", "]").
           gsub(/[\[\(]?\s*(\d{2}):(\d{2}):_?(\d{2})\s*[\]\)]?/, '[\1:\2:\3]').
           gsub(" [klokkeslett mangler]", "").
+          gsub(/^(\w)\så/, '\1å').
           gsub(" ", ""). # weird space
           gsub("­", ''). # weird space 2
           gsub("\xe2\x80\x89", ''). # weird space 3
