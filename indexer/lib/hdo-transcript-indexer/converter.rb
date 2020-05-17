@@ -346,7 +346,10 @@ module Hdo
         when /^([\w.æåøÆÅØ\- ]+?):?$/
           result.name = $1.strip
         else
-          if str =~ /^#{PARTY_EXP}:?$/ && @last_section[:text].empty?
+          if person
+            result.name = person['name']
+            result.party = person['party']
+          elsif str =~ /^#{PARTY_EXP}:?$/ && @last_section[:text].empty?
             result.party = normalize_party($1)
 
             if @last_section[:party] && @last_section[:party] != result.party
