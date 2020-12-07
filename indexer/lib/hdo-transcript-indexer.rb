@@ -141,8 +141,8 @@ module Hdo
 
         @logger.info "building name -> party cache, this could take a while"
 
-        xml_transcripts.each do |input_file|
-          Converter.parse(input_file.to_s).sections.each do |section|
+        xml_transcripts.each do |input_file|          
+          Converter.parse(input_file.to_s, skip_errors: true).sections.each do |section|
             n = section[:name]
             p = section[:party]
 
@@ -183,9 +183,9 @@ module Hdo
 
             @slug_cache[full_name] = rep['id']
             @id_to_person[rep['id']] = {
-              id: rep['id'],
-              name: full_name,
-              party: rep['parti'] ? rep['parti']['id'] : nil
+              "id": rep['id'],
+              "name": full_name,
+              "party": rep['parti'] ? rep['parti']['id'] : nil
             }
           end
         end
@@ -197,9 +197,9 @@ module Hdo
           @slug_cache[full_name] = rep['id']
 
           @id_to_person[rep['id']] = {
-            id: rep['id'],
-            name: full_name,
-            party: rep['parti'] ? rep['parti']['id'] : nil
+            "id": rep['id'],
+            "name": full_name,
+            "party": rep['parti'] ? rep['parti']['id'] : nil
           }
         end
 
@@ -271,10 +271,10 @@ module Hdo
             cache: @party_cache,
             id_to_person: @id_to_person,
             names: @extras.fetch('names'),
+            transitions: @extras.fetch('transitions'),
             ner: @ner,
             lix: @lix
           ).to_json
-
 
           dest.open('w') { |io| io << json }
         end

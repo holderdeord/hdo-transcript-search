@@ -28,7 +28,7 @@ def save(url, dest, opts = {})
 end
 
 client ||= Elasticsearch::Client.new(
-  url: ENV['BOXEN_ELASTICSEARCH_URL'] || 'http://127.0.0.1:9200',
+  url: ENV['ELASTICSEARCH_URL'] || 'http://127.0.0.1:9200',
   log: false
 )
 

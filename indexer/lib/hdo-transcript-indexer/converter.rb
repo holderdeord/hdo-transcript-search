@@ -61,9 +61,11 @@ module Hdo
         @name_to_party    = options[:cache] || {}
         @name_corrections = options[:names] || {}
         @id_to_person     = options[:id_to_person] || {};
+        @transitions      = options[:transitions] || {};
         @ner              = !!options[:ner]
         @lix              = !!options[:lix]
         @errors           = Set.new
+        @skip_errors      = options[:skip_errors]
 
         session = Hdo::StortingImporter::Util.session_for_date(@time.to_date)
         @session = [session.begin.year, session.end.year].join('-')
@@ -71,7 +73,7 @@ module Hdo
 
       def sections
         @doc.css('presinnl, innlegg, Presinnlegg, Hovedinnlegg, replikk, Replikk').
-          map { |node| @last_section = parse_section(node) }.
+          map { |node| @last_section = parse_section(node) || @last_section }.
           compact.
           reject { |e| e[:text].empty? }.
           map { |e| validate(e) }
@@ -149,6 +151,8 @@ module Hdo
         end
 
         section
+      rescue ParseError
+        raise unless @skip_errors
       end
 
       def text_from(node)
@@ -362,7 +366,7 @@ module Hdo
             result.time  = create_time($1, $2, $3)
             result.party = @last_section[:party]
             result.name  = @last_section[:name]
-          else
+          elsif !person
             raise ParseError.new(str, @current_node)
           end
         end
@@ -370,6 +374,7 @@ module Hdo
         if person
           if person['name'] != result.name
             p "parsed name does not match personID: #{result.to_hash.inspect} <=> #{person.inspect}"
+            result.name = person['name']            
           else
             normalized_party = normalize_party(person['party'])
 
@@ -377,7 +382,9 @@ module Hdo
               result.party = normalized_party
             end
 
-            if normalized_party != normalize_party(result.party) && !['uavh', 'uav'].include?(result.party.downcase)
+            independent = !['uavh', 'uav'].include?(result.party.downcase)
+
+            if normalized_party != normalize_party(result.party) && !independent && !expected_transition?(person['id'], normalized_party, normalize_party(result.party))
               raise "parsed party (#{result.party}) does not match personID (#{normalized_party}): #{result.to_hash.inspect} <=> #{person.inspect}"
             end
           end
@@ -409,6 +416,13 @@ module Hdo
 
           Time.new(@time.year, @time.month, @time.day, *data)
         end
+      end
+
+      def expected_transition?(person_id, party_a, party_by)
+        parties = @transitions[person_id] || []
+        p [person_id, party_a, party_b, parties]
+        
+        parties.include?(party_a) && parties.include?(party_b)
       end
 
       def party_for(name)

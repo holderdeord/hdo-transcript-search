@@ -2,7 +2,7 @@
 
 require 'optparse'
 
-elasticsearch_url = ENV['BOXEN_ELASTICSEARCH_URL'] or 'http://localhost:9200'
+elasticsearch_url = ENV['ELASTICSEARCH_URL'] or 'http://localhost:9200'
 
 options = {
   elasticsearch_url: elasticsearch_url,

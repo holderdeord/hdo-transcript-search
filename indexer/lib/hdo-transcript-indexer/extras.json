@@ -598,6 +598,10 @@
     "Åshild Bruun-Gundersen": "ASKH",
     "Åshild Karlstrøm Rundhaug": "ARU",
     "Åshild Karoline Haugland": "ASKH",
-    "Åslaug Marie Haga": "AAMH"
+    "Åslaug Marie Haga": "AAMH",
+    "Åsmund Grøver Aukrust": "AAUK"
+  },
+  "transitions": {
+    "JBO": ["A", "Sp"]
   }
 }

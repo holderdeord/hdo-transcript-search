@@ -12,6 +12,12 @@ This project consists of two parts:
 * `indexer/` - download and index Stortinget transcripts in ElasticSearch
 * `webapp/`  - web frontend to present / visualize the data
 
+## Running with docker-compose
+
+    $ docker-compose up -d es webapp
+    $ docker-compose run --rm indexer
+
+
 ## Requirements
 
 * elasticsearch

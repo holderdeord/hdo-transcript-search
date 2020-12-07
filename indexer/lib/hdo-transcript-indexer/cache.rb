@@ -26,7 +26,7 @@ module Hdo
       end
 
       def expired?
-        @ttl_in_days && ((Time.now - File.mtime(@path)) / 60 / 60 / 24) <= @ttl_in_days
+        @ttl_in_days && ((Time.now - File.mtime(@path)) / 60 / 60 / 24) >= @ttl_in_days
       end
     end
   end
