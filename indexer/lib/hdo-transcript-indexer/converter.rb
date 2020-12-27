@@ -418,7 +418,7 @@ module Hdo
         end
       end
 
-      def expected_transition?(person_id, party_a, party_by)
+      def expected_transition?(person_id, party_a, party_b)
         parties = @transitions[person_id] || []
         p [person_id, party_a, party_b, parties]
         
