@@ -275,7 +275,7 @@ module Hdo
           'KrF'
         when 'Ap'
           'A'
-        when 'uav', 'uavh'
+        when 'uav', 'uavh', 'Uav'
           'Uavhengig'
         when 'SP'
           'Sp'
@@ -382,9 +382,10 @@ module Hdo
               result.party = normalized_party
             end
 
-            independent = !['uavh', 'uav'].include?(result.party.downcase)
+            independent = ['uavh', 'uav'].include?(result.party.downcase)
+            normalized_result_party = normalize_party(result.party)
 
-            if normalized_party != normalize_party(result.party) && !independent && !expected_transition?(person['id'], normalized_party, normalize_party(result.party))
+            if normalized_party != normalized_result_party && !independent && !expected_transition?(person['id'], normalized_party, normalized_result_party)
               raise "parsed party (#{result.party}) does not match personID (#{normalized_party}): #{result.to_hash.inspect} <=> #{person.inspect}"
             end
           end
