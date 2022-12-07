@@ -24,7 +24,7 @@
         "debug": "^2.1.0",
         "elasticsearch": "^15.0.0",
         "elasticsearch-streams": "0.0.9",
-        "express": "^4.11.2",
+        "express": "^4.17.3",
         "express-hbs": "^1.0.4",
         "googleapis": "^32.0.0",
         "lru-cache": "^2.5.0",
